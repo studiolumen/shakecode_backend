@@ -1,8 +1,8 @@
 {
   "name": "shakecode",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Shakecode backend",
+  "author": "Yeonjun Lee <yeonfish6040@gmail.com>",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -49,7 +49,8 @@
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "0.3.21-dev.e7649d2"
+    "typeorm": "0.3.21-dev.e7649d2",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -64,6 +65,7 @@
     "@types/passport": "^1.0.12",
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^2.0.11",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.0.1",

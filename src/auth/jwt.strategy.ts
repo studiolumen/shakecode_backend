@@ -1,11 +1,19 @@
 import { HttpException, Injectable, HttpStatus } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
+import { InjectRepository } from "@nestjs/typeorm";
 import { ExtractJwt, Strategy, VerifiedCallback } from "passport-jwt";
+import { Repository } from "typeorm";
+
+import { Session } from "../schemas";
 
 @Injectable()
 export class CustomJwtStrategy extends PassportStrategy(Strategy, "jwt") {
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    @InjectRepository(Session)
+    private sessionRepository: Repository<Session>,
+    private readonly configService: ConfigService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -13,11 +21,17 @@ export class CustomJwtStrategy extends PassportStrategy(Strategy, "jwt") {
     });
   }
 
-  async validate(
-    payload: { refresh: boolean },
-    done: VerifiedCallback,
-  ): Promise<any> {
+  async validate(payload: any, done: VerifiedCallback): Promise<any> {
     if (!payload.refresh) {
+      const session = await this.sessionRepository.findOne({
+        where: { sessionIdentifier: payload.sessionIdentifier },
+      });
+      if (!session) {
+        throw new HttpException(
+          "세션이 만료되었습니다.",
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
       return done(null, payload);
     } else {
       throw new HttpException(

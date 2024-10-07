@@ -12,13 +12,16 @@ export const CustomSwaggerSetup = async (app: INestApplication) => {
     .setVersion(cluster.version)
     .addBearerAuth(
       {
+        description: "Please enter token in following format: Bearer [JWT]",
+        name: "Authorization",
+        bearerFormat: "Bearer",
+        scheme: "Bearer",
         type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-        in: "header",
+        in: "Header",
       },
       "access-token",
     )
+    .addSecurityRequirements("access-token")
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

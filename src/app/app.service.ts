@@ -33,7 +33,7 @@ export class AppService {
       "author",
     ]);
 
-    const mode = (process.env.NODE_ENV as Deployment) || "production";
+    const mode = (process.env.NODE_ENV as Deployment) || "prod";
 
     this.cluster = { ...packageInfo, mode };
     return this.cluster;

@@ -36,6 +36,9 @@ export class Session {
   @Column()
   refreshToken: string;
 
+  @Column()
+  sessionIdentifier: string;
+
   @ManyToOne(() => User, (user) => user.login, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",

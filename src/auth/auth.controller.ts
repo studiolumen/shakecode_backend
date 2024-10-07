@@ -1,8 +1,16 @@
-import { Body, Controller, HttpStatus, Post } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
-import { JWTResponse, PasswordLogin } from "./auth.dto";
+import { JWTResponse, PasswordLoginDTO, RefreshTokenDTO } from "./auth.dto";
 import { AuthService } from "./auth.service";
+import { CustomJwtAuthGuard } from "./guards";
 
 @ApiTags("Auth")
 @Controller("/auth")
@@ -26,7 +34,33 @@ export class AuthController {
     type: JWTResponse,
   })
   @Post("/login/password")
-  async passwordLogin(@Body() data: PasswordLogin) {
+  async passwordLogin(@Body() data: PasswordLoginDTO) {
     return await this.authService.loginByIdPassword(data.id, data.password);
+  }
+
+  @ApiOperation({
+    summary: "토큰 재발급",
+    description: "만료된 accessToken을 재발급받습니다.",
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: JWTResponse,
+  })
+  @Post("/refresh")
+  async refreshToken(@Body() data: RefreshTokenDTO) {
+    return await this.authService.refresh(data.refreshToken);
+  }
+
+  @ApiOperation({
+    summary: "로그아웃",
+    description: "로그아웃합니다.",
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+  })
+  @UseGuards(CustomJwtAuthGuard)
+  @Post("/logout")
+  async logout(@Req() req) {
+    return await this.authService.logout(req.user);
   }
 }

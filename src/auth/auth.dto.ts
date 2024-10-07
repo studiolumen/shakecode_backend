@@ -1,11 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class PasswordLogin {
+export class PasswordLoginDTO {
   @ApiProperty()
   id: string;
 
   @ApiProperty()
   password: string;
+}
+
+export class RefreshTokenDTO {
+  @ApiProperty()
+  refreshToken: string;
 }
 
 export class JWTResponse {
