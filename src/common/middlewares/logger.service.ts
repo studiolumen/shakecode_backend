@@ -1,5 +1,5 @@
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { Injectable, NestMiddleware, Logger } from "@nestjs/common";
+import { Request, Response, NextFunction } from "express";
 
 @Injectable()
 export class CustomLoggerMiddleware implements NestMiddleware {
@@ -10,39 +10,39 @@ export class CustomLoggerMiddleware implements NestMiddleware {
     const requestMethod = req.method;
     const originURL = req.originalUrl;
     const httpVersion = `HTTP/${req.httpVersion}`;
-    const userAgent = req.headers['user-agent'];
+    const userAgent = req.headers["user-agent"];
     const ipAddress =
-      req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    let authorization = '';
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+    let authorization = "";
     if (
-      req.headers['authorization'] &&
-      req.headers['authorization'].startsWith('Bearer')
+      req.headers["authorization"] &&
+      req.headers["authorization"].startsWith("Bearer")
     ) {
-      const authorizationTmp = req.headers['authorization'].replace(
-        'Bearer ',
-        '',
+      const authorizationTmp = req.headers["authorization"].replace(
+        "Bearer ",
+        "",
       );
-      if (authorizationTmp.split('.').length === 3) {
+      if (authorizationTmp.split(".").length === 3) {
         try {
           authorization = `${this.parseJwt(authorizationTmp).id}(${
             this.parseJwt(authorizationTmp).name
           })`;
         } catch (e) {
-          authorization = 'unknown';
+          authorization = "unknown";
         }
       }
     } else {
-      authorization = 'unknown';
+      authorization = "unknown";
     }
 
     if (!ipAddress) return next();
 
-    res.on('finish', () => {
+    res.on("finish", () => {
       const statusCode = res.statusCode;
       const endTimestamp = Date.now() - startTimestamp;
 
       this.logger.log(
-        `${ipAddress} (${userAgent}) - "${requestMethod} ${originURL} ${httpVersion}" ${statusCode} by ${authorization} +${endTimestamp}ms `,
+        `${ipAddress} (${userAgent}) - "${requestMethod} ${originURL} ${httpVersion}" ${statusCode} by uid{${authorization}} +${endTimestamp}ms `,
       );
 
       if (Object.keys(req.body).length > 0)
@@ -52,15 +52,15 @@ export class CustomLoggerMiddleware implements NestMiddleware {
   }
 
   parseJwt(token: string) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
     const jsonPayload = decodeURIComponent(
       atob(base64)
-        .split('')
+        .split("")
         .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
         })
-        .join(''),
+        .join(""),
     );
 
     return JSON.parse(jsonPayload);

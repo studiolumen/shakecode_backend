@@ -1,6 +1,9 @@
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule, TypeOrmModuleAsyncOptions } from "@nestjs/typeorm";
+import importToArray from "import-to-array";
+
+import * as entities from "src/schemas";
 
 import { CustomConfigModule } from "./config.module";
 
@@ -15,8 +18,10 @@ const typeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
       username: configService.get<string>("DB_USER"),
       password: configService.get<string>("DB_PASS"),
       database: configService.get<string>("DB_NAME"),
-      entities: [__dirname + "../../schemas/**/*.schemas.{js,ts}"],
+      entities: importToArray(entities),
       synchronize: true,
+      logging: true,
+      dropSchema: true,
     };
 
     return options;

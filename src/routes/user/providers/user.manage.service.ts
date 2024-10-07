@@ -1,16 +1,41 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import * as bcrypt from "bcrypt";
+import merge from "merge-js-class";
 import { Repository } from "typeorm";
 
-import { UserSchema } from "../../../schemas";
+import { Login, User } from "../../../schemas";
+import { CreateUserDTO } from "../dto";
 
 @Injectable()
 export class UserManageService {
   constructor(
-    @Inject(UserSchema.name)
-    private userSchema: Repository<UserSchema>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @InjectRepository(Login)
+    private loginRepository: Repository<Login>,
   ) {}
 
   async getUserById(id: number) {
-    return await this.userSchema.findOne({ where: { id } });
+    return await this.userRepository.findOne({ where: { id } });
+  }
+
+  async createUser(data: CreateUserDTO) {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(data.password, salt);
+
+    const user = new User();
+    await merge(user, data);
+
+    const login = new Login();
+    login.type = "password";
+    login.identifier1 = data.email;
+    login.identifier2 = hashedPassword;
+    login.user = user;
+
+    await this.userRepository.save(user);
+    await this.loginRepository.save(login);
+
+    return user;
   }
 }

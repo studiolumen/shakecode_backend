@@ -4,12 +4,12 @@ import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy, VerifiedCallback } from "passport-jwt";
 
 @Injectable()
-export class DIMIJwtStrategy extends PassportStrategy(Strategy, "jwt") {
+export class CustomJwtStrategy extends PassportStrategy(Strategy, "jwt") {
   constructor(private readonly configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      publicKey: configService.get<string>("JWT_PUBLIC"),
+      secretOrKey: configService.get<string>("JWT_PRIVATE"),
     });
   }
 

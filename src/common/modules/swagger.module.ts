@@ -17,7 +17,7 @@ export const CustomSwaggerSetup = async (app: INestApplication) => {
         bearerFormat: "JWT",
         in: "header",
       },
-      "access-token"
+      "access-token",
     )
     .build();
 
