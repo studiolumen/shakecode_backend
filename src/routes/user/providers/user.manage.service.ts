@@ -11,9 +11,9 @@ import { CreateUserDTO } from "../dto";
 export class UserManageService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
     @InjectRepository(Login)
-    private loginRepository: Repository<Login>,
+    private readonly loginRepository: Repository<Login>,
   ) {}
 
   async getUserById(id: number) {
@@ -37,5 +37,10 @@ export class UserManageService {
     await this.loginRepository.save(login);
 
     return user;
+  }
+
+  async deleteUser(id: number) {
+    const user = await this.getUserById(id);
+    await this.userRepository.remove(user);
   }
 }

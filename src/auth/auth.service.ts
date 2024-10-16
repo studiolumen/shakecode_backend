@@ -13,9 +13,9 @@ export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     @InjectRepository(Login)
-    private loginRepository: Repository<Login>,
+    private readonly loginRepository: Repository<Login>,
     @InjectRepository(Session)
-    private sessionRepository: Repository<Session>,
+    private readonly sessionRepository: Repository<Session>,
   ) {}
 
   async loginByIdPassword(id: string, password: string) {

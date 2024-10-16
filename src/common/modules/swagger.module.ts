@@ -21,7 +21,7 @@ export const CustomSwaggerSetup = async (app: INestApplication) => {
       },
       "access-token",
     )
-    .addSecurityRequirements("access-token")
+    // .addSecurityRequirements("access-token")
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

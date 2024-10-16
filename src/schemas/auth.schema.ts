@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { LoginType, LoginTypesValues } from "../common/types";
+import { LoginType, LoginTypeValues } from "../common/types";
 
 import { User } from "./user.schema";
 
@@ -15,14 +15,14 @@ export class Login {
   })
   user: User;
 
-  @Column({ enum: LoginTypesValues })
-  type: LoginType;
+  @Column({ enum: LoginTypeValues })
+  type: LoginType = null;
 
   @Column("text")
-  identifier1: string;
+  identifier1: string = null;
 
   @Column("text")
-  identifier2: string;
+  identifier2: string = null;
 }
 
 @Entity()
@@ -31,13 +31,13 @@ export class Session {
   id: number;
 
   @Column()
-  accessToken: string;
+  accessToken: string = null;
 
   @Column()
-  refreshToken: string;
+  refreshToken: string = null;
 
   @Column()
-  sessionIdentifier: string;
+  sessionIdentifier: string = null;
 
   @ManyToOne(() => User, (user) => user.login, {
     onDelete: "CASCADE",

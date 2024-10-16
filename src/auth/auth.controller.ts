@@ -11,6 +11,7 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JWTResponse, PasswordLoginDTO, RefreshTokenDTO } from "./auth.dto";
 import { AuthService } from "./auth.service";
 import { CustomJwtAuthGuard } from "./guards";
+import { UseGuardsWithSwagger } from "./guards/useGuards";
 
 @ApiTags("Auth")
 @Controller("/auth")
@@ -58,7 +59,7 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.OK,
   })
-  @UseGuards(CustomJwtAuthGuard)
+  @UseGuardsWithSwagger(CustomJwtAuthGuard)
   @Post("/logout")
   async logout(@Req() req) {
     return await this.authService.logout(req.user);

@@ -5,7 +5,7 @@ import { CustomScheduleModule } from "./schedule.module";
 
 export const CustomEssentialModules = [
   CustomConfigModule,
-  CustomDatabaseModule,
   CustomScheduleModule,
+  CustomDatabaseModule,
   CustomJWTModule,
 ];

@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 
 import { Login } from "./auth.schema";
+import { Problem } from "./problem.schema";
 
 @Entity()
 export class User {
