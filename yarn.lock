@@ -4523,10 +4523,10 @@ merge-descriptors@1.0.1:
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
   integrity sha512-cCi6g3/Zr1iqQi6ySbseM1Xvooa98N0w31jzUYrXPX2xqObmFGHJ0tQ5u74H3mVh7wLouTseZyYIq39g8cNp1w==
 
-merge-js-class@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/merge-js-class/-/merge-js-class-1.0.1.tgz#bd19273f5838eedae1cd62206fed9b24e67ba109"
-  integrity sha512-XOj9k36PFGDQOxVG4itvQYKupdkDWYyrVMzySE+GcVikXIXP/LrOCp6bIbu3K52+DENlWSBxiJfuL+M9IfkTpw==
+merge-js-class@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/merge-js-class/-/merge-js-class-1.0.2.tgz#e40ab7e703f5bc6c8f5b25cef5bca809c6478320"
+  integrity sha512-lZy648lU8fxvx0Hw4DLnqE/5SMeDsF+mHOF4PyEeEMxkkTpqnhvIifIJwWrMp34q57GUmKGpT9wueUIf9EvTeg==
 
 merge-stream@^2.0.0:
   version "2.0.0"

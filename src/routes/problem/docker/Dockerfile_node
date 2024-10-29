@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY . .
 
-CMD ["node", "code.js"]
+CMD sh -c "cat input.txt | node code.js"

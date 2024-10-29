@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpStatus,
-  Post,
-  Req,
-  UseGuards,
-} from "@nestjs/common";
+import { Body, Controller, Get, HttpStatus, Post, Req } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { JWTResponse, PasswordLoginDTO, RefreshTokenDTO } from "./auth.dto";
@@ -22,6 +15,7 @@ export class AuthController {
     summary: "핑",
     description: "서버가 살아있는지 테스트합니다.",
   })
+  @Get("/ping")
   async ping() {
     return "퐁";
   }

@@ -58,6 +58,5 @@ describe("Problem manage service test", () => {
     await userManageService.deleteUser(user.id);
 
     expect(result.name).toBe("test");
-    expect("test").toBe("test");
   });
 });

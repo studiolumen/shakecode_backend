@@ -6,4 +6,4 @@ COPY . .
 
 RUN gcc -o code code.c
 
-CMD ["./code"]
+CMD sh -c "cat input.txt | ./code"

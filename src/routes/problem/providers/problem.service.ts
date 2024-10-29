@@ -3,16 +3,37 @@ import * as child_process from "node:child_process";
 import * as path from "path";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 import { CompilerType } from "../../../common/types";
+import { Problem, TestCase } from "../../../schemas";
 
 @Injectable()
 export class ProblemService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor(
+    @InjectRepository(Problem)
+    private readonly problemRepository: Repository<Problem>,
+    @InjectRepository(TestCase)
+    private readonly testCaseRepository: Repository<TestCase>,
+  ) {}
 
-  async runCode(type: CompilerType, code: string): Promise<string> {
+  async getProblemById(id: number) {
+    const problem = await this.problemRepository.findOne({ where: { id } });
+    problem.testCases = problem.testCases.filter(
+      (testcase) => testcase.show_user,
+    );
+
+    return problem;
+  }
+
+  async runCode(
+    type: CompilerType,
+    code: string,
+    inputs: string[],
+  ): Promise<string> {
     const id = uuid();
     const basePath = path.join(__dirname, "../docker");
     fs.mkdirSync(path.join(basePath, id));
@@ -49,11 +70,12 @@ export class ProblemService {
     }
 
     const workDir = { cwd: path.join(basePath, id) };
+    fs.writeFileSync(path.join(basePath, id, "input.txt"), inputs.join("\n"));
     await new Promise((accept) => {
       child_process.exec(`docker build . -t ${id}`, workDir, accept);
     });
     await new Promise((accept) => {
-      child_process.exec(`docker run --name ${id} ${id}`, workDir, accept);
+      child_process.exec(`docker run  --name ${id} ${id}`, workDir, accept);
     });
     const result: string = await new Promise((accept) => {
       child_process.exec(

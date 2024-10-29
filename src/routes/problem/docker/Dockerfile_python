@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY . .
 
-CMD ["python3", "code.py"]
+CMD sh -c "cat input.txt | python3 code.py"
