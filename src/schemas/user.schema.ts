@@ -7,6 +7,7 @@ import {
 } from "typeorm";
 
 import { Login } from "./auth.schema";
+import { ClassUser } from "./group.schema";
 import { Problem } from "./problem.schema";
 
 @Entity()
@@ -32,4 +33,7 @@ export class User {
 
   @OneToMany(() => Login, (login) => login.user)
   login: Login[];
+
+  @OneToMany(() => ClassUser, (classUser) => classUser.user)
+  classUser: ClassUser[];
 }

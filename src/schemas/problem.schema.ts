@@ -1,13 +1,16 @@
 import {
+  ChildEntity,
   Column,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  TableInheritance,
 } from "typeorm";
 
 import { ProblemCategory } from "../common/types";
 
+import { Classroom } from "./group.schema";
 import { User } from "./user.schema";
 
 @Entity()
@@ -39,8 +42,17 @@ export class Problem {
   @Column()
   memory_limit: number = null;
 
+  @Column()
+  restricted: number = null;
+
   @OneToMany(() => TestCase, (testCase) => testCase.problem)
   testCases: TestCase[];
+
+  @OneToMany(() => PublicProblem, (publicProblem) => publicProblem.problem)
+  publicProblem: TestCase[];
+
+  @OneToMany(() => ClassProblem, (classProblem) => classProblem.problem)
+  classProblem: TestCase[];
 
   @ManyToOne(() => User)
   user: User;
@@ -65,4 +77,33 @@ export class TestCase {
     onUpdate: "CASCADE",
   })
   problem: Problem;
+}
+
+@Entity()
+export class PublicProblem {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => Problem, (problem) => problem.publicProblem, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  problem: Classroom;
+}
+@Entity()
+export class ClassProblem {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => Problem, (problem) => problem.classProblem, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  problem: Classroom;
+
+  @ManyToOne(() => Classroom, (classroom) => classroom.problem, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+  })
+  classroom: Classroom;
 }
