@@ -34,4 +34,7 @@ export class CreateProblemDTO {
 
   @ApiProperty({ type: TestCaseDTO })
   testCases: TestCaseDTO[];
+
+  @ApiProperty()
+  restricted: number;
 }

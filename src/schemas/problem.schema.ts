@@ -1,11 +1,9 @@
 import {
-  ChildEntity,
   Column,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  TableInheritance,
 } from "typeorm";
 
 import { ProblemCategory } from "../common/types";

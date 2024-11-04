@@ -33,7 +33,6 @@ export class ProblemManageService {
     for (const t of data.testCases) {
       const tc = await merge(new TestCase(), t);
       tc.problem = problem;
-      tc.show_user = t.show_user;
       testcases.push(tc);
     }
 

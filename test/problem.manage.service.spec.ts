@@ -51,6 +51,7 @@ describe("Problem manage service test", () => {
         show_user: true,
       },
     ];
+    cpdto.restricted = 1;
 
     const problem = await problemManageService.createProblem(user, cpdto);
     const result = await problemManageService.deleteProblem(problem.id);
