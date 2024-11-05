@@ -12,6 +12,8 @@ import { Login, Session, User } from "../schemas";
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     @InjectRepository(Login)
     private readonly loginRepository: Repository<Login>,
     @InjectRepository(Session)
@@ -43,7 +45,11 @@ export class AuthService {
 
     await this.sessionRepository.delete(session.id);
 
-    return await this.generateJWTKeyPair(session.user, "30m", "1y");
+    const user = await this.userRepository.findOne({
+      where: { id: session.id },
+    });
+
+    return await this.generateJWTKeyPair(user, "30m", "1y");
   }
 
   async logout(accessToken: string) {
@@ -68,11 +74,11 @@ export class AuthService {
     const keyPair = {
       accessToken: await this.jwtService.signAsync(
         { sessionIdentifier, ...user, refresh: false },
-        { expiresIn: accessExpire || "30m" },
+        { expiresIn: accessExpire || "10m" },
       ),
       refreshToken: await this.jwtService.signAsync(
-        { sessionIdentifier, ...user, refresh: true },
-        { expiresIn: refreshExpire || "1y" },
+        { sessionIdentifier, id: user.id, refresh: true },
+        { expiresIn: refreshExpire || "5h" },
       ),
     };
 
