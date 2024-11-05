@@ -26,12 +26,12 @@ export class ProblemManageService {
       where: { id: user.id },
     });
 
-    const problem = await merge(new Problem(), data);
+    const problem = merge(new Problem(), data);
     problem.user = dbUser;
 
     const testcases = [];
     for (const t of data.testCases) {
-      const tc = await merge(new TestCase(), t);
+      const tc = merge(new TestCase(), t);
       tc.problem = problem;
       testcases.push(tc);
     }

@@ -50,8 +50,13 @@ describe("Problem manage service test", () => {
         output: "hello world",
         show_user: true,
       },
+      {
+        input: "",
+        output: "hello world",
+        show_user: false,
+      },
     ];
-    cpdto.restricted = 1;
+    cpdto.restricted = 0;
 
     const problem = await problemManageService.createProblem(user, cpdto);
     const result = await problemManageService.deleteProblem(problem.id);
