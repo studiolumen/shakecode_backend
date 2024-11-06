@@ -1,6 +1,10 @@
 import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
+import { CustomJwtAuthGuard } from "../../../auth/guards";
+import { PermissionGuard } from "../../../auth/guards/permission.guard";
+import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
+import { PermissionEnum } from "../../../common/types";
 import { CreateProblemDTO } from "../dto/problem.manage.dto";
 import { ProblemManageService, ProblemService } from "../providers";
 
@@ -26,6 +30,10 @@ export class ProblemController {
     description: "Create problem from given items",
   })
   @Post("/")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(PermissionEnum.CREATE_PROBLEM),
+  )
   async createProblem(@Req() req, @Body() data: CreateProblemDTO) {
     return this.problemManageService.createProblem(req.user, data);
   }
