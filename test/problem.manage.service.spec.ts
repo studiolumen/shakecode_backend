@@ -1,5 +1,4 @@
-import { describe, beforeEach, it } from "node:test";
-
+import { beforeEach, describe, it, expect, jest } from "@jest/globals";
 import { Test } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
@@ -10,7 +9,8 @@ import { UserManageService } from "../src/routes/user/providers";
 import { Login, Problem, TestCase, User } from "../src/schemas";
 
 import { EssentialTestModules } from "./modue.test";
-import { expect } from "./util";
+
+jest.useRealTimers();
 
 describe("Problem manage service test", () => {
   let problemManageService: ProblemManageService;
