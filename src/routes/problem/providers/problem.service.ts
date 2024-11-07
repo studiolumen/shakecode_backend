@@ -4,29 +4,57 @@ import * as path from "path";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import merge from "merge-js-class";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 import { CompilerType } from "../../../common/types";
-import { Problem, TestCase } from "../../../schemas";
+import { Problem, TestCase, User } from "../../../schemas";
+import { CreateProblemDTO } from "../dto/problem.manage.dto";
 
 @Injectable()
 export class ProblemService {
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     @InjectRepository(Problem)
     private readonly problemRepository: Repository<Problem>,
     @InjectRepository(TestCase)
     private readonly testCaseRepository: Repository<TestCase>,
   ) {}
 
-  async getProblemById(id: number) {
+  async getProblemById(id: number, forUser?: boolean) {
     const problem = await this.problemRepository.findOne({ where: { id } });
-    problem.testCases = problem.testCases.filter(
-      (testcase) => testcase.show_user,
-    );
+
+    if (forUser)
+      problem.testCases = problem.testCases.filter((tc) => tc.show_user);
 
     return problem;
+  }
+
+  async createProblem(user: User, data: CreateProblemDTO) {
+    const dbUser = await this.userRepository.findOne({
+      where: { id: user.id },
+    });
+
+    const problem = merge(new Problem(), data);
+    problem.user = dbUser;
+
+    const testcases = [];
+    for (const t of data.testCases) {
+      const tc = merge(new TestCase(), t);
+      tc.problem = problem;
+      testcases.push(tc);
+    }
+
+    await this.problemRepository.save(problem);
+    await this.testCaseRepository.save(testcases);
+
+    return problem;
+  }
+
+  async deleteProblem(id: number) {
+    return await this.problemRepository.remove(await this.getProblemById(id));
   }
 
   async runCode(

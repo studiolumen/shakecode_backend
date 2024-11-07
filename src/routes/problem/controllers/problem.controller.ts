@@ -6,15 +6,12 @@ import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
 import { CreateProblemDTO } from "../dto/problem.manage.dto";
-import { ProblemManageService, ProblemService } from "../providers";
+import { ProblemService } from "../providers";
 
 @ApiTags("Problem")
 @Controller("/problem")
 export class ProblemController {
-  constructor(
-    private readonly problemService: ProblemService,
-    private readonly problemManageService: ProblemManageService,
-  ) {}
+  constructor(private readonly problemService: ProblemService) {}
 
   @ApiOperation({
     summary: "get problem",
@@ -35,6 +32,6 @@ export class ProblemController {
     PermissionGuard(PermissionEnum.CREATE_PROBLEM),
   )
   async createProblem(@Req() req, @Body() data: CreateProblemDTO) {
-    return this.problemManageService.createProblem(req.user, data);
+    return this.problemService.createProblem(req.user, data);
   }
 }
