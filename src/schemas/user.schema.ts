@@ -6,7 +6,8 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 
-import { CommonUserPermission, numberPermission } from "../common/types";
+import { CommonUserPermission } from "../common/types";
+import { numberPermission } from "../common/utils/permission.util";
 
 import { Login } from "./auth.schema";
 import { ClassUser } from "./group.schema";

@@ -20,8 +20,8 @@ const typeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
       database: configService.get<string>("DB_NAME"),
       entities: importToArray(entities),
       synchronize: true,
-      logging: true,
-      dropSchema: true,
+      // logging: true,
+      // dropSchema: true,
     };
 
     return options;

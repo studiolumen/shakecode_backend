@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, mixin } from "@nestjs/common";
 
-import { hasPermission } from "../../common/types";
+import { hasPermission } from "../../common/utils/permission.util";
 
 export const PermissionGuard = (...requiredPermission: number[]) => {
   class PermissionGuardMixin implements CanActivate {
