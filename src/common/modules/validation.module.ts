@@ -132,7 +132,7 @@ export class ValidationService {
       return;
     }
 
-    this.logger.log(`OK. ${users.length} affected.`);
+    this.logger.log(`OK. ${users.length} users affected.`);
 
     // Commit changes
     this.logger.log("Commiting changes:");
