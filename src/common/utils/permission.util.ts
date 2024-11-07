@@ -46,6 +46,6 @@ export const hasPermission = (
   );
 
   return requiredPermissionList.every(
-    (rp) => currentPermissionList.indexOf(rp) !== -1,
+    (rp) => currentPermissionList.indexOf(rp as PermissionType) !== -1,
   );
 };

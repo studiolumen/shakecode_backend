@@ -64,33 +64,28 @@ export class ValidationService {
     let users = await this.userRepository.find();
 
     this.logger.log("Permission Group migration:");
-    const deprecatedPermissionGroups = savedPermissionMappings
-      .filter((v) => v.type === "permission_group")
-      .sort()
-      .map((v) => [v.key, v.value]);
-    const commonUsers = users
-      .filter(
-        (u) =>
-          u.permission ===
-          numberPermission(deprecatedPermissionGroups["CommonUserPermission"]),
+
+    const deprecatedPermissionGroups = Object.fromEntries(
+      Object.keys(NumberedPermissionGroupsEnum).map((v) => [
+        v,
+        fixedPermissionGroupMappings[v],
+      ]),
+    );
+    const groupUsers = users
+      .filter((u) =>
+        Object.values(deprecatedPermissionGroups).some(
+          (dpg) => dpg === u.permission,
+        ),
       )
-      .map((cu) => {
-        cu.permission = numberPermission(...CommonUserPermission);
-        return cu;
-      });
-    const teacherUsers = users
-      .filter(
-        (u) =>
-          u.permission ===
-          numberPermission(deprecatedPermissionGroups["TeacherUserPermission"]),
-      )
-      .map((tu) => {
-        tu.permission = numberPermission(...TeacherUserPermission);
-        return tu;
+      .map((u) => {
+        const groupName = Object.entries(deprecatedPermissionGroups).find(
+          (v) => v[1] === u.permission,
+        )[0];
+        u.permission = NumberedPermissionGroupsEnum[groupName];
+        return u;
       });
 
-    const size = countArray(commonUsers, teacherUsers);
-    this.logger.log(`OK. ${size} users affected`);
+    this.logger.log(`OK. ${groupUsers.length} users affected`);
 
     users = users.filter(
       (u) =>
@@ -137,7 +132,7 @@ export class ValidationService {
     // Commit changes
     this.logger.log("Commiting changes:");
 
-    users = [].concat(commonUsers, teacherUsers, users);
+    users = [].concat(groupUsers, users);
     await this.userRepository.save(users);
 
     await this.permissionValidatorRepository.clear();

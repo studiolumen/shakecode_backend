@@ -1,11 +1,10 @@
 import { describe, it, expect, jest } from "@jest/globals";
 
+import { CommonUserPermission, PermissionEnum } from "../src/common/types";
 import {
-  CommonUserPermission,
   hasPermission,
   numberPermission,
-  PermissionEnum,
-} from "../src/common/types";
+} from "../src/common/utils/permission.util";
 
 jest.useRealTimers();
 

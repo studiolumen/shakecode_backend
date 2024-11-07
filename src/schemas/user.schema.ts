@@ -33,7 +33,7 @@ export class User {
   @Column("int", { default: 7500 })
   rating: number = 7500;
 
-  @Column("bigint", { default: numberPermission(...CommonUserPermission) })
+  @Column("int", { default: numberPermission(...CommonUserPermission) })
   permission: number;
 
   @OneToMany(() => Login, (login) => login.user)

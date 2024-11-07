@@ -3,7 +3,7 @@ import { Test } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { CreateProblemDTO } from "../src/routes/problem/dto/problem.manage.dto";
-import { ProblemManageService } from "../src/routes/problem/providers";
+import { ProblemService } from "../src/routes/problem/providers";
 import { CreateUserDTO } from "../src/routes/user/dto";
 import { UserManageService } from "../src/routes/user/providers";
 import { Login, Problem, TestCase, User } from "../src/schemas";
@@ -13,7 +13,7 @@ import { EssentialTestModules } from "./modue.test";
 jest.useRealTimers();
 
 describe("Problem manage service test", () => {
-  let problemManageService: ProblemManageService;
+  let problemService: ProblemService;
   let userManageService: UserManageService;
 
   beforeEach(async () => {
@@ -22,9 +22,9 @@ describe("Problem manage service test", () => {
         ...EssentialTestModules,
         TypeOrmModule.forFeature([Login, User, Problem, TestCase]),
       ],
-      providers: [UserManageService, ProblemManageService],
+      providers: [UserManageService, ProblemService],
     }).compile();
-    problemManageService = moduleRef.get(ProblemManageService);
+    problemService = moduleRef.get(ProblemService);
     userManageService = moduleRef.get(UserManageService);
   });
 
@@ -58,10 +58,10 @@ describe("Problem manage service test", () => {
     ];
     cpdto.restricted = 0;
 
-    const problem = await problemManageService.createProblem(user, cpdto);
-    const result = await problemManageService.deleteProblem(problem.id);
+    const problem = await problemService.createProblem(user, cpdto);
+    const result = await problemService.deleteProblem(problem.id);
 
-    await userManageService.deleteUser(user.id);
+    // await userManageService.deleteUser(user.id);
 
     expect(result.name).toBe("test");
   });
