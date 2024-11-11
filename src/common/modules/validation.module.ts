@@ -7,12 +7,10 @@ import {
   CommonUserPermission,
   NumberedPermissionGroupsEnum,
   PermissionEnum,
-  PermissionGroups,
   PermissionType,
   TeacherUserPermission,
 } from "../types";
 import { deepObjectCompare } from "../utils/compare.util";
-import { countArray } from "../utils/countArray.util";
 import { numberPermission, parsePermission } from "../utils/permission.util";
 
 @Injectable()
@@ -98,7 +96,7 @@ export class ValidationService {
     this.logger.log("Individual Permission migration: ");
 
     const exceptions = [];
-    users.map((user) => {
+    users = users.map((user) => {
       const permissions = parsePermission(
         user.permission,
         fixedPermissionMappings,
