@@ -31,7 +31,7 @@ pipeline {
                         docker stop shakecode_back || true
                         docker rm shakecode_back || true
                         docker pull $username/shakecode_back
-                        docker run -d --name shakecode_back --restart always -p 9002:3000 $username/shakecode_back
+                        docker run -d --name shakecode_back --restart always -p 9007:3000 $username/shakecode_back
                         docker image prune -f
                         """
                     }
