@@ -13,7 +13,7 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'SHAKECODE_DB_PASS', variable: 'DB_PASS')]) {
                         sh """
-                        echo "DB_HOST=localhost" >> .env
+                        echo "DB_HOST=host.docker.internal" >> .env
                         echo "DB_PORT=9101" >> .env
                         echo "DB_PASS=$DB_PASS" >> .env
                         echo "DB_NAME=shakecode" >> .env
