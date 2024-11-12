@@ -8,6 +8,22 @@ pipeline {
             }
         }
 
+        stage('Build ENV') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'SHAKECODE_DB_PASS', variable: 'DB_PASS')]) {
+                        sh """
+                        echo "DB_HOST=localhost" >> .env
+                        echo "DB_PORT=9101" >> .env
+                        echo "DB_PASS=$DB_PASS" >> .env
+                        echo "DB_NAME=shakecode" >> .env
+                        ./genkey.sh >> .env
+                        """
+                    }
+                }
+            }
+        }
+
         stage('Docker Build & Push') {
             steps {
                 script {
@@ -31,7 +47,8 @@ pipeline {
                         docker stop shakecode_back || true
                         docker rm shakecode_back || true
                         docker pull $username/shakecode_back
-                        docker run -d --name shakecode_back --restart always --network shakecode --ip 172.20.0.101 -p 9007:3000 $username/shakecode_back
+                        docker run -d --name shakecode_back --restart always --network shakecode --ip 172.20.0.101 --add-host host.docker.internal:host-gateway -p 9002:3000 $username/shakecode_back
+                        docker network connect lyj_default shakecode_back
                         docker image prune -f
                         """
                     }
