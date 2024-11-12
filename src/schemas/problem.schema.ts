@@ -86,7 +86,7 @@ export class PublicProblem {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  problem: Classroom;
+  problem: Problem;
 }
 @Entity()
 export class ClassProblem {
@@ -97,7 +97,7 @@ export class ClassProblem {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
-  problem: Classroom;
+  problem: Problem;
 
   @ManyToOne(() => Classroom, (classroom) => classroom.problem, {
     onDelete: "CASCADE",

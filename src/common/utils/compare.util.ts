@@ -91,7 +91,7 @@ export const deepObjectCompare = (...objects) => {
   }
 
   if (objects.length < 1) {
-    return true; //Die silently? Don't know how to handle such case, please help...
+    return true; // Die silently? Don't know how to handle such case, please help...
     // throw "Need two or more arguments to compare";
   }
 

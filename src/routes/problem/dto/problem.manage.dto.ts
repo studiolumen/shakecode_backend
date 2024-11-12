@@ -38,3 +38,8 @@ export class CreateProblemDTO {
   @ApiProperty()
   restricted: number;
 }
+
+export class CreateClassProblemDTO extends CreateProblemDTO {
+  @ApiProperty()
+  classId: number;
+}

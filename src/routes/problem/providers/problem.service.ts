@@ -23,7 +23,7 @@ export class ProblemService {
     private readonly testCaseRepository: Repository<TestCase>,
   ) {}
 
-  async getProblemById(id: number, forUser?: boolean) {
+  async getProblemById(id: number, forUser?: boolean): Promise<Problem> {
     const problem = await this.problemRepository.findOne({ where: { id } });
 
     if (forUser)
@@ -32,7 +32,7 @@ export class ProblemService {
     return problem;
   }
 
-  async createProblem(user: User, data: CreateProblemDTO) {
+  async createProblem(user: User, data: CreateProblemDTO): Promise<Problem> {
     const dbUser = await this.userRepository.findOne({
       where: { id: user.id },
     });

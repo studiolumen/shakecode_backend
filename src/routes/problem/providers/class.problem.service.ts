@@ -2,8 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { Problem, User } from "../../../schemas";
-import { CreateProblemDTO } from "../dto/problem.manage.dto";
+import { ClassProblem, Problem, User } from "../../../schemas";
+import {
+  CreateClassProblemDTO,
+  CreateProblemDTO,
+} from "../dto/problem.manage.dto";
 
 import { ProblemService } from "./problem.service";
 
@@ -14,11 +17,17 @@ export class ClassProblemService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Problem)
     private readonly problemRepository: Repository<Problem>,
+    @InjectRepository(ClassProblem)
+    private readonly classProblemRepository: Repository<ClassProblem>,
 
     private readonly problemService: ProblemService,
   ) {}
 
-  async createClassProblem(user: User, data: CreateProblemDTO) {
-    await this.problemService.createProblem(user, data);
+  async createClassProblem(user: User, data: CreateClassProblemDTO) {
+    // const class =
+    // const problem = await this.problemService.createProblem(user, data);
+    // const classProblem = new ClassProblem();
+    // classProblem.problem = problem;
+    // classProblem.
   }
 }
