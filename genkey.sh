@@ -4,23 +4,19 @@ PRIVATE_KEY_FILE="/tmp/jwt.key"
 PUBLIC_KEY_FILE="/tmp/jwt.key.pub"
 
 function print() {
-    awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}'
+  awk 'NF {sub(/\r|\n/, ""); printf "%s", $0}'
 }
 
-echo "Generating RSA private key, 4096 bit long modulus"
 ssh-keygen -t rsa -b 4096 -m PEM -f $PRIVATE_KEY_FILE -q -N "" > /dev/null 2>&1
 openssl rsa -in $PRIVATE_KEY_FILE -pubout -outform PEM -out $PUBLIC_KEY_FILE > /dev/null 2>&1
-printf "\n\n"
 
-echo "Private key:"
+echo -n "JWT_PRIVATE=\""
 print < $PRIVATE_KEY_FILE
-printf "\n\n"
+echo "\""
 
-echo "Public key:"
+echo -n "JWT_PUBLIC=\""
 print < $PUBLIC_KEY_FILE
-printf "\n\n"
+echo "\""
 
 rm -f $PRIVATE_KEY_FILE
 rm -f $PUBLIC_KEY_FILE
-
-echo "Done"
