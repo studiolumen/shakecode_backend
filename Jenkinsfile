@@ -15,6 +15,7 @@ pipeline {
                         sh """
                         echo "DB_HOST=host.docker.internal" >> .env
                         echo "DB_PORT=9101" >> .env
+                        echo "DB_USER=postgres" >> .env
                         echo "DB_PASS=$DB_PASS" >> .env
                         echo "DB_NAME=shakecode" >> .env
                         ./genkey.sh >> .env
