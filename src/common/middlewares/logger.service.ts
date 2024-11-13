@@ -44,9 +44,6 @@ export class CustomLoggerMiddleware implements NestMiddleware {
       this.logger.log(
         `${ipAddress} (${userAgent}) - "${requestMethod} ${originURL} ${httpVersion}" ${statusCode} by uid{${authorization}} +${endTimestamp}ms `,
       );
-      if (statusCode >= 400 && statusCode < 500) {
-        this.logger.error(req.headers);
-      }
 
       if (Object.keys(req.body).length > 0)
         this.logger.log(`Request Body: ${JSON.stringify(req.body)}`);
