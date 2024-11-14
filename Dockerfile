@@ -1,5 +1,11 @@
 FROM node:18-alpine AS base
 
+# ENV
+FROM base AS env
+WORKDIR /usr/src/app
+
+COPY ./.env ./
+
 # INSTALL DEPENDENCIES FOR DEVELOPMENT (FOR NEST)
 FROM base AS deps
 WORKDIR /usr/src/app
@@ -30,5 +36,6 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+COPY --chown=node:node --from=env /usr/src/app/.env ./dist
 
 CMD [ "node", "dist/main.js" ]
