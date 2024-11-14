@@ -1,11 +1,16 @@
 import { PermissionEnum, PermissionType } from "../types";
 
-export const numberPermission = (...items: number[]): number => {
+export const numberPermission = (
+  ...items: number[] | PermissionType[]
+): number => {
   let val = 0;
   const valList = [];
   for (const item of items) {
-    if (valList.indexOf(item) != -1) continue;
-    val += item;
+    let fixedItem: number;
+    if (typeof item !== "number") fixedItem = PermissionEnum[item] || 0;
+    else fixedItem = item;
+    if (valList.indexOf(fixedItem) != -1) continue;
+    val += fixedItem;
     valList.push(item);
   }
 
@@ -15,7 +20,7 @@ export const numberPermission = (...items: number[]): number => {
 export const parsePermission = (
   numberedPermission: number,
   customPermissionEnum?: { [key: string]: number },
-): PermissionType[] | string[] => {
+): PermissionType[] => {
   const permissionEnum = customPermissionEnum || PermissionEnum;
 
   const permissions: PermissionType[] = [];

@@ -4,8 +4,18 @@ import * as bcrypt from "bcrypt";
 import merge from "merge-js-class";
 import { Repository } from "typeorm";
 
+import { PermissionType } from "../../../common/types";
+import {
+  numberPermission,
+  parsePermission,
+} from "../../../common/utils/permission.util";
 import { Login, User } from "../../../schemas";
-import { CreateUserDTO } from "../dto";
+import {
+  AddPermissionDTO,
+  CreateUserDTO,
+  RemovePermissionDTO,
+  SetPermissionDTO,
+} from "../dto";
 
 @Injectable()
 export class UserManageService {
@@ -16,11 +26,11 @@ export class UserManageService {
     private readonly loginRepository: Repository<Login>,
   ) {}
 
-  async getUserById(id: number) {
+  async getUserById(id: number): Promise<User> {
     return await this.userRepository.findOne({ where: { id } });
   }
 
-  async createUser(data: CreateUserDTO) {
+  async createUser(data: CreateUserDTO): Promise<User> {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(data.password, salt);
 
@@ -39,8 +49,45 @@ export class UserManageService {
     return user;
   }
 
-  async deleteUser(id: number) {
+  async deleteUser(id: number): Promise<User> {
     const user = await this.getUserById(id);
-    await this.userRepository.remove(user);
+    return await this.userRepository.remove(user);
+  }
+
+  // this bunch of code can be shortened.
+  // but i left it like this for optimization.
+  async setPermission(data: SetPermissionDTO) {
+    const user = await this.userRepository.findOne({ where: { id: data.id } });
+    user.permission = numberPermission(...data.permissions);
+
+    return await this.userRepository.save(user);
+  }
+
+  async addPermission(data: AddPermissionDTO) {
+    const user = await this.userRepository.findOne({ where: { id: data.id } });
+
+    const permissions = parsePermission(user.permission);
+
+    const addPermissionTarget = data.permissions.filter(
+      (p: PermissionType) => !permissions.find((p2) => p2 === p),
+    );
+
+    const resultPermission = [].concat(permissions, addPermissionTarget);
+
+    user.permission = numberPermission(...resultPermission);
+
+    return await this.userRepository.save(user);
+  }
+
+  async removePermission(data: RemovePermissionDTO) {
+    const user = await this.userRepository.findOne({ where: { id: data.id } });
+
+    const resultPermissions = parsePermission(user.permission).filter(
+      (p: PermissionType) => !data.permissions.find((p2) => p2 === p),
+    ) as PermissionType[];
+
+    user.permission = numberPermission(...resultPermissions);
+
+    return await this.userRepository.save(user);
   }
 }
