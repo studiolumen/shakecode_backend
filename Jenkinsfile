@@ -13,8 +13,8 @@ pipeline {
                 script {
                     withCredentials([string(credentialsId: 'SHAKECODE_DB_PASS', variable: 'DB_PASS')]) {
                         sh """
-                        echo "DB_HOST=host.docker.internal" >> .env
-                        echo "DB_PORT=9101" >> .env
+                        echo "DB_HOST=192.168.1.100" >> .env
+                        echo "DB_PORT=5432" >> .env
                         echo "DB_USER=postgres" >> .env
                         echo "DB_PASS=$DB_PASS" >> .env
                         echo "DB_NAME=shakecode" >> .env
@@ -59,7 +59,7 @@ pipeline {
                         docker stop shakecode_back || true
                         docker rm shakecode_back || true
                         docker pull $username/shakecode_back
-                        docker run -it -d --name shakecode_back --restart always --network shakecode --ip 172.20.0.101 --add-host host.docker.internal:host-gateway -p 9007:3000 $username/shakecode_back
+                        docker run -it -d --name shakecode_back --restart always --network shakecode_default --ip 192.168.1.101 -p 9007:3000 $username/shakecode_back
                         docker network connect lyj_default shakecode_back
                         docker image prune -f
                         """
