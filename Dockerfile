@@ -1,14 +1,34 @@
-FROM public.ecr.aws/docker/library/node:lts-alpine
+FROM node:18-alpine AS base
 
-RUN apk add tzdata && ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+# INSTALL DEPENDENCIES FOR DEVELOPMENT (FOR NEST)
+FROM base AS deps
+WORKDIR /usr/src/app
 
-WORKDIR /app
+COPY --chown=node:node package.json yarn.lock ./
+RUN yarn --frozen-lockfile;
 
-COPY . .
+USER node
 
-RUN yarn install
+# INSTALL DEPENDENCIES & BUILD FOR PRODUCTION
+FROM base AS build
+WORKDIR /usr/src/app
 
+COPY --chown=node:node --from=deps /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node . .
 
 RUN yarn build
 
-CMD [ "yarn", "start:prod" ]
+ENV NODE_ENV production
+RUN yarn --frozen-lockfile --production;
+RUN rm -rf ./.next/cache
+
+USER node
+
+# PRODUCTION IMAGE
+FROM base AS production
+WORKDIR /usr/src/app
+
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
+CMD [ "node", "dist/main.js" ]
