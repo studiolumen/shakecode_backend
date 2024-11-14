@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import importToArray from "import-to-array";
 
-import { Login, Problem, PublicProblem, TestCase, User } from "../../schemas";
+import { Problem, PublicProblem, TestCase, User } from "../../schemas";
 
 import * as problemControllers from "./controllers";
 import * as problemServices from "./providers";
