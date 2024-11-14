@@ -18,13 +18,14 @@ export class ProblemController {
     description: "get problem and its testcase via problem id",
   })
   @Get("/")
+  @UseGuardsWithSwagger(CustomJwtAuthGuard)
   async getProblem() {
     return this.problemService.getProblemById(0);
   }
 
   @ApiOperation({
     summary: "Create problem",
-    description: "Create problem from given items",
+    description: "Create Public problem from given items",
   })
   @Post("/")
   @UseGuardsWithSwagger(
@@ -32,6 +33,6 @@ export class ProblemController {
     PermissionGuard(PermissionEnum.CREATE_PROBLEM),
   )
   async createProblem(@Req() req, @Body() data: CreateProblemDTO) {
-    return this.problemService.createProblem(req.user, data);
+    return this.problemService.createProblem(req.user, data, true);
   }
 }

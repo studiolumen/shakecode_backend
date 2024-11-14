@@ -9,7 +9,7 @@ import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 import { CompilerType } from "../../../common/types";
-import { Problem, TestCase, User } from "../../../schemas";
+import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
 import { CreateProblemDTO } from "../dto/problem.manage.dto";
 
 @Injectable()
@@ -21,6 +21,9 @@ export class ProblemService {
     private readonly problemRepository: Repository<Problem>,
     @InjectRepository(TestCase)
     private readonly testCaseRepository: Repository<TestCase>,
+
+    @InjectRepository(PublicProblem)
+    private readonly publicProblemRepository: Repository<PublicProblem>,
   ) {}
 
   async getProblemById(id: number, forUser?: boolean): Promise<Problem> {
@@ -32,7 +35,11 @@ export class ProblemService {
     return problem;
   }
 
-  async createProblem(user: User, data: CreateProblemDTO): Promise<Problem> {
+  async createProblem(
+    user: User,
+    data: CreateProblemDTO,
+    linkPublic: boolean = false,
+  ): Promise<Problem | PublicProblem> {
     const dbUser = await this.userRepository.findOne({
       where: { id: user.id },
     });
@@ -47,8 +54,15 @@ export class ProblemService {
       testcases.push(tc);
     }
 
-    await this.problemRepository.save(problem);
+    const result = await this.problemRepository.save(problem);
     await this.testCaseRepository.save(testcases);
+
+    if (linkPublic) {
+      const publicProblem = new PublicProblem();
+      publicProblem.problem = result;
+
+      return await this.publicProblemRepository.save(publicProblem);
+    }
 
     return problem;
   }
