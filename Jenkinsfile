@@ -3,6 +3,11 @@ pipeline {
 
     stages {
         stage('Checkout') {
+            when {
+                expression {
+                  env.BRANCH_NAME == 'main'
+                }
+            }
             steps {
                 checkout scm
             }
