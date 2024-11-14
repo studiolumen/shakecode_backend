@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { CustomConfigModule } from "../common/modules/config.module";
 import { CustomJWTModule } from "../common/modules/jwt.module";
-import { UserManageService } from "../routes/user/providers/user.manage.service";
+import { UserService } from "../routes/user/providers/user.service";
 import { Login, Session, User } from "../schemas";
 
 import { AuthController } from "./auth.controller";
@@ -17,7 +17,7 @@ import { CustomJwtStrategy } from "./jwt.strategy";
     CustomConfigModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, CustomJwtStrategy, UserManageService],
+  providers: [AuthService, CustomJwtStrategy, UserService],
   exports: [AuthService],
 })
 export class AuthModule {}

@@ -18,7 +18,7 @@ import {
 } from "../dto";
 
 @Injectable()
-export class UserManageService {
+export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,

@@ -1,14 +1,13 @@
 import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
-import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { CreateUserDTO } from "../dto";
-import { UserManageService } from "../providers";
+import { UserService } from "../providers";
 
 @ApiTags("User Manage")
 @Controller("/manage/user")
-export class UserManageController {
-  constructor(private readonly userManageService: UserManageService) {}
+export class UserController {
+  constructor(private readonly userManageService: UserService) {}
 
   @ApiOperation({
     summary: "회원가입",

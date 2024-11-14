@@ -5,7 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { CreateProblemDTO } from "../src/routes/problem/dto/problem.manage.dto";
 import { ProblemService } from "../src/routes/problem/providers";
 import { CreateUserDTO } from "../src/routes/user/dto";
-import { UserManageService } from "../src/routes/user/providers";
+import { UserService } from "../src/routes/user/providers";
 import { Login, Problem, TestCase, User } from "../src/schemas";
 
 import { EssentialTestModules } from "./modue.test";
@@ -14,7 +14,7 @@ import { EssentialTestModules } from "./modue.test";
 
 describe("Problem manage service test", () => {
   let problemService: ProblemService;
-  let userManageService: UserManageService;
+  let userManageService: UserService;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -22,10 +22,10 @@ describe("Problem manage service test", () => {
         ...EssentialTestModules,
         TypeOrmModule.forFeature([Login, User, Problem, TestCase]),
       ],
-      providers: [UserManageService, ProblemService],
+      providers: [UserService, ProblemService],
     }).compile();
     problemService = moduleRef.get(ProblemService);
-    userManageService = moduleRef.get(UserManageService);
+    userManageService = moduleRef.get(UserService);
   });
 
   it("problem creation test", async () => {
