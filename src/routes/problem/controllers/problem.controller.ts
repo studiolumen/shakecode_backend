@@ -5,7 +5,7 @@ import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
-import { CreateProblemDTO } from "../dto/problem.manage.dto";
+import { CreateProblemDTO, GetProblemDTO } from "../dto/problem.manage.dto";
 import { ProblemService } from "../providers";
 
 @ApiTags("Problem")
@@ -15,12 +15,28 @@ export class ProblemController {
 
   @ApiOperation({
     summary: "get problem",
-    description: "get problem and its testcase via problem id",
+    description: "get single problem via id",
   })
   @Get("/")
-  @UseGuardsWithSwagger(CustomJwtAuthGuard)
-  async getProblem() {
-    return this.problemService.getProblemById(0);
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(PermissionEnum.GET_PUBLIC_PROBLEM),
+  )
+  async getProblem(data: GetProblemDTO) {
+    return this.problemService.getPublicProblemById(data.id, true);
+  }
+
+  @ApiOperation({
+    summary: "get problem list",
+    description: "list problems",
+  })
+  @Get("/")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(PermissionEnum.GET_PUBLIC_PROBLEM),
+  )
+  async getProblems() {
+    return this.problemService.getPublicProblems();
   }
 
   @ApiOperation({

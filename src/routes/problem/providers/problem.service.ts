@@ -26,13 +26,23 @@ export class ProblemService {
     private readonly publicProblemRepository: Repository<PublicProblem>,
   ) {}
 
-  async getProblemById(id: number, forUser?: boolean): Promise<Problem> {
-    const problem = await this.problemRepository.findOne({ where: { id } });
+  async getPublicProblemById(id: number, forUser?: boolean): Promise<Problem> {
+    const publicProblem = await this.publicProblemRepository.findOne({
+      where: { id },
+    });
 
     if (forUser)
-      problem.testCases = problem.testCases.filter((tc) => tc.show_user);
+      publicProblem.problem.testCases = publicProblem.problem.testCases.filter(
+        (tc) => tc.show_user,
+      );
 
-    return problem;
+    return publicProblem.problem;
+  }
+
+  async getPublicProblems(): Promise<PublicProblem[]> {
+    return (await this.publicProblemRepository.find()).filter(
+      (p) => p.problem.restricted === 0,
+    );
   }
 
   async createProblem(
@@ -68,7 +78,9 @@ export class ProblemService {
   }
 
   async deleteProblem(id: number) {
-    return await this.problemRepository.remove(await this.getProblemById(id));
+    return await this.problemRepository.remove(
+      await this.getPublicProblemById(id),
+    );
   }
 
   async runCode(

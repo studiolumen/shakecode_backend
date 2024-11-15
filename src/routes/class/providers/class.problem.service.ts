@@ -6,9 +6,8 @@ import { ClassProblem, Problem, User } from "../../../schemas";
 import {
   CreateClassProblemDTO,
   CreateProblemDTO,
-} from "../dto/problem.manage.dto";
-
-import { ProblemService } from "./problem.service";
+} from "../../problem/dto/problem.manage.dto";
+import { ProblemService } from "../../problem/providers/problem.service";
 
 @Injectable()
 export class ClassProblemService {
