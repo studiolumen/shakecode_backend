@@ -30,7 +30,7 @@ export class ProblemController {
     summary: "get problem list",
     description: "list problems",
   })
-  @Get("/")
+  @Get("/list")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
     PermissionGuard(PermissionEnum.GET_PUBLIC_PROBLEM),

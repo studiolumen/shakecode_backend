@@ -22,7 +22,6 @@ export class AuthService {
 
   async loginByIdPassword(id: string, password: string) {
     const login = await this.loginRepository.findOne({
-      relations: { user: true },
       where: { identifier1: id },
     });
     if (!login)
