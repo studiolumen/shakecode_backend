@@ -54,7 +54,7 @@ export class Problem {
   classProblem: TestCase[];
 
   @JoinColumn()
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.problem, { eager: true })
   user: User;
 }
 
@@ -76,6 +76,7 @@ export class TestCase {
   @ManyToOne(() => Problem, (problem) => problem.testCases, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    eager: true,
   })
   problem: Problem;
 }
@@ -89,6 +90,7 @@ export class PublicProblem {
   @ManyToOne(() => Problem, (problem) => problem.publicProblem, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    eager: true,
   })
   problem: Problem;
 }
@@ -101,6 +103,7 @@ export class ClassProblem {
   @ManyToOne(() => Problem, (problem) => problem.classProblem, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    eager: true,
   })
   problem: Problem;
 
@@ -108,6 +111,7 @@ export class ClassProblem {
   @ManyToOne(() => Classroom, (classroom) => classroom.problem, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    eager: true,
   })
   classroom: Classroom;
 }

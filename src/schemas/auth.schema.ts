@@ -19,6 +19,7 @@ export class Login {
   @ManyToOne(() => User, (user) => user.login, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    eager: true,
   })
   user: User;
 
@@ -50,6 +51,7 @@ export class Session {
   @ManyToOne(() => User, (user) => user.session, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    eager: true,
   })
   user: User;
 }

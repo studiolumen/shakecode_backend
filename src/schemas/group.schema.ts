@@ -43,6 +43,7 @@ export class ClassUser {
   @ManyToOne(() => User, (user) => user.classUser, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    eager: true,
   })
   user: User;
 
@@ -50,6 +51,7 @@ export class ClassUser {
   @ManyToOne(() => Classroom, (classroom) => classroom.classUser, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
+    eager: true,
   })
   classroom: Classroom;
 }

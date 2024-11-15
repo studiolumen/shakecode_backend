@@ -11,6 +11,7 @@ import { numberPermission } from "../common/utils/permission.util";
 
 import { Login, Session } from "./auth.schema";
 import { ClassUser } from "./group.schema";
+import { Problem } from "./problem.schema";
 
 @Entity()
 export class User {
@@ -41,6 +42,9 @@ export class User {
 
   @OneToMany(() => Session, (session) => session.user)
   session: Login[];
+
+  @OneToMany(() => Problem, (problem) => problem.user)
+  problem: Problem[];
 
   @OneToMany(() => ClassUser, (classUser) => classUser.user)
   classUser: ClassUser[];
