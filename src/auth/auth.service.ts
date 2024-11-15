@@ -43,7 +43,7 @@ export class AuthService {
         404,
       );
 
-    await this.sessionRepository.delete(session.id);
+    await this.sessionRepository.delete(session);
 
     const user = await this.userRepository.findOne({
       where: { id: session.user.id },
@@ -59,7 +59,7 @@ export class AuthService {
     // cannot be called. if called, it's a bug. (jwt strategy should catch this)
     if (!session) throw new HttpException("Cannot find valid session.", 404);
 
-    await this.sessionRepository.delete(session.id);
+    await this.sessionRepository.delete(session);
 
     return session;
   }
