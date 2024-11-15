@@ -31,7 +31,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'LYJ_DockerHub', passwordVariable: 'password', usernameVariable: 'username')]) {
                         sh """
                         echo $password | docker login --username $username --password-stdin
-                        docker build -f Dockerfile -t $username/shakecode_back .
+                        docker build --no-cache -f Dockerfile -t $username/shakecode_back .
                         """
                     }
                 }
