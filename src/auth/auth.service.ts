@@ -45,7 +45,6 @@ export class AuthService {
 
     await this.sessionRepository.delete(session);
 
-    console.log(session);
     const user = await this.userRepository.findOne({
       where: { id: session.user.id },
     });
