@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -52,6 +53,7 @@ export class Problem {
   @OneToMany(() => ClassProblem, (classProblem) => classProblem.problem)
   classProblem: TestCase[];
 
+  @JoinColumn()
   @ManyToOne(() => User)
   user: User;
 }
@@ -70,6 +72,7 @@ export class TestCase {
   @Column()
   show_user: boolean = null;
 
+  @JoinColumn()
   @ManyToOne(() => Problem, (problem) => problem.testCases, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
@@ -82,6 +85,7 @@ export class PublicProblem {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @JoinColumn()
   @ManyToOne(() => Problem, (problem) => problem.publicProblem, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
@@ -93,12 +97,14 @@ export class ClassProblem {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @JoinColumn()
   @ManyToOne(() => Problem, (problem) => problem.classProblem, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   problem: Problem;
 
+  @JoinColumn()
   @ManyToOne(() => Classroom, (classroom) => classroom.problem, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",

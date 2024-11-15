@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -38,12 +39,14 @@ export class ClassUser {
   @Column()
   permission: string;
 
+  @JoinColumn()
   @ManyToOne(() => User, (user) => user.classUser, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   user: User;
 
+  @JoinColumn()
   @ManyToOne(() => Classroom, (classroom) => classroom.classUser, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",

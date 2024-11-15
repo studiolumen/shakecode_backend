@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
 import { LoginType, LoginTypeValues } from "../common/types";
 
@@ -9,6 +15,7 @@ export class Login {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @JoinColumn()
   @ManyToOne(() => User, (user) => user.login, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
@@ -39,6 +46,7 @@ export class Session {
   @Column()
   sessionIdentifier: string = null;
 
+  @JoinColumn()
   @ManyToOne(() => User, (user) => user.session, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
