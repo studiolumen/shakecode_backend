@@ -43,9 +43,8 @@ export class AuthService {
         404,
       );
 
-    console.log(session);
     await this.sessionRepository.delete(session);
-    console.log(session);
+
     const user = await this.userRepository.findOne({
       where: { id: session.user.id },
     });

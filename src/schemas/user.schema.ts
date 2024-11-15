@@ -9,7 +9,7 @@ import {
 import { CommonUserPermission } from "../common/types";
 import { numberPermission } from "../common/utils/permission.util";
 
-import { Login } from "./auth.schema";
+import { Login, Session } from "./auth.schema";
 import { ClassUser } from "./group.schema";
 
 @Entity()
@@ -38,6 +38,9 @@ export class User {
 
   @OneToMany(() => Login, (login) => login.user)
   login: Login[];
+
+  @OneToMany(() => Session, (session) => session.user)
+  session: Login[];
 
   @OneToMany(() => ClassUser, (classUser) => classUser.user)
   classUser: ClassUser[];

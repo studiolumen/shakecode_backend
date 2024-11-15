@@ -39,7 +39,7 @@ export class Session {
   @Column()
   sessionIdentifier: string = null;
 
-  @ManyToOne(() => User, (user) => user.login, {
+  @ManyToOne(() => User, (user) => user.session, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
