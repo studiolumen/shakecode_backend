@@ -4,7 +4,7 @@ PRIVATE_KEY_FILE="/tmp/jwt.key"
 PUBLIC_KEY_FILE="/tmp/jwt.key.pub"
 
 function print() {
-  awk 'NF {sub(/\r|\n/, ""); printf "%s", $0}'
+  awk 'NF {sub(/\r/, ""); printf "%s\\n", $0}'
 }
 
 ssh-keygen -t rsa -b 4096 -m PEM -f $PRIVATE_KEY_FILE -q -N "" > /dev/null 2>&1
