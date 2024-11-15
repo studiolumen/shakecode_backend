@@ -46,7 +46,7 @@ export class AuthService {
     await this.sessionRepository.delete(session.id);
 
     const user = await this.userRepository.findOne({
-      where: { id: session.id },
+      where: { id: session.user.id },
     });
 
     return await this.generateJWTKeyPair(user, "30m", "1y");
