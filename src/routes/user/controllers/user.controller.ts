@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
@@ -10,8 +10,8 @@ import {
 } from "../dto";
 import { UserService } from "../providers";
 
-@ApiTags("User Manage")
-@Controller("/manage/user")
+@ApiTags("User")
+@Controller("/user")
 export class UserController {
   constructor(private readonly userManageService: UserService) {}
 
