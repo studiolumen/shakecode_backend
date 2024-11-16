@@ -10,7 +10,7 @@ import { v4 as uuid } from "uuid";
 
 import { CompilerType } from "../../../common/types";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
-import { CreateProblemDTO } from "../dto/problem.manage.dto";
+import { CreateProblemDTO } from "../dto/problem.dto";
 
 @Injectable()
 export class ProblemService {
@@ -76,6 +76,8 @@ export class ProblemService {
 
     return problem;
   }
+
+  async updateProblem();
 
   async deleteProblem(id: number) {
     return await this.problemRepository.remove(

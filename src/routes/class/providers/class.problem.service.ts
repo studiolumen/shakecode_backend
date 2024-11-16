@@ -6,7 +6,7 @@ import { ClassProblem, Problem, User } from "../../../schemas";
 import {
   CreateClassProblemDTO,
   CreateProblemDTO,
-} from "../../problem/dto/problem.manage.dto";
+} from "../../problem/dto/problem.dto";
 import { ProblemService } from "../../problem/providers/problem.service";
 
 @Injectable()

@@ -2,7 +2,7 @@ import { beforeEach, describe, it, expect, jest } from "@jest/globals";
 import { Test } from "@nestjs/testing";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { CreateProblemDTO } from "../src/routes/problem/dto/problem.manage.dto";
+import { CreateProblemDTO } from "../src/routes/problem/dto/problem.dto";
 import { ProblemService } from "../src/routes/problem/providers";
 import { CreateUserDTO } from "../src/routes/user/dto";
 import { UserService } from "../src/routes/user/providers";
