@@ -30,7 +30,7 @@ export class AuthController {
   })
   @Post("/login/password")
   async passwordLogin(@Body() data: PasswordLoginDTO) {
-    return await this.authService.loginByIdPassword(data.id, data.password);
+    return await this.authService.loginByIdPassword(data.email, data.password);
   }
 
   @ApiOperation({
