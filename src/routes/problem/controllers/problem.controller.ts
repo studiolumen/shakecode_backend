@@ -22,7 +22,7 @@ export class ProblemController {
     CustomJwtAuthGuard,
     PermissionGuard(PermissionEnum.GET_PUBLIC_PROBLEM),
   )
-  async getProblem(data: GetProblemDTO) {
+  async getProblem(@Body() data: GetProblemDTO) {
     return this.problemService.getPublicProblemById(data.id, true);
   }
 
