@@ -77,7 +77,7 @@ export class ProblemService {
     return problem;
   }
 
-  async updateProblem();
+  async updateProblem() {}
 
   async deleteProblem(id: number) {
     return await this.problemRepository.remove(
