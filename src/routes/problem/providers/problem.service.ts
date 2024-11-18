@@ -42,7 +42,9 @@ export class ProblemService {
   }
 
   async getSelfPublicProblemById(user: any, id: number) {
-    const problem = await this.getPublicProblemById(id, false);
+    const problem = await this.problemRepository.findOne({
+      where: { id: (await this.getPublicProblemById(id, false)).id },
+    });
     if (
       problem.user.id !== user.id &&
       !hasPermission(user.permission, [PermissionEnum.MANAGE_PERMISSION])
