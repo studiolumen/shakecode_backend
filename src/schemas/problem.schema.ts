@@ -44,6 +44,7 @@ export class Problem {
   @Column()
   restricted: number = null;
 
+  @JoinColumn()
   @OneToMany(() => TestCase, (testCase) => testCase.problem)
   testCases: TestCase[];
 
