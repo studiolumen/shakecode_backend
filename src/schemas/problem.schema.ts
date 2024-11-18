@@ -77,7 +77,6 @@ export class TestCase {
   @ManyToOne(() => Problem, (problem) => problem.testCases, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",
-    eager: true,
   })
   problem: Problem;
 }
