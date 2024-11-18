@@ -42,7 +42,8 @@ export const parsePermission = (
 
 export const hasPermission = (
   currentPermission: number,
-  ...requiredPermission: number[]
+  requiredPermission: number[],
+  or: boolean = false,
 ) => {
   const currentPermissionList = parsePermission(currentPermission);
   // TODO: Optimise
@@ -50,7 +51,11 @@ export const hasPermission = (
     numberPermission(...requiredPermission),
   );
 
-  return requiredPermissionList.every(
-    (rp) => currentPermissionList.indexOf(rp as PermissionType) !== -1,
-  );
+  return or
+    ? requiredPermissionList.some(
+        (rp) => currentPermissionList.indexOf(rp as PermissionType) !== -1,
+      )
+    : requiredPermissionList.every(
+        (rp) => currentPermissionList.indexOf(rp as PermissionType) !== -1,
+      );
 };

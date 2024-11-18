@@ -10,6 +10,7 @@ import { v4 as uuid } from "uuid";
 
 import { CompilerType } from "../../../common/types";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
+import { ErrorMsg } from "../../user/error";
 import { CreateProblemDTO, ProblemSummary } from "../dto/problem.dto";
 
 @Injectable()
@@ -28,7 +29,7 @@ export class ProblemService {
 
   async getPublicProblemById(id: number, forUser?: boolean): Promise<Problem> {
     const publicProblem = await this.publicProblemRepository.findOne({
-      where: { id },
+      where: { id: id || 0 },
     });
 
     if (forUser)
@@ -37,6 +38,16 @@ export class ProblemService {
       );
 
     return publicProblem.problem;
+  }
+
+  async getSelfPublicProblemById(userId: number, id: number) {
+    const problem = await this.getPublicProblemById(id, false);
+    if (problem.user.id !== userId)
+      throw new HttpException(
+        ErrorMsg.PermissionDenied_Resource,
+        HttpStatus.FORBIDDEN,
+      );
+    return problem;
   }
 
   async getPublicProblems(): Promise<ProblemSummary[]> {

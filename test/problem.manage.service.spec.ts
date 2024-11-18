@@ -6,7 +6,7 @@ import { CreateProblemDTO } from "../src/routes/problem/dto/problem.dto";
 import { ProblemService } from "../src/routes/problem/providers";
 import { CreateUserDTO } from "../src/routes/user/dto";
 import { UserService } from "../src/routes/user/providers";
-import { Login, Problem, TestCase, User } from "../src/schemas";
+import { Login, Problem, PublicProblem, TestCase, User } from "../src/schemas";
 
 import { EssentialTestModules } from "./modue.test";
 
@@ -20,7 +20,13 @@ describe("Problem manage service test", () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
         ...EssentialTestModules,
-        TypeOrmModule.forFeature([Login, User, Problem, TestCase]),
+        TypeOrmModule.forFeature([
+          Login,
+          User,
+          Problem,
+          TestCase,
+          PublicProblem,
+        ]),
       ],
       providers: [UserService, ProblemService],
     }).compile();

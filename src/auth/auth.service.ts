@@ -5,7 +5,7 @@ import * as bcrypt from "bcrypt";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import { UserError } from "../routes/user/error";
+import { ErrorMsg } from "../routes/user/error";
 import { Login, Session, User } from "../schemas";
 
 @Injectable()
@@ -24,9 +24,9 @@ export class AuthService {
     const login = await this.loginRepository.findOne({
       where: { identifier1: id || "" },
     });
-    if (!login) throw new HttpException(UserError.UserIdentifier_NotFound, 403);
+    if (!login) throw new HttpException(ErrorMsg.UserIdentifier_NotFound, 403);
     if (!bcrypt.compareSync(password, login.identifier2))
-      throw new HttpException(UserError.UserIdentifier_NotMatched, 403);
+      throw new HttpException(ErrorMsg.UserIdentifier_NotMatched, 403);
 
     return await this.generateJWTKeyPair(login.user, "30m", "1y");
   }

@@ -26,10 +26,33 @@ export class ProblemController {
   @Get("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(PermissionEnum.GET_PUBLIC_PROBLEM),
+    PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]),
   )
   async getProblem(@Query("id") id: number) {
     return this.problemService.getPublicProblemById(id, true);
+  }
+
+  @ApiOperation({
+    summary: "get problem - no filter",
+    description:
+      "get user's single public problem with hidden testcases via id",
+  })
+  @ApiQuery({
+    required: true,
+    name: "id",
+    description: "problem id",
+    type: Number,
+  })
+  @Get("/")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard([
+      PermissionEnum.GET_PUBLIC_PROBLEM,
+      PermissionEnum.GET_PROBLEM_SELF,
+    ]),
+  )
+  async getFullProblem(@Req() user, @Query("id") id: number) {
+    return this.problemService.getSelfPublicProblemById(user.id, id);
   }
 
   @ApiOperation({
@@ -39,7 +62,7 @@ export class ProblemController {
   @Get("/list")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(PermissionEnum.GET_PUBLIC_PROBLEM),
+    PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]),
   )
   async getProblems() {
     return this.problemService.getPublicProblems();
@@ -52,7 +75,7 @@ export class ProblemController {
   @Post("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(PermissionEnum.CREATE_PROBLEM),
+    PermissionGuard([PermissionEnum.CREATE_PROBLEM]),
   )
   async createProblem(@Req() req, @Body() data: CreateProblemDTO) {
     return this.problemService.createProblem(req.user, data, true);
