@@ -45,7 +45,7 @@ export class ProblemService {
     const problem = await this.getPublicProblemById(id, false);
     if (
       problem.user.id !== user.id ||
-      hasPermission(user.permission, [PermissionEnum.MANAGE_PERMISSION])
+      !hasPermission(user.permission, [PermissionEnum.MANAGE_PERMISSION])
     )
       throw new HttpException(
         ErrorMsg.PermissionDenied_Resource,
