@@ -44,7 +44,7 @@ export class ProblemService {
   async getSelfPublicProblemById(user: any, id: number) {
     const problem = await this.getPublicProblemById(id, false);
     if (
-      problem.user.id !== user.id ||
+      problem.user.id !== user.id &&
       !hasPermission(user.permission, [PermissionEnum.MANAGE_PERMISSION])
     )
       throw new HttpException(
