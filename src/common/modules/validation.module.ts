@@ -104,15 +104,14 @@ export class ValidationService {
       console.log(permissions);
 
       const newPermissions = [];
-      for (const permission in permissions) {
+      permissions.forEach((permission) => {
         console.log(permission, PermissionEnum[permission]);
         if (!PermissionEnum[permission]) {
           exceptions.push(user);
           return;
         }
-
         newPermissions.push(PermissionEnum[permission]);
-      }
+      });
 
       user.permission = numberPermission(...newPermissions);
       return user;
