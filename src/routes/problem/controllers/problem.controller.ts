@@ -43,7 +43,7 @@ export class ProblemController {
     description: "problem id",
     type: Number,
   })
-  @Get("/")
+  @Get("/full")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
     PermissionGuard([
