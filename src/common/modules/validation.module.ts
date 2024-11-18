@@ -166,7 +166,7 @@ export class ValidationService {
 }
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, PermissionValidator])],
+  imports: [TypeOrmModule.forFeature([User, Session, PermissionValidator])],
   providers: [ValidationService],
   exports: [ValidationService],
 })
