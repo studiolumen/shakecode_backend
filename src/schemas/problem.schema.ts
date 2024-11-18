@@ -45,7 +45,7 @@ export class Problem {
   restricted: number = null;
 
   @JoinColumn()
-  @OneToMany(() => TestCase, (testCase) => testCase.problem)
+  @OneToMany(() => TestCase, (testCase) => testCase.problem, { eager: true })
   testCases: TestCase[];
 
   @OneToMany(() => PublicProblem, (publicProblem) => publicProblem.problem)
