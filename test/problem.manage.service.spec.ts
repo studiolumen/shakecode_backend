@@ -44,7 +44,7 @@ describe("Problem manage service test", () => {
     cpdto.time_limit = 1000;
     cpdto.memory_limit = 100;
     cpdto.difficulty = 1;
-    cpdto.testCases = [
+    cpdto.testcases = [
       {
         input: "",
         output: "hello world",

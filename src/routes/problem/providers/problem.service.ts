@@ -58,7 +58,7 @@ export class ProblemService {
     problem.user = dbUser;
 
     const testcases = [];
-    for (const t of data.testCases) {
+    for (const t of data.testcases) {
       const tc = merge(new TestCase(), t);
       tc.problem = problem;
       testcases.push(tc);
