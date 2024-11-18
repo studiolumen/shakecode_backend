@@ -15,7 +15,7 @@ export class Classroom {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column("varchar", { unique: true })
   name: string;
 
   @Column()

@@ -17,7 +17,7 @@ export class Problem {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column("varchar", { unique: true })
   name: string = null;
 
   @Column()
