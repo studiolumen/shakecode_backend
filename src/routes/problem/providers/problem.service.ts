@@ -8,7 +8,8 @@ import merge from "merge-js-class";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import { CompilerType } from "../../../common/types";
+import { CompilerType, PermissionEnum } from "../../../common/types";
+import { hasPermission } from "../../../common/utils/permission.util";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
 import { ErrorMsg } from "../../user/error";
 import { CreateProblemDTO, ProblemSummary } from "../dto/problem.dto";
@@ -40,9 +41,12 @@ export class ProblemService {
     return publicProblem.problem;
   }
 
-  async getSelfPublicProblemById(userId: number, id: number) {
+  async getSelfPublicProblemById(user: any, id: number) {
     const problem = await this.getPublicProblemById(id, false);
-    if (problem.user.id !== userId)
+    if (
+      problem.user.id !== user.id ||
+      hasPermission(user.permission, [PermissionEnum.MANAGE_PERMISSION])
+    )
       throw new HttpException(
         ErrorMsg.PermissionDenied_Resource,
         HttpStatus.FORBIDDEN,

@@ -51,8 +51,8 @@ export class ProblemController {
       PermissionEnum.GET_PROBLEM_SELF,
     ]),
   )
-  async getFullProblem(@Req() user, @Query("id") id: number) {
-    return this.problemService.getSelfPublicProblemById(user.id, id);
+  async getFullProblem(@Req() req, @Query("id") id: number) {
+    return this.problemService.getSelfPublicProblemById(req.user, id);
   }
 
   @ApiOperation({
