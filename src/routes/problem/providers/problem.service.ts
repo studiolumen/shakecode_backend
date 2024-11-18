@@ -10,7 +10,7 @@ import { v4 as uuid } from "uuid";
 
 import { CompilerType } from "../../../common/types";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
-import { CreateProblemDTO } from "../dto/problem.dto";
+import { CreateProblemDTO, ProblemSummary } from "../dto/problem.dto";
 
 @Injectable()
 export class ProblemService {
@@ -39,10 +39,15 @@ export class ProblemService {
     return publicProblem.problem;
   }
 
-  async getPublicProblems(): Promise<PublicProblem[]> {
-    return (await this.publicProblemRepository.find()).filter(
-      (p) => p.problem.restricted === 0,
-    );
+  async getPublicProblems(): Promise<ProblemSummary[]> {
+    return (await this.publicProblemRepository.find())
+      .filter((p) => p.problem.restricted === 0)
+      .map((p) => ({
+        id: p.problem.id,
+        title: p.problem.name,
+        description: p.problem.description,
+        category: p.problem.category,
+      }));
   }
 
   async createProblem(

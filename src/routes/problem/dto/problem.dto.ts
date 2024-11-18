@@ -48,3 +48,11 @@ export class GetProblemDTO {
   @ApiProperty()
   id: number;
 }
+
+export class ProblemSummary {
+  @ApiProperty()
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+}
