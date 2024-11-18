@@ -47,7 +47,8 @@ export class ProblemService {
         title: p.problem.name,
         description: p.problem.description,
         category: p.problem.category,
-      }));
+      }))
+      .sort((a, b) => a.id - b.id);
   }
 
   async createProblem(
