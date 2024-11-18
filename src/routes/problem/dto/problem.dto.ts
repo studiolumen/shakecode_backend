@@ -33,7 +33,7 @@ export class CreateProblemDTO {
   memory_limit: number;
 
   @ApiProperty({ type: TestCaseDTO })
-  testCases: TestCaseDTO[];
+  testcases: TestCaseDTO[];
 
   @ApiProperty()
   restricted: number;
