@@ -25,6 +25,8 @@ export class AuthService {
       where: { identifier1: id },
     });
     if (!login) throw new HttpException(UserError.UserIdentifier_NotFount, 403);
+    console.log(login);
+    console.log(bcrypt.compareSync(password, login.identifier2));
     if (!bcrypt.compareSync(password, login.identifier2))
       throw new HttpException(UserError.UserIdentifier_NotMatched, 403);
 
