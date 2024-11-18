@@ -2,7 +2,7 @@ import { Injectable, Logger, Module } from "@nestjs/common";
 import { InjectRepository, TypeOrmModule } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { PermissionValidator, User } from "../../schemas";
+import { PermissionValidator, Session, User } from "../../schemas";
 import {
   CommonUserPermission,
   NumberedPermissionGroupsEnum,
@@ -18,6 +18,8 @@ export class ValidationService {
   private logger = new Logger(ValidationModule.name);
 
   constructor(
+    @InjectRepository(Session)
+    private readonly sessionRepository: Repository<Session>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(PermissionValidator)
@@ -154,6 +156,12 @@ export class ValidationService {
     await this.permissionValidatorRepository.save(permissions);
 
     this.logger.log("OK. All changes have been commited");
+  }
+
+  async validateSession() {
+    this.logger.log("Clearing expired sessions:");
+    await this.sessionRepository.clear();
+    this.logger.log("OK. Sessions cleared");
   }
 }
 
