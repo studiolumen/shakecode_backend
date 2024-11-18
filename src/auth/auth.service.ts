@@ -22,12 +22,9 @@ export class AuthService {
 
   async loginByIdPassword(id: string, password: string) {
     const login = await this.loginRepository.findOne({
-      where: { identifier1: id },
+      where: { identifier1: id || "" },
     });
     if (!login) throw new HttpException(UserError.UserIdentifier_NotFound, 403);
-    console.log(id);
-    console.log(login);
-    console.log(bcrypt.compareSync(password, login.identifier2));
     if (!bcrypt.compareSync(password, login.identifier2))
       throw new HttpException(UserError.UserIdentifier_NotMatched, 403);
 
