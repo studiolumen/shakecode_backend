@@ -75,7 +75,13 @@ export const TeacherUserPermission: number[] = [
   PermissionEnum.CREATE_CLASS,
   PermissionEnum.MODIFY_CLASS_SELF,
 ];
-export const PermissionGroups = { CommonUserPermission, TeacherUserPermission };
+export const AdminUserPermission: number[] = Object.values(PermissionEnum);
+
+export const PermissionGroups = {
+  CommonUserPermission,
+  TeacherUserPermission,
+  AdminUserPermission,
+};
 export const NumberedPermissionGroupsEnum = Object.fromEntries(
   Object.keys(PermissionGroups).map((v) => [
     v,

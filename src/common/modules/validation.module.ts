@@ -101,11 +101,9 @@ export class ValidationService {
         user.permission,
         fixedPermissionMappings,
       );
-      console.log(permissions);
 
       const newPermissions = [];
       permissions.forEach((permission) => {
-        console.log(permission, PermissionEnum[permission]);
         if (!PermissionEnum[permission]) {
           exceptions.push(user);
           return;
