@@ -52,7 +52,13 @@ export class GetProblemDTO {
 export class ProblemSummary {
   @ApiProperty()
   id: number;
+
+  @ApiProperty()
   title: string;
+
+  @ApiProperty()
   description: string;
+
+  @ApiProperty()
   category: string;
 }
