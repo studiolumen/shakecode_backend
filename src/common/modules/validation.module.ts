@@ -122,6 +122,7 @@ export class ValidationService {
       );
       this.logger.error(`Details: ${exceptions.map((e) => e.id).join(", ")}`);
       this.logger.error("Changes are not commited.");
+      throw new Error("Migration failed");
       return;
     }
 
