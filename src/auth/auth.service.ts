@@ -33,7 +33,7 @@ export class AuthService {
 
   async refresh(refreshToken: string) {
     const session = await this.sessionRepository.findOne({
-      where: { refreshToken },
+      where: { refreshToken: refreshToken || "" },
     });
     if (!session)
       throw new HttpException(
@@ -52,7 +52,7 @@ export class AuthService {
 
   async logout(accessToken: string) {
     const session = await this.sessionRepository.findOne({
-      where: { accessToken },
+      where: { accessToken: accessToken || "" },
     });
     // cannot be called. if called, it's a bug. (jwt strategy should catch this)
     if (!session) throw new HttpException("Cannot find valid session.", 404);
