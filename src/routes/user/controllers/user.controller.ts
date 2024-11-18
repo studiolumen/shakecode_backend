@@ -2,6 +2,8 @@ import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
+import { PermissionGuard } from "../../../auth/guards/permission.guard";
+import { PermissionEnum } from "../../../common/types";
 import {
   AddPermissionDTO,
   CreateUserDTO,
@@ -31,7 +33,7 @@ export class UserController {
     summary: "권한 설정",
     description: "유저 권한 설정",
   })
-  @UseGuards(CustomJwtAuthGuard)
+  @UseGuards(CustomJwtAuthGuard, PermissionGuard(PermissionEnum.MODIFY_USER))
   @Post("/permission/set")
   async setPermission(@Body() data: SetPermissionDTO) {
     return await this.userManageService.setPermission(data);
@@ -41,7 +43,7 @@ export class UserController {
     summary: "권한 추가",
     description: "유저 권한 추가",
   })
-  @UseGuards(CustomJwtAuthGuard)
+  @UseGuards(CustomJwtAuthGuard, PermissionGuard(PermissionEnum.MODIFY_USER))
   @Post("/permission/add")
   async addPermission(@Body() data: AddPermissionDTO) {
     return await this.userManageService.addPermission(data);
@@ -51,7 +53,7 @@ export class UserController {
     summary: "권한 제거",
     description: "유저 권한 제거",
   })
-  @UseGuards(CustomJwtAuthGuard)
+  @UseGuards(CustomJwtAuthGuard, PermissionGuard(PermissionEnum.MODIFY_USER))
   @Post("/permission/remove")
   async removePermission(@Body() data: RemovePermissionDTO) {
     return await this.userManageService.removePermission(data);

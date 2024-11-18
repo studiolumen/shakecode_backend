@@ -41,6 +41,7 @@ export const ManagementPermissionValues = [
   "DELETE_USER",
   "DELETE_PROBLEM",
   "DELETE_CLASS",
+  "MANAGE_PERMISSION",
 ] as const;
 
 // Merge permission values without duplicates

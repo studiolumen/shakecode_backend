@@ -44,11 +44,6 @@ export class CreateClassProblemDTO extends CreateProblemDTO {
   classId: number;
 }
 
-export class GetProblemDTO {
-  @ApiProperty()
-  id: number;
-}
-
 export class ProblemSummary {
   @ApiProperty()
   id: number;

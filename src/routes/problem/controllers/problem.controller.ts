@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Post, Req } from "@nestjs/common";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, Post, Query, Req } from "@nestjs/common";
+import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
-import { CreateProblemDTO, GetProblemDTO } from "../dto/problem.dto";
+import { CreateProblemDTO } from "../dto/problem.dto";
 import { ProblemService } from "../providers";
 
 @ApiTags("Problem")
@@ -17,13 +17,19 @@ export class ProblemController {
     summary: "get problem",
     description: "get single problem via id",
   })
+  @ApiQuery({
+    required: true,
+    name: "id",
+    description: "problem id",
+    type: Number,
+  })
   @Get("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
     PermissionGuard(PermissionEnum.GET_PUBLIC_PROBLEM),
   )
-  async getProblem(@Body() data: GetProblemDTO) {
-    return this.problemService.getPublicProblemById(data.id, true);
+  async getProblem(@Query("id") id: number) {
+    return this.problemService.getPublicProblemById(id, true);
   }
 
   @ApiOperation({
