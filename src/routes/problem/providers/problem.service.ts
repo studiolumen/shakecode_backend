@@ -77,7 +77,11 @@ export class ProblemService {
       where: { id: user.id },
     });
 
-    const problem = merge(new Problem(), data);
+    const existingProblem = await this.problemRepository.findOne({
+      where: { name: data.name },
+    });
+
+    const problem = merge(existingProblem || new Problem(), data);
     problem.user = dbUser;
 
     const testcases = [];
@@ -99,8 +103,6 @@ export class ProblemService {
 
     return problem;
   }
-
-  async updateProblem() {}
 
   async deleteProblem(id: number) {
     return await this.problemRepository.remove(
