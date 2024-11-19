@@ -5,4 +5,5 @@ export const ErrorMsg = {
   PermissionDenied_Resource: "이 리소스에 대한 권한이 없습니다.",
   PermissionDenied_Action: "이 작업에 대한 권한이 없습니다.",
   Resource_NotFound: "리소스를 찾을 수 없습니다.",
+  ResourceAlreadyExists: "리소스가 이미 존재합니다.",
 };

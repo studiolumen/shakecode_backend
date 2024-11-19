@@ -77,6 +77,16 @@ export class ProblemService {
       where: { id: user.id },
     });
 
+    const existingProblem = await this.problemRepository.findOne({
+      where: { name: data.name },
+    });
+
+    if (existingProblem)
+      throw new HttpException(
+        ErrorMsg.ResourceAlreadyExists,
+        HttpStatus.BAD_REQUEST,
+      );
+
     const problem = merge(new Problem(), data);
     problem.user = dbUser;
 
