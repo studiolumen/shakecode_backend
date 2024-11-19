@@ -8,10 +8,10 @@ import merge from "merge-js-class";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
+import { ErrorMsg } from "../../../common/error";
 import { CompilerType, PermissionEnum } from "../../../common/types";
 import { hasPermission } from "../../../common/utils/permission.util";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
-import { ErrorMsg } from "../../user/error";
 import { CreateProblemDTO, ProblemSummary } from "../dto/problem.dto";
 
 @Injectable()
@@ -80,6 +80,16 @@ export class ProblemService {
     const existingProblem = await this.problemRepository.findOne({
       where: { name: data.name },
     });
+
+    if (
+      existingProblem &&
+      existingProblem.user.id !== dbUser.id &&
+      !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM])
+    )
+      throw new HttpException(
+        ErrorMsg.PermissionDenied_Action,
+        HttpStatus.FORBIDDEN,
+      );
 
     const problem = merge(existingProblem || new Problem(), data);
     problem.user = dbUser;

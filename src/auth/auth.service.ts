@@ -5,7 +5,7 @@ import * as bcrypt from "bcrypt";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import { ErrorMsg } from "../routes/user/error";
+import { ErrorMsg } from "../common/error";
 import { Login, Session, User } from "../schemas";
 
 @Injectable()
