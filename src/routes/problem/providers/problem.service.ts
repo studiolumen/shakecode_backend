@@ -12,7 +12,11 @@ import { ErrorMsg } from "../../../common/error";
 import { CompilerType, PermissionEnum } from "../../../common/types";
 import { hasPermission } from "../../../common/utils/permission.util";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
-import { CreateProblemDTO, ProblemSummary } from "../dto/problem.dto";
+import {
+  CreateProblemDTO,
+  ProblemSummary,
+  UpdateProblemDTO,
+} from "../dto/problem.dto";
 
 @Injectable()
 export class ProblemService {
@@ -77,16 +81,6 @@ export class ProblemService {
       where: { id: user.id },
     });
 
-    const existingProblem = await this.problemRepository.findOne({
-      where: { name: data.name },
-    });
-
-    if (existingProblem)
-      throw new HttpException(
-        ErrorMsg.ResourceAlreadyExists,
-        HttpStatus.BAD_REQUEST,
-      );
-
     const problem = merge(new Problem(), data);
     problem.user = dbUser;
 
@@ -112,14 +106,14 @@ export class ProblemService {
 
   async updateProblem(
     user: User,
-    data: CreateProblemDTO,
+    data: UpdateProblemDTO,
   ): Promise<Problem | PublicProblem> {
     const dbUser = await this.userRepository.findOne({
       where: { id: user.id },
     });
 
     const existingProblem = await this.problemRepository.findOne({
-      where: { name: data.name },
+      where: { id: data.id },
     });
 
     if (!existingProblem)

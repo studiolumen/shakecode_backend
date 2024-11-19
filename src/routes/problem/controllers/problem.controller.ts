@@ -5,7 +5,7 @@ import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
-import { CreateProblemDTO } from "../dto/problem.dto";
+import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
 import { ProblemService } from "../providers";
 
 @ApiTags("Problem")
@@ -93,7 +93,7 @@ export class ProblemController {
       true,
     ),
   )
-  async updateProblem(@Req() req, @Body() data: CreateProblemDTO) {
+  async updateProblem(@Req() req, @Body() data: UpdateProblemDTO) {
     return this.problemService.updateProblem(req.user, data);
   }
 }

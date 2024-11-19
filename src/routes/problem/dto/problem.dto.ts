@@ -39,6 +39,11 @@ export class CreateProblemDTO {
   restricted: number;
 }
 
+export class UpdateProblemDTO extends CreateProblemDTO {
+  @ApiProperty()
+  id: number;
+}
+
 export class CreateClassProblemDTO extends CreateProblemDTO {
   @ApiProperty()
   classId: number;
