@@ -49,7 +49,7 @@ export class ProblemService {
         (tc) => tc.show_user,
       );
 
-    return { pid: publicProblem.id, ...publicProblem.problem };
+    return { pid: publicProblem.pid, ...publicProblem.problem };
   }
 
   async getSelfProblemById(
@@ -71,7 +71,7 @@ export class ProblemService {
     const publicProblem = await this.publicProblemRepository.findOne({
       where: { problem: problem },
     });
-    if (publicProblem) return { pid: publicProblem.id, ...problem };
+    if (publicProblem) return { pid: publicProblem.pid, ...problem };
     else return problem;
   }
 
@@ -80,7 +80,7 @@ export class ProblemService {
       .filter((p) => p.problem.restricted === 0)
       .map((p) => ({
         id: p.problem.id,
-        pid: p.id,
+        pid: p.pid,
         title: p.problem.name,
         description: p.problem.description,
         category: p.problem.category,
@@ -162,12 +162,9 @@ export class ProblemService {
       where: { problem: problem },
     });
 
-    if (publicProblem && publicProblem.id !== data.pid) {
-      await this.publicProblemRepository.remove(publicProblem);
-      const newPublicProblem = new PublicProblem();
-      newPublicProblem.id = data.pid;
-      newPublicProblem.problem = result;
-      await this.publicProblemRepository.save(newPublicProblem);
+    if (publicProblem && publicProblem.pid !== data.pid) {
+      publicProblem.pid = data.pid;
+      await this.publicProblemRepository.save(publicProblem);
     }
 
     return result;

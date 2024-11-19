@@ -86,6 +86,9 @@ export class PublicProblem {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column("int", { generated: "increment" })
+  pid: number;
+
   @JoinColumn()
   @ManyToOne(() => Problem, (problem) => problem.publicProblem, {
     onDelete: "CASCADE",
