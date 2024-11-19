@@ -135,7 +135,6 @@ export class ProblemService {
       );
 
     const problem = merge(existingProblem, data);
-    problem.user = dbUser;
 
     const testcases = [];
     for (const t of data.testcases) {
