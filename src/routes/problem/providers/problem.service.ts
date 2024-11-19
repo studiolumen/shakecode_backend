@@ -173,7 +173,7 @@ export class ProblemService {
 
   async deleteProblem(id: number) {
     return await this.problemRepository.remove(
-      await this.getPublicProblemById(id),
+      await this.problemRepository.findOne({ where: { id: id } }),
     );
   }
 

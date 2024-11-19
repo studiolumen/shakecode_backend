@@ -1,4 +1,4 @@
-import { Problem } from "../schemas";
+import { Problem, TestCase, User } from "../schemas";
 
 import { numberPermission } from "./utils/permission.util";
 
@@ -11,9 +11,19 @@ export type CompilerType = (typeof CompilerTypeValues)[number];
 export const ProblemCategoryValues = ["basic"] as const;
 export type ProblemCategory = (typeof ProblemCategoryValues)[number];
 
-export class ProblemCheckResult extends Problem {
+export type ProblemCheckResult = {
+  id: number;
   pid: number;
-}
+  name: string;
+  description: string;
+  category: ProblemCategory;
+  difficulty: number;
+  time_limit: number;
+  memory_limit: number;
+  restricted: number;
+  testCases: TestCase[];
+  user: User;
+};
 
 export const PermissionValidationTypeValues = [
   "permission",
