@@ -145,6 +145,7 @@ export class ProblemService {
       );
 
     const problem = merge(existingProblem, data);
+    delete problem.pid;
 
     const testcases = [];
     for (const t of data.testcases) {
