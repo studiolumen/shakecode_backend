@@ -43,7 +43,7 @@ export class ProblemService {
 
   async getSelfPublicProblemById(user: any, id: number) {
     const problem = await this.problemRepository.findOne({
-      where: { id: (await this.getPublicProblemById(id, false)).id },
+      where: { id: id | 0 },
     });
     if (
       problem.user.id !== user.id &&
