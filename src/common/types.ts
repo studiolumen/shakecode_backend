@@ -1,3 +1,5 @@
+import { Problem } from "../schemas";
+
 import { numberPermission } from "./utils/permission.util";
 
 export const LoginTypeValues = ["password"] as const;
@@ -8,6 +10,10 @@ export type CompilerType = (typeof CompilerTypeValues)[number];
 
 export const ProblemCategoryValues = ["basic"] as const;
 export type ProblemCategory = (typeof ProblemCategoryValues)[number];
+
+export class ProblemCheckResult extends Problem {
+  pid: number;
+}
 
 export const PermissionValidationTypeValues = [
   "permission",

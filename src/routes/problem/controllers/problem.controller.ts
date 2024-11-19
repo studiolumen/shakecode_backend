@@ -52,7 +52,7 @@ export class ProblemController {
     ]),
   )
   async getFullProblem(@Req() req, @Query("id") id: number) {
-    return this.problemService.getSelfPublicProblemById(req.user, id);
+    return this.problemService.getSelfProblemById(req.user, id);
   }
 
   @ApiOperation({

@@ -42,6 +42,9 @@ export class CreateProblemDTO {
 export class UpdateProblemDTO extends CreateProblemDTO {
   @ApiProperty()
   id: number;
+
+  @ApiProperty()
+  pid: number; // public problem id
 }
 
 export class CreateClassProblemDTO extends CreateProblemDTO {

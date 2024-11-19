@@ -9,7 +9,11 @@ import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 import { ErrorMsg } from "../../../common/error";
-import { CompilerType, PermissionEnum } from "../../../common/types";
+import {
+  CompilerType,
+  PermissionEnum,
+  ProblemCheckResult,
+} from "../../../common/types";
 import { hasPermission } from "../../../common/utils/permission.util";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
 import {
@@ -32,7 +36,10 @@ export class ProblemService {
     private readonly publicProblemRepository: Repository<PublicProblem>,
   ) {}
 
-  async getPublicProblemById(id: number, forUser?: boolean): Promise<Problem> {
+  async getPublicProblemById(
+    id: number,
+    forUser?: boolean,
+  ): Promise<ProblemCheckResult> {
     const publicProblem = await this.publicProblemRepository.findOne({
       where: { id: id || 0 },
     });
@@ -42,10 +49,13 @@ export class ProblemService {
         (tc) => tc.show_user,
       );
 
-    return publicProblem.problem;
+    return { pid: publicProblem.id, ...publicProblem.problem };
   }
 
-  async getSelfPublicProblemById(user: any, id: number) {
+  async getSelfProblemById(
+    user: any,
+    id: number,
+  ): Promise<Problem | ProblemCheckResult> {
     const problem = await this.problemRepository.findOne({
       where: { id: id || 0 },
     });
@@ -57,7 +67,12 @@ export class ProblemService {
         ErrorMsg.PermissionDenied_Resource,
         HttpStatus.FORBIDDEN,
       );
-    return problem;
+
+    const publicProblem = await this.publicProblemRepository.findOne({
+      where: { problem: problem },
+    });
+    if (publicProblem) return { pid: publicProblem.id, ...problem };
+    else return problem;
   }
 
   async getPublicProblems(): Promise<ProblemSummary[]> {
@@ -65,6 +80,7 @@ export class ProblemService {
       .filter((p) => p.problem.restricted === 0)
       .map((p) => ({
         id: p.problem.id,
+        pid: p.id,
         title: p.problem.name,
         description: p.problem.description,
         category: p.problem.category,
@@ -139,6 +155,18 @@ export class ProblemService {
 
     const result = await this.problemRepository.save(problem);
     await this.testCaseRepository.save(testcases);
+
+    const publicProblem = await this.publicProblemRepository.findOne({
+      where: { problem: problem },
+    });
+
+    if (publicProblem && publicProblem.id !== data.pid) {
+      await this.publicProblemRepository.remove(publicProblem);
+      const newPublicProblem = new PublicProblem();
+      newPublicProblem.id = data.pid;
+      newPublicProblem.problem = result;
+      await this.publicProblemRepository.save(newPublicProblem);
+    }
 
     return result;
   }
