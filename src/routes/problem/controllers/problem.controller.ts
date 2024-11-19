@@ -80,4 +80,20 @@ export class ProblemController {
   async createProblem(@Req() req, @Body() data: CreateProblemDTO) {
     return this.problemService.createProblem(req.user, data, true);
   }
+
+  @ApiOperation({
+    summary: "Update problem",
+    description: "Problem from given items via name",
+  })
+  @Post("/update")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(
+      [PermissionEnum.MODIFY_PROBLEM_SELF, PermissionEnum.MODIFY_PROBLEM],
+      true,
+    ),
+  )
+  async updateProblem(@Req() req, @Body() data: CreateProblemDTO) {
+    return this.problemService.updateProblem(req.user, data);
+  }
 }

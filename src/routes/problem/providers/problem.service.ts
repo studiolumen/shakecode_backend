@@ -43,7 +43,7 @@ export class ProblemService {
 
   async getSelfPublicProblemById(user: any, id: number) {
     const problem = await this.problemRepository.findOne({
-      where: { id: id | 0 },
+      where: { id: id || 0 },
     });
     if (
       problem.user.id !== user.id &&
@@ -77,21 +77,7 @@ export class ProblemService {
       where: { id: user.id },
     });
 
-    const existingProblem = await this.problemRepository.findOne({
-      where: { name: data.name },
-    });
-
-    if (
-      existingProblem &&
-      existingProblem.user.id !== dbUser.id &&
-      !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM])
-    )
-      throw new HttpException(
-        ErrorMsg.PermissionDenied_Action,
-        HttpStatus.FORBIDDEN,
-      );
-
-    const problem = merge(existingProblem || new Problem(), data);
+    const problem = merge(new Problem(), data);
     problem.user = dbUser;
 
     const testcases = [];
@@ -112,6 +98,46 @@ export class ProblemService {
     }
 
     return problem;
+  }
+
+  async updateProblem(
+    user: User,
+    data: CreateProblemDTO,
+  ): Promise<Problem | PublicProblem> {
+    const dbUser = await this.userRepository.findOne({
+      where: { id: user.id },
+    });
+
+    const existingProblem = await this.problemRepository.findOne({
+      where: { name: data.name },
+    });
+
+    if (!existingProblem)
+      throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+
+    if (
+      existingProblem.user.id !== dbUser.id &&
+      !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM])
+    )
+      throw new HttpException(
+        ErrorMsg.PermissionDenied_Action,
+        HttpStatus.FORBIDDEN,
+      );
+
+    const problem = merge(existingProblem, data);
+    problem.user = dbUser;
+
+    const testcases = [];
+    for (const t of data.testcases) {
+      const tc = merge(new TestCase(), t);
+      tc.problem = problem;
+      testcases.push(tc);
+    }
+
+    const result = await this.problemRepository.save(problem);
+    await this.testCaseRepository.save(testcases);
+
+    return result;
   }
 
   async deleteProblem(id: number) {
