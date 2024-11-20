@@ -47,6 +47,9 @@ export const UserPermissionValues = [
   "MODIFY_USER_SELF",
   "MODIFY_PROBLEM_SELF",
   "MODIFY_CLASS_SELF",
+  "DELETE_PROBLEM_SELF",
+  "DELETE_CLASS_SELF",
+  "DELETE_USER_SELF",
 ] as const;
 
 export const ManagementPermissionValues = [

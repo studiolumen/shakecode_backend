@@ -65,3 +65,8 @@ export class ProblemSummary {
   @ApiProperty()
   category: string;
 }
+
+export class DeleteProblemDTO {
+  @ApiProperty()
+  id: number;
+}

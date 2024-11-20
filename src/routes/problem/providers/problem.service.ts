@@ -176,10 +176,22 @@ export class ProblemService {
     return result;
   }
 
-  async deleteProblem(id: number) {
-    return await this.problemRepository.remove(
-      await this.problemRepository.findOne({ where: { id: id } }),
-    );
+  async deleteProblem(user, id: number) {
+    const existingProblem = await this.problemRepository.findOne({
+      where: { id: id },
+    });
+    if (!existingProblem)
+      throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+
+    if (
+      existingProblem.user.id !== user.id &&
+      !hasPermission(user.permission, [PermissionEnum.DELETE_PROBLEM])
+    )
+      throw new HttpException(
+        ErrorMsg.PermissionDenied_Action,
+        HttpStatus.FORBIDDEN,
+      );
+    return await this.problemRepository.remove(existingProblem);
   }
 
   async runCode(

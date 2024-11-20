@@ -1,11 +1,23 @@
-import { Body, Controller, Get, Post, Query, Req } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  Req,
+} from "@nestjs/common";
 import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
-import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
+import {
+  CreateProblemDTO,
+  DeleteProblemDTO,
+  UpdateProblemDTO,
+} from "../dto/problem.dto";
 import { ProblemService } from "../providers";
 
 @ApiTags("Problem")
@@ -95,5 +107,21 @@ export class ProblemController {
   )
   async updateProblem(@Req() req, @Body() data: UpdateProblemDTO) {
     return this.problemService.updateProblem(req.user, data);
+  }
+
+  @ApiOperation({
+    summary: "Delete problem",
+    description: "Delete problem via id",
+  })
+  @Delete("/")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(
+      [PermissionEnum.DELETE_PROBLEM_SELF, PermissionEnum.DELETE_PROBLEM],
+      true,
+    ),
+  )
+  async deleteProblem(@Req() req, @Body() data: DeleteProblemDTO) {
+    return this.problemService.deleteProblem(req.user, data.id);
   }
 }
