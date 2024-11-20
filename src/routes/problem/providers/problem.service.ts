@@ -97,6 +97,12 @@ export class ProblemService {
       where: { id: user.id },
     });
 
+    if (data.name === "" || data.description === "")
+      throw new HttpException(
+        ErrorMsg.InvalidParameter,
+        HttpStatus.BAD_REQUEST,
+      );
+
     const problem = merge(new Problem(), data);
     problem.user = dbUser;
 
