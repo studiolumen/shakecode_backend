@@ -6,24 +6,24 @@ export class TestCaseDTO {
   @ApiProperty()
   input: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   output: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   show_user: boolean;
 }
 
 export class CreateProblemDTO {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   description: string;
 
   @ApiProperty({ type: ProblemCategoryValues })
   category: ProblemCategory;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   difficulty: number;
 
   @ApiProperty({ description: "Unit: milliseconds" })
@@ -35,38 +35,38 @@ export class CreateProblemDTO {
   @ApiProperty({ type: TestCaseDTO })
   testcases: TestCaseDTO[];
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   restricted: number;
 }
 
 export class UpdateProblemDTO extends CreateProblemDTO {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   pid: number; // public problem id
 }
 
 export class CreateClassProblemDTO extends CreateProblemDTO {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   classId: number;
 }
 
 export class ProblemSummary {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   title: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   category: string;
 }
 
 export class DeleteProblemDTO {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   id: number;
 }

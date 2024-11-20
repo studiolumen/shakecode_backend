@@ -3,24 +3,24 @@ import { ApiProperty } from "@nestjs/swagger";
 import { PermissionType } from "../../../common/types";
 
 export class CreateUserDTO {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   password: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   nickname: string;
 }
 
 export class SetPermissionDTO {
-  @ApiProperty()
+  @ApiProperty({ required: true })
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ required: true })
   permissions: PermissionType[];
 }
 export class AddPermissionDTO extends SetPermissionDTO {}
