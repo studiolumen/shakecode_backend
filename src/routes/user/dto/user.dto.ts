@@ -1,26 +1,33 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsArray, IsNumber, IsString } from "class-validator";
 
 import { PermissionType } from "../../../common/types";
 
 export class CreateUserDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   email: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   password: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   name: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   nickname: string;
 }
 
 export class SetPermissionDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsNumber()
   id: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsArray()
   permissions: PermissionType[];
 }
 export class AddPermissionDTO extends SetPermissionDTO {}

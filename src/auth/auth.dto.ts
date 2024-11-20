@@ -1,22 +1,28 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from "nestjs-swagger-dto";
 
 export class PasswordLoginDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   email: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   password: string;
 }
 
 export class RefreshTokenDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   refreshToken: string;
 }
 
 export class JWTResponse {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   accessToken: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   refreshToken: string;
 }

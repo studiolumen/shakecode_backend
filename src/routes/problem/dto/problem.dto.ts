@@ -1,72 +1,97 @@
 import { ApiProperty } from "@nestjs/swagger";
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsObject,
+  IsString,
+} from "class-validator";
 
 import { ProblemCategory, ProblemCategoryValues } from "../../../common/types";
 
 export class TestCaseDTO {
   @ApiProperty()
+  @IsString()
   input: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   output: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsBoolean()
   show_user: boolean;
 }
 
 export class CreateProblemDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   name: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   description: string;
 
   @ApiProperty({ type: ProblemCategoryValues })
+  @IsString()
   category: ProblemCategory;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
   difficulty: number;
 
   @ApiProperty({ description: "Unit: milliseconds" })
+  @IsNumber()
   time_limit: number;
 
   @ApiProperty({ description: "Unit: megabytes" })
+  @IsNumber()
   memory_limit: number;
 
   @ApiProperty({ type: TestCaseDTO })
+  @IsArray()
   testcases: TestCaseDTO[];
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsNumber()
   restricted: number;
 }
 
 export class UpdateProblemDTO extends CreateProblemDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsNumber()
   id: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsNumber()
   pid: number; // public problem id
 }
 
 export class CreateClassProblemDTO extends CreateProblemDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsNumber()
   classId: number;
 }
 
 export class ProblemSummary {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsNumber()
   id: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   title: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   description: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsString()
   category: string;
 }
 
 export class DeleteProblemDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty()
+  @IsNumber()
   id: number;
 }
