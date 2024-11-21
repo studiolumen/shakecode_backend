@@ -25,6 +25,18 @@ export type ProblemCheckResult = {
   user: User;
 };
 
+export type UserJWT = {
+  id: number;
+  email: string;
+  name: string;
+  nickname: string;
+  lvl: number;
+  rating: number;
+  permission: number;
+  refresh: boolean;
+  sessionIdentifier: string;
+};
+
 export const PermissionValidationTypeValues = [
   "permission",
   "permission_group",
@@ -54,6 +66,7 @@ export const UserPermissionValues = [
 
 export const ManagementPermissionValues = [
   "CREATE_USER",
+  "GET_PROBLEM",
   "MODIFY_USER",
   "MODIFY_PROBLEM",
   "MODIFY_CLASS",

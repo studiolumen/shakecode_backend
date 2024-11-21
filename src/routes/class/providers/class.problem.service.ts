@@ -7,7 +7,7 @@ import {
   CreateClassProblemDTO,
   CreateProblemDTO,
 } from "../../problem/dto/problem.dto";
-import { ProblemService } from "../../problem/providers/problem.service";
+import { ProblemGetService } from "../../problem/providers/problem.get.service";
 
 @Injectable()
 export class ClassProblemService {
@@ -19,7 +19,7 @@ export class ClassProblemService {
     @InjectRepository(ClassProblem)
     private readonly classProblemRepository: Repository<ClassProblem>,
 
-    private readonly problemService: ProblemService,
+    private readonly problemService: ProblemGetService,
   ) {}
 
   async createClassProblem(user: User, data: CreateClassProblemDTO) {

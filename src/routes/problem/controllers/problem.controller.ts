@@ -3,11 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
+  ParseBoolPipe,
   Post,
   Query,
   Req,
 } from "@nestjs/common";
 import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { Request } from "express";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
@@ -18,12 +21,16 @@ import {
   DeleteProblemDTO,
   UpdateProblemDTO,
 } from "../dto/problem.dto";
-import { ProblemService } from "../providers";
+import { ProblemGetService } from "../providers";
+import { ProblemAdderService } from "../providers/problem.adder.service";
 
 @ApiTags("Problem")
 @Controller("/problem")
 export class ProblemController {
-  constructor(private readonly problemService: ProblemService) {}
+  constructor(
+    private readonly problemGetService: ProblemGetService,
+    private readonly problemPsadderService: ProblemAdderService,
+  ) {}
 
   @ApiOperation({
     summary: "get problem",
@@ -41,7 +48,32 @@ export class ProblemController {
     PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]),
   )
   async getProblem(@Query("id") id: number) {
-    return this.problemService.getPublicProblemById(id, true);
+    return this.problemGetService.getPublicProblemById(id);
+  }
+
+  @ApiOperation({
+    summary: "get problem list",
+    description: "list problems",
+  })
+  @Get("/list")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(
+      [PermissionEnum.GET_PUBLIC_PROBLEM, PermissionEnum.GET_PROBLEM],
+      true,
+    ),
+  )
+  @ApiQuery({
+    required: false,
+    name: "all",
+    description: "get all problems as possible",
+    type: Boolean,
+  })
+  async getProblemList(
+    @Req() req,
+    @Param("all", new ParseBoolPipe()) all: boolean,
+  ) {
+    return this.problemGetService.getPublicProblemList(req.user, all);
   }
 
   @ApiOperation({
@@ -59,27 +91,13 @@ export class ProblemController {
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
     PermissionGuard([
-      PermissionEnum.GET_PUBLIC_PROBLEM,
+      PermissionEnum.GET_PROBLEM,
       PermissionEnum.GET_PROBLEM_SELF,
     ]),
   )
   async getFullProblem(@Req() req, @Query("id") id: number) {
-    return this.problemService.getSelfProblemById(req.user, id);
+    return this.problemGetService.getSelfProblemById(req.user, id);
   }
-
-  @ApiOperation({
-    summary: "get problem list",
-    description: "list problems",
-  })
-  @Get("/list")
-  @UseGuardsWithSwagger(
-    CustomJwtAuthGuard,
-    PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]),
-  )
-  async getProblems() {
-    return this.problemService.getPublicProblems();
-  }
-
   @ApiOperation({
     summary: "Create problem",
     description: "Create Public problem from given items",
@@ -90,7 +108,7 @@ export class ProblemController {
     PermissionGuard([PermissionEnum.CREATE_PROBLEM]),
   )
   async createProblem(@Req() req, @Body() data: CreateProblemDTO) {
-    return this.problemService.createProblem(req.user, data, true);
+    return this.problemPsadderService.createProblem(req.user, data, true);
   }
 
   @ApiOperation({
@@ -106,7 +124,7 @@ export class ProblemController {
     ),
   )
   async updateProblem(@Req() req, @Body() data: UpdateProblemDTO) {
-    return this.problemService.updateProblem(req.user, data);
+    return this.problemPsadderService.updateProblem(req.user, data);
   }
 
   @ApiOperation({
@@ -122,6 +140,6 @@ export class ProblemController {
     ),
   )
   async deleteProblem(@Req() req, @Body() data: DeleteProblemDTO) {
-    return this.problemService.deleteProblem(req.user, data.id);
+    return this.problemPsadderService.deleteProblem(req.user, data.id);
   }
 }
