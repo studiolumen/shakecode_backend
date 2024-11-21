@@ -6,4 +6,4 @@ COPY . .
 
 RUN gcc -o code code.c
 
-CMD sh -c "cat input.txt | ./code"
+CMD sh -c 'for file in input*; do cat "$file" | ./code; done'
