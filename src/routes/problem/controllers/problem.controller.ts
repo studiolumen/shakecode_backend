@@ -15,11 +15,7 @@ import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
-import {
-  CreateProblemDTO,
-  DeleteProblemDTO,
-  UpdateProblemDTO,
-} from "../dto/problem.dto";
+import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
 import { ProblemGetService } from "../providers";
 import { ProblemAdderService } from "../providers/problem.adder.service";
 
@@ -130,6 +126,12 @@ export class ProblemController {
     summary: "Delete problem",
     description: "Delete problem via id",
   })
+  @ApiQuery({
+    required: true,
+    name: "id",
+    description: "problem id",
+    type: Number,
+  })
   @Delete("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
@@ -138,7 +140,7 @@ export class ProblemController {
       true,
     ),
   )
-  async deleteProblem(@Req() req, @Body() data: DeleteProblemDTO) {
-    return this.problemPsadderService.deleteProblem(req.user, data.id);
+  async deleteProblem(@Req() req, @Query("id") id: number) {
+    return this.problemPsadderService.deleteProblem(req.user, id);
   }
 }

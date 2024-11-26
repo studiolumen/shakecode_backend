@@ -105,10 +105,3 @@ export class ProblemSummary {
   @IsNotEmpty()
   category: string;
 }
-
-export class DeleteProblemDTO {
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  id: number;
-}
