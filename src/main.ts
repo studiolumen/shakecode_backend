@@ -10,7 +10,7 @@ async function bootstrap() {
 
   await CustomSwaggerSetup(app);
 
-  await app.listen(3000);
+  await app.listen(process.env.NODE_ENV === "dev" ? 3001 : 3000);
 
   const validationService = app.get<ValidationService>(ValidationService);
   await validationService.validatePermissionEnum();
