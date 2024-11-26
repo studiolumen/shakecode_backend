@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   ParseBoolPipe,
   Post,
   Query,
@@ -90,10 +89,10 @@ export class ProblemController {
   @Get("/full")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard([
-      PermissionEnum.GET_PROBLEM,
-      PermissionEnum.GET_PROBLEM_SELF,
-    ]),
+    PermissionGuard(
+      [PermissionEnum.GET_PROBLEM, PermissionEnum.GET_PROBLEM_SELF],
+      true,
+    ),
   )
   async getFullProblem(@Req() req, @Query("id") id: number) {
     return this.problemGetService.getSelfProblemById(req.user, id);

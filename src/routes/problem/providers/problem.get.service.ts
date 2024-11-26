@@ -73,6 +73,8 @@ export class ProblemGetService {
     const problem = await this.problemRepository.findOne({
       where: { id: id || 0 },
     });
+
+    console.log(problem);
     if (
       problem.user.id !== user.id &&
       !hasPermission(user.permission, [PermissionEnum.GET_PROBLEM])
