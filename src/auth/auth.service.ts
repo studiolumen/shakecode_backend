@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 import { ErrorMsg } from "../common/error";
+import { UserJWT } from "../common/types";
 import { Login, Session, User } from "../schemas";
 
 @Injectable()
@@ -50,9 +51,9 @@ export class AuthService {
     return await this.generateJWTKeyPair(user, "30m", "1y");
   }
 
-  async logout(accessToken: string) {
+  async logout(user: UserJWT) {
     const session = await this.sessionRepository.findOne({
-      where: { accessToken: accessToken || "" },
+      where: { sessionIdentifier: user.sessionIdentifier || "" },
     });
     // cannot be called. if called, it's a bug. (jwt strategy should catch this)
     if (!session) throw new HttpException("Cannot find valid session.", 404);
