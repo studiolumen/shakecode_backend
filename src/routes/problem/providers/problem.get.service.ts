@@ -75,6 +75,7 @@ export class ProblemGetService {
     });
 
     console.log(problem);
+    console.log(user);
     if (
       problem.user.id !== user.id &&
       !hasPermission(user.permission, [PermissionEnum.GET_PROBLEM])
