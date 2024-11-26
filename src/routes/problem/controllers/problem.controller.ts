@@ -71,7 +71,7 @@ export class ProblemController {
   })
   async getProblemList(
     @Req() req,
-    @Param("all", new ParseBoolPipe()) all: boolean,
+    @Query("all", new ParseBoolPipe()) all: boolean,
   ) {
     return this.problemGetService.getPublicProblemList(req.user, all);
   }
