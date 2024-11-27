@@ -86,7 +86,7 @@ export class PublicProblem {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column("int", { generated: "increment" })
+  @Column("int", { generated: "increment", unique: true })
   pid: number;
 
   @JoinColumn()
