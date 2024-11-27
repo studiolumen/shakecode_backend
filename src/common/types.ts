@@ -101,11 +101,14 @@ export const CommonUserPermission: number[] = [
   PermissionEnum.CREATE_PROBLEM,
   PermissionEnum.MODIFY_USER_SELF,
   PermissionEnum.MODIFY_PROBLEM_SELF,
+  PermissionEnum.DELETE_PROBLEM_SELF,
+  PermissionEnum.DELETE_USER_SELF,
 ];
 export const TeacherUserPermission: number[] = [
   ...CommonUserPermission,
   PermissionEnum.CREATE_CLASS,
   PermissionEnum.MODIFY_CLASS_SELF,
+  PermissionEnum.DELETE_CLASS_SELF,
 ];
 export const AdminUserPermission: number[] = Object.values(PermissionEnum);
 
