@@ -98,7 +98,6 @@ export const CommonUserPermission: number[] = [
   PermissionEnum.GET_PUBLIC_USER,
   PermissionEnum.GET_PUBLIC_CLASS,
   PermissionEnum.GET_PUBLIC_PROBLEM,
-  PermissionEnum.CREATE_PROBLEM,
   PermissionEnum.MODIFY_USER_SELF,
   PermissionEnum.MODIFY_PROBLEM_SELF,
   PermissionEnum.DELETE_PROBLEM_SELF,
