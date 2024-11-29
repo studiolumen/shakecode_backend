@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import { json } from "express";
+import { json, urlencoded } from "express";
 
 import { AppModule } from "./app";
 import { CustomSwaggerSetup } from "./common/modules/swagger.module";
@@ -8,6 +8,7 @@ import { ValidationService } from "./common/modules/validation.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(json({ limit: "5000mb" }));
+  app.use(urlencoded({ limit: "5000mb" }));
   app.enableCors();
 
   await CustomSwaggerSetup(app);
