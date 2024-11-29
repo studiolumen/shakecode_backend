@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   ParseBoolPipe,
+  ParseIntPipe,
   Post,
   Query,
   Req,
@@ -82,6 +83,12 @@ export class ProblemController {
     description: "problem id",
     type: Number,
   })
+  @ApiQuery({
+    required: true,
+    name: "hidden",
+    description: "get hidden cases?",
+    type: Boolean,
+  })
   @Get("/full")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
@@ -90,8 +97,12 @@ export class ProblemController {
       true,
     ),
   )
-  async getFullProblem(@Req() req, @Query("id") id: number) {
-    return this.problemGetService.getSelfProblemById(req.user, id);
+  async getFullProblem(
+    @Req() req,
+    @Query("id", ParseIntPipe) id: number,
+    @Query("hidden", ParseBoolPipe) hidden: boolean,
+  ) {
+    return this.problemGetService.getSelfProblemById(req.user, id, hidden);
   }
   @ApiOperation({
     summary: "Create problem",

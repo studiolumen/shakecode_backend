@@ -69,6 +69,7 @@ export class ProblemGetService {
   async getSelfProblemById(
     user: UserJWT,
     id: number,
+    hidden: boolean,
   ): Promise<Problem | ProblemCheckResult> {
     const problem = await this.problemRepository.findOne({
       where: { id: id || 0 },
@@ -86,7 +87,19 @@ export class ProblemGetService {
     const publicProblem = await this.publicProblemRepository.findOne({
       where: { problem: problem },
     });
-    if (publicProblem) return { pid: publicProblem.pid, ...problem };
-    else return problem;
+
+    if (publicProblem) {
+      if (hidden) return { pid: publicProblem.pid, ...problem };
+
+      const tmp: Problem = publicProblem.problem;
+      tmp.testCases = tmp.testCases.filter((tc) => tc.show_user);
+      return { pid: publicProblem.pid, ...tmp };
+    } else {
+      if (hidden) return problem;
+
+      const tmp: Problem = problem;
+      tmp.testCases = tmp.testCases.filter((tc) => tc.show_user);
+      return tmp;
+    }
   }
 }
