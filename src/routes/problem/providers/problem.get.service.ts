@@ -71,8 +71,16 @@ export class ProblemGetService {
     id: number,
     hidden: boolean,
   ): Promise<Problem | ProblemCheckResult> {
+    if (isNaN(id))
+      new HttpException(ErrorMsg.InvalidParameter, HttpStatus.BAD_REQUEST);
+
     const problem = await this.problemRepository.findOne({
-      where: { id: id || 0 },
+      where: { id: id },
+    });
+    const testcases = await this.testCaseRepository.find({
+      where: hidden
+        ? { problem: problem }
+        : { problem: problem, show_user: true },
     });
 
     if (
@@ -88,18 +96,12 @@ export class ProblemGetService {
       where: { problem: problem },
     });
 
-    if (publicProblem) {
-      if (hidden) return { pid: publicProblem.pid, ...problem };
-
-      const tmp: Problem = publicProblem.problem;
-      tmp.testCases = tmp.testCases.filter((tc) => tc.show_user);
-      return { pid: publicProblem.pid, ...tmp };
-    } else {
-      if (hidden) return problem;
-
-      const tmp: Problem = problem;
-      tmp.testCases = tmp.testCases.filter((tc) => tc.show_user);
-      return tmp;
-    }
+    if (publicProblem)
+      return { pid: publicProblem.pid, ...problem, testCases: testcases };
+    else
+      return {
+        ...problem,
+        testCases: testcases,
+      };
   }
 }
