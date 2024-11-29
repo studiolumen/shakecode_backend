@@ -10,7 +10,7 @@ import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
 import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
 
 @Injectable()
-export class ProblemAdderService {
+export class ProblemManageService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -90,6 +90,7 @@ export class ProblemAdderService {
     }
 
     const result = await this.problemRepository.save(problem);
+    await this.testCaseRepository.delete({ problem: problem });
     await this.testCaseRepository.save(testcases);
 
     const publicProblem = await this.publicProblemRepository.findOne({
@@ -105,6 +106,12 @@ export class ProblemAdderService {
   }
 
   async deleteProblem(user: UserJWT, id: number) {
+    if (isNaN(id))
+      throw new HttpException(
+        ErrorMsg.InvalidParameter,
+        HttpStatus.BAD_REQUEST,
+      );
+
     const existingProblem = await this.problemRepository.findOne({
       where: { id: id },
     });

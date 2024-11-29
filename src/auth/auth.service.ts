@@ -81,6 +81,7 @@ export class AuthService {
       ),
     };
 
+    // TODO: separate to redis
     const session = new Session();
     session.accessToken = keyPair.accessToken;
     session.refreshToken = keyPair.refreshToken;

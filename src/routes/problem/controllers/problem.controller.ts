@@ -17,14 +17,14 @@ import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
 import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
 import { ProblemGetService } from "../providers";
-import { ProblemAdderService } from "../providers/problem.adder.service";
+import { ProblemManageService } from "../providers/problem.manage.service";
 
 @ApiTags("Problem")
 @Controller("/problem")
 export class ProblemController {
   constructor(
     private readonly problemGetService: ProblemGetService,
-    private readonly problemPsadderService: ProblemAdderService,
+    private readonly problemPsadderService: ProblemManageService,
   ) {}
 
   @ApiOperation({
