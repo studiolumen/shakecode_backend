@@ -12,6 +12,7 @@ import { numberPermission } from "../common/utils/permission.util";
 import { Login, Session } from "./auth.schema";
 import { ClassUser } from "./group.schema";
 import { Problem } from "./problem.schema";
+import { UploadBuffer } from "./upload.buffer.schema";
 
 @Entity()
 export class User {
@@ -48,4 +49,7 @@ export class User {
 
   @OneToMany(() => ClassUser, (classUser) => classUser.user)
   classUser: ClassUser[];
+
+  @OneToMany(() => UploadBuffer, (uploadBuffer) => uploadBuffer.user)
+  uploadBuffer: UploadBuffer[];
 }

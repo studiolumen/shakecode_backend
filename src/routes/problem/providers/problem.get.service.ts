@@ -41,6 +41,7 @@ export class ProblemGetService {
         title: p.problem.name,
         description: p.problem.description,
         category: p.problem.category,
+        difficulty: p.problem.difficulty,
       }))
       .sort((a, b) => a.id - b.id);
   }
