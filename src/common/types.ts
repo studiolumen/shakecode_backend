@@ -11,6 +11,12 @@ export type CompilerType = (typeof CompilerTypeValues)[number];
 export const ProblemCategoryValues = ["basic"] as const;
 export type ProblemCategory = (typeof ProblemCategoryValues)[number];
 
+export const UploadBufferIdentifierValues = [
+  "problem_testcase_upload",
+] as const;
+export type UploadBufferIdentifier =
+  (typeof UploadBufferIdentifierValues)[number];
+
 export type ProblemCheckResult = {
   id: number;
   pid: number;
@@ -62,6 +68,7 @@ export const UserPermissionValues = [
   "DELETE_PROBLEM_SELF",
   "DELETE_CLASS_SELF",
   "DELETE_USER_SELF",
+  "USE_UPLOAD_BUFFER",
 ] as const;
 
 export const ManagementPermissionValues = [
@@ -102,6 +109,7 @@ export const CommonUserPermission: number[] = [
   PermissionEnum.MODIFY_PROBLEM_SELF,
   PermissionEnum.DELETE_PROBLEM_SELF,
   PermissionEnum.DELETE_USER_SELF,
+  PermissionEnum.USE_UPLOAD_BUFFER,
 ];
 export const TeacherUserPermission: number[] = [
   ...CommonUserPermission,
