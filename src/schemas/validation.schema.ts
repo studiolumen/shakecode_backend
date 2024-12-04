@@ -4,8 +4,8 @@ import { PermissionValidationType } from "../common/types";
 
 @Entity()
 export class PermissionValidator {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   type: PermissionValidationType;

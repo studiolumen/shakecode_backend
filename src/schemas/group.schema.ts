@@ -12,8 +12,8 @@ import { User } from "./user.schema";
 
 @Entity()
 export class Classroom {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column("varchar", { unique: true })
   name: string;
@@ -30,8 +30,8 @@ export class Classroom {
 
 @Entity()
 export class ClassUser {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   nickname: string;

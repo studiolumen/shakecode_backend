@@ -26,7 +26,7 @@ export class UserService {
     private readonly loginRepository: Repository<Login>,
   ) {}
 
-  async getUserById(id: number): Promise<User> {
+  async getUserById(id: string): Promise<User> {
     return await this.userRepository.findOne({ where: { id } });
   }
 
@@ -49,7 +49,7 @@ export class UserService {
     return user;
   }
 
-  async deleteUser(id: number): Promise<User> {
+  async deleteUser(id: string): Promise<User> {
     const user = await this.getUserById(id);
     return await this.userRepository.remove(user);
   }

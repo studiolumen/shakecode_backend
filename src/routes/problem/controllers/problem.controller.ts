@@ -36,14 +36,14 @@ export class ProblemController {
     required: true,
     name: "id",
     description: "problem id",
-    type: Number,
+    type: String,
   })
   @Get("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
     PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]),
   )
-  async getProblem(@Query("id") id: number) {
+  async getProblem(@Query("id") id: string) {
     return this.problemGetService.getPublicProblemById(id);
   }
 
@@ -81,7 +81,7 @@ export class ProblemController {
     required: true,
     name: "id",
     description: "problem id",
-    type: Number,
+    type: String,
   })
   @ApiQuery({
     required: true,
@@ -99,7 +99,7 @@ export class ProblemController {
   )
   async getFullProblem(
     @Req() req,
-    @Query("id", ParseIntPipe) id: number,
+    @Query("id") id: string,
     @Query("hidden", ParseBoolPipe) hidden: boolean,
   ) {
     return this.problemGetService.getSelfProblemById(req.user, id, hidden);
@@ -141,7 +141,7 @@ export class ProblemController {
     required: true,
     name: "id",
     description: "problem id",
-    type: Number,
+    type: String,
   })
   @Delete("/")
   @UseGuardsWithSwagger(
@@ -151,7 +151,7 @@ export class ProblemController {
       true,
     ),
   )
-  async deleteProblem(@Req() req, @Query("id") id: number) {
+  async deleteProblem(@Req() req, @Query("id") id: string) {
     return this.problemPsadderService.deleteProblem(req.user, id);
   }
 }
