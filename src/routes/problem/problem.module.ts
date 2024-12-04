@@ -4,13 +4,13 @@ import importToArray from "import-to-array";
 
 import { Problem, PublicProblem, TestCase, User } from "../../schemas";
 
-import * as problemControllers from "./controllers";
-import * as problemServices from "./providers";
+import * as controllers from "./controllers";
+import * as providers from "./providers";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Problem, TestCase, PublicProblem])],
-  controllers: importToArray(problemControllers),
-  providers: importToArray(problemServices),
-  exports: importToArray(problemServices),
+  controllers: importToArray(controllers),
+  providers: importToArray(providers),
+  exports: importToArray(providers),
 })
 export class ProblemModule {}
