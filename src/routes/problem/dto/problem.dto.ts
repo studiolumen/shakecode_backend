@@ -125,3 +125,29 @@ export class getTestcasesDTO {
   @Min(0)
   count: number;
 }
+
+export class ProblemIdDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+}
+
+export class GetProblemListDTO {
+  @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
+  all: boolean = false;
+}
+
+export class GetFullProblemDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
+  hidden: boolean = true;
+}

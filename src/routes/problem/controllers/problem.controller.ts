@@ -18,7 +18,10 @@ import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
 import {
   CreateProblemDTO,
+  GetFullProblemDTO,
+  GetProblemListDTO,
   getTestcasesDTO,
+  ProblemIdDTO,
   UpdateProblemDTO,
 } from "../dto/problem.dto";
 import { ProblemGetService } from "../providers";
@@ -38,19 +41,13 @@ export class ProblemController {
     summary: "get problem",
     description: "get single problem via id",
   })
-  @ApiQuery({
-    required: true,
-    name: "id",
-    description: "problem id",
-    type: String,
-  })
   @Get("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
     PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]),
   )
-  async getProblem(@Query("id") id: string) {
-    return this.problemGetService.getPublicProblemById(id);
+  async getProblem(@Query() data: ProblemIdDTO) {
+    return this.problemGetService.getPublicProblemById(data.id);
   }
 
   @ApiOperation({
@@ -65,35 +62,14 @@ export class ProblemController {
       true,
     ),
   )
-  @ApiQuery({
-    required: false,
-    name: "all",
-    description: "get all problems as possible",
-    type: Boolean,
-  })
-  async getProblemList(
-    @Req() req,
-    @Query("all", new ParseBoolPipe()) all: boolean,
-  ) {
-    return this.problemGetService.getPublicProblemList(req.user, all);
+  async getProblemList(@Req() req, @Query() data: GetProblemListDTO) {
+    return this.problemGetService.getPublicProblemList(req.user, data.all);
   }
 
   @ApiOperation({
     summary: "get problem - no filter",
     description:
       "get user's single public problem with hidden testcases via id",
-  })
-  @ApiQuery({
-    required: true,
-    name: "id",
-    description: "problem id",
-    type: String,
-  })
-  @ApiQuery({
-    required: true,
-    name: "hidden",
-    description: "get hidden cases?",
-    type: Boolean,
   })
   @Get("/full")
   @UseGuardsWithSwagger(
@@ -103,12 +79,12 @@ export class ProblemController {
       true,
     ),
   )
-  async getFullProblem(
-    @Req() req,
-    @Query("id") id: string,
-    @Query("hidden", ParseBoolPipe) hidden: boolean,
-  ) {
-    return this.problemGetService.getSelfProblemById(req.user, id, hidden);
+  async getFullProblem(@Req() req, @Query() data: GetFullProblemDTO) {
+    return this.problemGetService.getSelfProblemById(
+      req.user,
+      data.id,
+      data.hidden,
+    );
   }
   @ApiOperation({
     summary: "Create problem",
@@ -143,12 +119,6 @@ export class ProblemController {
     summary: "Delete problem",
     description: "Delete problem via id",
   })
-  @ApiQuery({
-    required: true,
-    name: "id",
-    description: "problem id",
-    type: String,
-  })
   @Delete("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
@@ -157,8 +127,8 @@ export class ProblemController {
       true,
     ),
   )
-  async deleteProblem(@Req() req, @Query("id") id: string) {
-    return this.problemPsadderService.deleteProblem(req.user, id);
+  async deleteProblem(@Req() req, @Query() data: ProblemIdDTO) {
+    return this.problemPsadderService.deleteProblem(req.user, data.id);
   }
 
   @ApiOperation({
