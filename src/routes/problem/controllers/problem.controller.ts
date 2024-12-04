@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Post,
   Query,
   Req,
@@ -13,17 +14,18 @@ import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
-import { Problem } from "../../../schemas";
+import { Problem, TestCase } from "../../../schemas";
 import {
   CreateProblemDTO,
   GetFullProblemDTO,
   GetProblemListDTO,
-  getTestcasesDTO,
+  GetTestcasesDTO,
   ProblemIdDTO,
   ProblemSummary,
   TestcaseListResponseDTO,
   UpdateProblemDTO,
   ProblemCheckResult,
+  TestcaseIdDTO,
 } from "../dto/problem.dto";
 import { ProblemGetService } from "../providers";
 import { ProblemManageService } from "../providers/problem.manage.service";
@@ -43,7 +45,7 @@ export class ProblemController {
     description: "get single problem via id",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "problem",
     type: ProblemCheckResult,
   })
@@ -61,7 +63,7 @@ export class ProblemController {
     description: "list problems",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "problem summary list",
     type: [ProblemSummary],
   })
@@ -83,7 +85,7 @@ export class ProblemController {
       "get user's single public problem with hidden testcases via id",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "problem",
     type: ProblemCheckResult,
   })
@@ -108,7 +110,7 @@ export class ProblemController {
     description: "Create Public problem from given items",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "problem",
     type: Problem,
   })
@@ -126,7 +128,7 @@ export class ProblemController {
     description: "Problem from given items via name",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "problem",
     type: Problem,
   })
@@ -147,7 +149,7 @@ export class ProblemController {
     description: "Delete problem via id",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "problem",
     type: Problem,
   })
@@ -165,10 +167,10 @@ export class ProblemController {
 
   @ApiOperation({
     summary: "get testcases",
-    description: "get testcases",
+    description: "get testcases by problem id",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "problem",
     type: TestcaseListResponseDTO,
   })
@@ -180,12 +182,59 @@ export class ProblemController {
       true,
     ),
   )
-  async getTestcases(@Req() req, @Query() data: getTestcasesDTO) {
+  async getTestcases(@Req() req, @Query() data: GetTestcasesDTO) {
     return this.problemTestcaseService.getTestCases(
       req.user,
       data.id,
       data.from,
       data.count,
     );
+  }
+
+  @ApiOperation({
+    summary: "modify testcase",
+    description: "modify testcase",
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "testcase",
+    type: TestCase,
+  })
+  @Post("/testcases/")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(
+      [PermissionEnum.MODIFY_PROBLEM_SELF, PermissionEnum.MODIFY_PROBLEM],
+      true,
+    ),
+  )
+  async modifyTestCase(@Req() req, @Body() data: TestCase) {
+    return this.problemTestcaseService.modifyTestCase(
+      req.user,
+      data.id,
+      data.input,
+      data.output,
+    );
+  }
+
+  @ApiOperation({
+    summary: "delete testcase",
+    description: "delete testcase",
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "testcase",
+    type: TestCase,
+  })
+  @Delete("/testcases/")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(
+      [PermissionEnum.DELETE_PROBLEM_SELF, PermissionEnum.DELETE_PROBLEM],
+      true,
+    ),
+  )
+  async deleteTestCase(@Req() req, @Query() data: TestcaseIdDTO) {
+    return this.problemTestcaseService.deleteTestCase(req.user, data.id);
   }
 }

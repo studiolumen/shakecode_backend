@@ -108,7 +108,7 @@ export class ProblemSummary {
   category: string;
 }
 
-export class getTestcasesDTO {
+export class GetTestcasesDTO {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -125,6 +125,13 @@ export class getTestcasesDTO {
   @IsOptional()
   @Min(0)
   count: number;
+}
+
+export class TestcaseIdDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
 }
 
 export class ProblemIdDTO {

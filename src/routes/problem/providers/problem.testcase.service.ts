@@ -64,7 +64,7 @@ export class ProblemTestCaseService {
 
     if (
       testcase.problem.user.id !== user.id &&
-      !hasPermission(user.permission, [PermissionEnum.GET_PROBLEM])
+      !hasPermission(user.permission, [PermissionEnum.MODIFY_PROBLEM])
     )
       throw new HttpException(
         ErrorMsg.PermissionDenied_Resource,
@@ -75,5 +75,25 @@ export class ProblemTestCaseService {
     testcase.output = output;
 
     return await this.testCaseRepository.save(testcase);
+  }
+
+  async deleteTestCase(user: UserJWT, id: string): Promise<TestCase> {
+    const testcase = await this.testCaseRepository.findOne({
+      where: { id: id },
+      relations: ["problem"],
+    });
+    if (!testcase)
+      throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+
+    if (
+      testcase.problem.user.id !== user.id &&
+      !hasPermission(user.permission, [PermissionEnum.MODIFY_PROBLEM])
+    )
+      throw new HttpException(
+        ErrorMsg.PermissionDenied_Resource,
+        HttpStatus.FORBIDDEN,
+      );
+
+    return await this.testCaseRepository.remove(testcase);
   }
 }
