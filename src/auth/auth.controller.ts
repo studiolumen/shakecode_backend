@@ -13,7 +13,7 @@ export class AuthController {
 
   @ApiOperation({
     summary: "핑",
-    description: "서버와 세션이 살아있는지 테스트합니다.",
+    description: "세션이 살아있는지 테스트합니다.",
   })
   @Get("/ping")
   @UseGuardsWithSwagger(CustomJwtAuthGuard)

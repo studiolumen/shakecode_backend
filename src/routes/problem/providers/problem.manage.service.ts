@@ -105,8 +105,8 @@ export class ProblemManageService {
     return result;
   }
 
-  async deleteProblem(user: UserJWT, id: number) {
-    if (isNaN(id))
+  async deleteProblem(user: UserJWT, id: string) {
+    if (id)
       throw new HttpException(
         ErrorMsg.InvalidParameter,
         HttpStatus.BAD_REQUEST,

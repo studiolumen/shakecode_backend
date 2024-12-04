@@ -43,10 +43,10 @@ export class ProblemGetService {
         category: p.problem.category,
         difficulty: p.problem.difficulty,
       }))
-      .sort((a, b) => a.id - b.id);
+      .sort((a, b) => a.pid - b.pid);
   }
 
-  async getPublicProblemById(id: number): Promise<ProblemCheckResult> {
+  async getPublicProblemById(id: string): Promise<ProblemCheckResult> {
     const publicProblem = await this.publicProblemRepository.findOne({
       where: { id: id },
     });
@@ -69,10 +69,10 @@ export class ProblemGetService {
 
   async getSelfProblemById(
     user: UserJWT,
-    id: number,
+    id: string,
     hidden: boolean,
   ): Promise<Problem | ProblemCheckResult> {
-    if (isNaN(id))
+    if (id)
       new HttpException(ErrorMsg.InvalidParameter, HttpStatus.BAD_REQUEST);
 
     const problem = await this.problemRepository.findOne({

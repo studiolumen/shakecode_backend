@@ -12,8 +12,8 @@ import { User } from "./user.schema";
 
 @Entity()
 export class Login {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @JoinColumn()
   @ManyToOne(() => User, (user) => user.login, {
@@ -35,8 +35,8 @@ export class Login {
 
 @Entity()
 export class Session {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   accessToken: string = null;

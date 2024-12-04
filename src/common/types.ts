@@ -18,7 +18,7 @@ export type UploadBufferIdentifier =
   (typeof UploadBufferIdentifierValues)[number];
 
 export type ProblemCheckResult = {
-  id: number;
+  id: string;
   pid: number;
   name: string;
   description: string;
@@ -32,7 +32,7 @@ export type ProblemCheckResult = {
 };
 
 export type UserJWT = {
-  id: number;
+  id: string;
   email: string;
   name: string;
   nickname: string;

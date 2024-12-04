@@ -27,9 +27,9 @@ export class CreateUserDTO {
 
 export class SetPermissionDTO {
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   @IsArray()

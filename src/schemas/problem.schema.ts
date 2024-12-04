@@ -14,8 +14,8 @@ import { User } from "./user.schema";
 
 @Entity()
 export class Problem {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   name: string = null;
@@ -60,8 +60,8 @@ export class Problem {
 
 @Entity()
 export class TestCase {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column({ nullable: true })
   input: string = null;
@@ -81,8 +81,8 @@ export class TestCase {
 
 @Entity()
 export class PublicProblem {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column("int", { generated: "increment", unique: true })
   pid: number;
@@ -97,8 +97,8 @@ export class PublicProblem {
 }
 @Entity()
 export class ClassProblem {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @JoinColumn()
   @ManyToOne(() => Problem, (problem) => problem.classProblem, {

@@ -67,9 +67,9 @@ export class CreateProblemDTO {
 
 export class UpdateProblemDTO extends CreateProblemDTO {
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   @IsNumber()
@@ -79,16 +79,16 @@ export class UpdateProblemDTO extends CreateProblemDTO {
 
 export class CreateClassProblemDTO extends CreateProblemDTO {
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  classId: number;
+  classId: string;
 }
 
 export class ProblemSummary {
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  id: number;
+  id: string;
 
   @ApiProperty()
   @IsString()

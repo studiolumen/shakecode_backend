@@ -1,11 +1,11 @@
-FROM node:18-alpine AS base
+FROM oven/bun:1.0.0 AS base
 
 # INSTALL DEPENDENCIES FOR DEVELOPMENT (FOR NEST)
 FROM base AS deps
 WORKDIR /usr/src/app
 
-COPY --chown=node:node package.json yarn.lock ./
-RUN yarn --frozen-lockfile;
+COPY --chown=node:node package.json bun.lockb ./
+RUN bun install --frozen-lockfile
 
 USER node
 
@@ -16,10 +16,10 @@ WORKDIR /usr/src/app
 COPY --chown=node:node --from=deps /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node . .
 
-RUN yarn build
+RUN bun run build
 
 ENV NODE_ENV production
-RUN yarn --frozen-lockfile --production;
+RUN bun install --frozen-lockfile --production
 RUN rm -rf ./.next/cache
 
 USER node
@@ -33,4 +33,4 @@ COPY --chown=node:node package.json ./
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
-CMD [ "node", "dist/main.js" ]
+CMD [ "bun", "dist/main.js" ]
