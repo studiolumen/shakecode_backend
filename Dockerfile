@@ -5,7 +5,7 @@ FROM base AS deps
 WORKDIR /usr/src/app
 
 COPY --chown=node:node package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+RUN bun install
 
 USER node
 
