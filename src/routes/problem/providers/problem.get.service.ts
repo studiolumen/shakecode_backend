@@ -50,6 +50,9 @@ export class ProblemGetService {
     const publicProblem = await this.publicProblemRepository.findOne({
       where: { id: id },
     });
+    const testcasesCount = await this.testCaseRepository.count({
+      where: { problem: publicProblem.problem },
+    });
 
     if (!publicProblem)
       throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
@@ -64,14 +67,14 @@ export class ProblemGetService {
       (tc) => tc.show_user,
     );
 
-    return { pid: publicProblem.pid, ...publicProblem.problem };
+    return { pid: publicProblem.pid, ...publicProblem.problem, testcasesCount };
   }
 
   async getSelfProblemById(
     user: UserJWT,
     id: string,
     hidden: boolean,
-  ): Promise<Problem | ProblemCheckResult> {
+  ): Promise<ProblemCheckResult> {
     if (id)
       new HttpException(ErrorMsg.InvalidParameter, HttpStatus.BAD_REQUEST);
 
@@ -82,6 +85,9 @@ export class ProblemGetService {
       where: hidden
         ? { problem: problem }
         : { problem: problem, show_user: true },
+    });
+    const testcasesCount = await this.testCaseRepository.count({
+      where: { problem: problem },
     });
 
     if (
@@ -98,11 +104,17 @@ export class ProblemGetService {
     });
 
     if (publicProblem)
-      return { pid: publicProblem.pid, ...problem, testCases: testcases };
+      return {
+        pid: publicProblem.pid,
+        ...problem,
+        testCases: testcases,
+        testcasesCount,
+      };
     else
       return {
         ...problem,
         testCases: testcases,
+        testcasesCount,
       };
   }
 }

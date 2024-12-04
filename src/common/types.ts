@@ -19,7 +19,7 @@ export type UploadBufferIdentifier =
 
 export type ProblemCheckResult = {
   id: string;
-  pid: number;
+  pid?: number;
   name: string;
   description: string;
   category: ProblemCategory;
@@ -28,6 +28,7 @@ export type ProblemCheckResult = {
   memory_limit: number;
   restricted: number;
   testCases: TestCase[];
+  testcasesCount: number;
   user: User;
 };
 
