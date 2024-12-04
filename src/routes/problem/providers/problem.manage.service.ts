@@ -105,7 +105,7 @@ export class ProblemManageService {
     return result;
   }
 
-  async deleteProblem(user: UserJWT, id: string) {
+  async deleteProblem(user: UserJWT, id: string): Promise<Problem> {
     const existingProblem = await this.problemRepository.findOne({
       where: { id: id },
     });

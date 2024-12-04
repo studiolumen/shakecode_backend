@@ -72,6 +72,7 @@ export class TestCase {
   @Column()
   show_user: boolean = null;
 
+  @JoinColumn()
   @ManyToOne(() => Problem, (problem) => problem.testCases, {
     onDelete: "CASCADE",
     onUpdate: "CASCADE",

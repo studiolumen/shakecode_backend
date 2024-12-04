@@ -3,26 +3,27 @@ import {
   Controller,
   Delete,
   Get,
-  ParseBoolPipe,
-  ParseIntPipe,
   Post,
   Query,
   Req,
 } from "@nestjs/common";
-import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
-import { Request } from "express";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
+import { Problem } from "../../../schemas";
 import {
   CreateProblemDTO,
   GetFullProblemDTO,
   GetProblemListDTO,
   getTestcasesDTO,
   ProblemIdDTO,
+  ProblemSummary,
+  TestcaseListResponseDTO,
   UpdateProblemDTO,
+  ProblemCheckResult,
 } from "../dto/problem.dto";
 import { ProblemGetService } from "../providers";
 import { ProblemManageService } from "../providers/problem.manage.service";
@@ -41,6 +42,11 @@ export class ProblemController {
     summary: "get problem",
     description: "get single problem via id",
   })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: ProblemCheckResult,
+  })
   @Get("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
@@ -53,6 +59,11 @@ export class ProblemController {
   @ApiOperation({
     summary: "get problem list",
     description: "list problems",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "problem summary list",
+    type: [ProblemSummary],
   })
   @Get("/list")
   @UseGuardsWithSwagger(
@@ -71,6 +82,11 @@ export class ProblemController {
     description:
       "get user's single public problem with hidden testcases via id",
   })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: ProblemCheckResult,
+  })
   @Get("/full")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
@@ -86,9 +102,15 @@ export class ProblemController {
       data.hidden,
     );
   }
+
   @ApiOperation({
     summary: "Create problem",
     description: "Create Public problem from given items",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: Problem,
   })
   @Post("/")
   @UseGuardsWithSwagger(
@@ -102,6 +124,11 @@ export class ProblemController {
   @ApiOperation({
     summary: "Update problem",
     description: "Problem from given items via name",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: Problem,
   })
   @Post("/update")
   @UseGuardsWithSwagger(
@@ -119,6 +146,11 @@ export class ProblemController {
     summary: "Delete problem",
     description: "Delete problem via id",
   })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: Problem,
+  })
   @Delete("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
@@ -134,6 +166,11 @@ export class ProblemController {
   @ApiOperation({
     summary: "get testcases",
     description: "get testcases",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: TestcaseListResponseDTO,
   })
   @Get("/testcases")
   @UseGuardsWithSwagger(

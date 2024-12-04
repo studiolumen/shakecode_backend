@@ -17,21 +17,6 @@ export const UploadBufferIdentifierValues = [
 export type UploadBufferIdentifier =
   (typeof UploadBufferIdentifierValues)[number];
 
-export type ProblemCheckResult = {
-  id: string;
-  pid?: number;
-  name: string;
-  description: string;
-  category: ProblemCategory;
-  difficulty: number;
-  time_limit: number;
-  memory_limit: number;
-  restricted: number;
-  testCases: TestCase[];
-  testcasesCount: number;
-  user: User;
-};
-
 export type UserJWT = {
   id: string;
   email: string;

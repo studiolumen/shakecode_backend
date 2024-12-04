@@ -10,6 +10,7 @@ import {
 } from "class-validator";
 
 import { ProblemCategory, ProblemCategoryValues } from "../../../common/types";
+import { TestCase, User } from "../../../schemas";
 
 export class TestCaseDTO {
   @ApiProperty()
@@ -150,4 +151,52 @@ export class GetFullProblemDTO {
   @IsBoolean()
   @IsOptional()
   hidden: boolean = true;
+}
+
+export class TestcaseListResponseDTO {
+  @ApiProperty({ type: [TestCaseDTO] })
+  @IsArray()
+  testcases: TestCaseDTO[];
+
+  @ApiProperty()
+  @IsNumber()
+  count: number;
+}
+
+export class ProblemCheckResult {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  pid?: number;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty({ type: ProblemCategoryValues })
+  category: ProblemCategory;
+
+  @ApiProperty()
+  difficulty: number;
+
+  @ApiProperty()
+  time_limit: number;
+
+  @ApiProperty()
+  memory_limit: number;
+
+  @ApiProperty()
+  restricted: number;
+
+  @ApiProperty({ type: [TestCase] })
+  testCases: TestCase[];
+
+  @ApiProperty()
+  testcasesCount: number;
+
+  @ApiProperty({ type: User })
+  user: User;
 }
