@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, HttpStatus, Post, UseGuards } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
@@ -23,7 +23,7 @@ export class UserController {
     description: "유저 및 로그인 정보 생성",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "성공",
     type: User,
   })
@@ -38,7 +38,7 @@ export class UserController {
     description: "유저 권한 설정",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "성공",
     type: User,
   })
@@ -53,7 +53,7 @@ export class UserController {
     description: "유저 권한 추가",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "성공",
     type: User,
   })
@@ -68,7 +68,7 @@ export class UserController {
     description: "유저 권한 제거",
   })
   @ApiResponse({
-    status: 200,
+    status: HttpStatus.OK,
     description: "성공",
     type: User,
   })
