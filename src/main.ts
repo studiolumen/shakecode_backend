@@ -10,20 +10,22 @@ import { ValidationService } from "./common/modules/validation.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useWebSocketAdapter(new IoAdapter(app));
-  app.useGlobalPipes(new ValidationPipe());
-  app.use(json({ limit: "5000mb" }));
+
+  const configService = app.get(ConfigService);
+
   app.enableCors();
+  app.use(json({ limit: "5000mb" }));
+  app.useGlobalPipes(new ValidationPipe());
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   await CustomSwaggerSetup(app);
+
+  const port = configService.get("PORT");
+  await app.listen(port);
 
   const validationService = app.get<ValidationService>(ValidationService);
   await validationService.validatePermissionEnum();
   await validationService.validateSession();
-
-  const configService = app.get(ConfigService);
-  const port = configService.get("PORT");
-
-  await app.listen(port);
 }
+
 bootstrap();

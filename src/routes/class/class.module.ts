@@ -3,15 +3,14 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import importToArray from "import-to-array";
 
 import { ClassProblem, Problem, TestCase, User } from "../../schemas";
-import * as problemServices from "../problem/providers";
 
-import * as classControllers from "./controllers";
-import * as classServices from "./providers";
+import * as controllers from "./controllers";
+import * as providers from "./providers";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Problem, TestCase, ClassProblem])],
-  controllers: importToArray(classControllers),
-  providers: importToArray(classServices),
-  exports: importToArray(problemServices),
+  controllers: importToArray(controllers),
+  providers: importToArray(providers),
+  exports: importToArray(providers),
 })
 export class ClassModule {}
