@@ -45,8 +45,14 @@ export class CustomLoggerMiddleware implements NestMiddleware {
         `${ipAddress} (${userAgent}) - "${requestMethod} ${originURL} ${httpVersion}" ${statusCode} by uid{${authorization}} +${endTimestamp}ms `,
       );
 
-      // if (Object.keys(req.body).length > 0)
-      //   this.logger.log(`Request Body: ${JSON.stringify(req.body)}`);
+      if (
+        Object.keys(req.body).length > 0 &&
+        Buffer.byteLength(req.body.toString(), "utf8") < 1024 * 1024 // 1mb
+      )
+        this.logger.log(`Request Body: ${JSON.stringify(req.body)}`);
+
+      if (Buffer.byteLength(req.body.toString(), "utf8") > 1024 * 1024)
+        this.logger.log("Request Body: [Too large to log]");
     });
     next();
   }

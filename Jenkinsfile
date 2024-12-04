@@ -59,7 +59,7 @@ pipeline {
                         docker stop shakecode_back || true
                         docker rm shakecode_back || true
                         docker pull $username/shakecode_back
-                        docker run -it -d --name shakecode_back --restart always -p 9007:3000 $username/shakecode_back
+                        docker run -it -d --name shakecode_back --restart always -p 9007:3001 $username/shakecode_back
                         docker network connect --ip 192.168.1.101 shakecode_default shakecode_back
                         docker image prune -f
                         """

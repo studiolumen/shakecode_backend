@@ -3,22 +3,31 @@ import {
   Controller,
   Delete,
   Get,
-  ParseBoolPipe,
-  ParseIntPipe,
   Post,
   Query,
   Req,
 } from "@nestjs/common";
-import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
-import { Request } from "express";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
-import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
+import { Problem } from "../../../schemas";
+import {
+  CreateProblemDTO,
+  GetFullProblemDTO,
+  GetProblemListDTO,
+  getTestcasesDTO,
+  ProblemIdDTO,
+  ProblemSummary,
+  TestcaseListResponseDTO,
+  UpdateProblemDTO,
+  ProblemCheckResult,
+} from "../dto/problem.dto";
 import { ProblemGetService } from "../providers";
 import { ProblemManageService } from "../providers/problem.manage.service";
+import { ProblemTestCaseService } from "../providers/problem.testcase.service";
 
 @ApiTags("Problem")
 @Controller("/problem")
@@ -26,30 +35,35 @@ export class ProblemController {
   constructor(
     private readonly problemGetService: ProblemGetService,
     private readonly problemPsadderService: ProblemManageService,
+    private readonly problemTestcaseService: ProblemTestCaseService,
   ) {}
 
   @ApiOperation({
     summary: "get problem",
     description: "get single problem via id",
   })
-  @ApiQuery({
-    required: true,
-    name: "id",
-    description: "problem id",
-    type: String,
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: ProblemCheckResult,
   })
   @Get("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
     PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]),
   )
-  async getProblem(@Query("id") id: string) {
-    return this.problemGetService.getPublicProblemById(id);
+  async getProblem(@Query() data: ProblemIdDTO) {
+    return this.problemGetService.getPublicProblemById(data.id);
   }
 
   @ApiOperation({
     summary: "get problem list",
     description: "list problems",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "problem summary list",
+    type: [ProblemSummary],
   })
   @Get("/list")
   @UseGuardsWithSwagger(
@@ -59,17 +73,8 @@ export class ProblemController {
       true,
     ),
   )
-  @ApiQuery({
-    required: false,
-    name: "all",
-    description: "get all problems as possible",
-    type: Boolean,
-  })
-  async getProblemList(
-    @Req() req,
-    @Query("all", new ParseBoolPipe()) all: boolean,
-  ) {
-    return this.problemGetService.getPublicProblemList(req.user, all);
+  async getProblemList(@Req() req, @Query() data: GetProblemListDTO) {
+    return this.problemGetService.getPublicProblemList(req.user, data.all);
   }
 
   @ApiOperation({
@@ -77,17 +82,10 @@ export class ProblemController {
     description:
       "get user's single public problem with hidden testcases via id",
   })
-  @ApiQuery({
-    required: true,
-    name: "id",
-    description: "problem id",
-    type: String,
-  })
-  @ApiQuery({
-    required: true,
-    name: "hidden",
-    description: "get hidden cases?",
-    type: Boolean,
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: ProblemCheckResult,
   })
   @Get("/full")
   @UseGuardsWithSwagger(
@@ -97,16 +95,22 @@ export class ProblemController {
       true,
     ),
   )
-  async getFullProblem(
-    @Req() req,
-    @Query("id") id: string,
-    @Query("hidden", ParseBoolPipe) hidden: boolean,
-  ) {
-    return this.problemGetService.getSelfProblemById(req.user, id, hidden);
+  async getFullProblem(@Req() req, @Query() data: GetFullProblemDTO) {
+    return this.problemGetService.getSelfProblemById(
+      req.user,
+      data.id,
+      data.hidden,
+    );
   }
+
   @ApiOperation({
     summary: "Create problem",
     description: "Create Public problem from given items",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: Problem,
   })
   @Post("/")
   @UseGuardsWithSwagger(
@@ -120,6 +124,11 @@ export class ProblemController {
   @ApiOperation({
     summary: "Update problem",
     description: "Problem from given items via name",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: Problem,
   })
   @Post("/update")
   @UseGuardsWithSwagger(
@@ -137,11 +146,10 @@ export class ProblemController {
     summary: "Delete problem",
     description: "Delete problem via id",
   })
-  @ApiQuery({
-    required: true,
-    name: "id",
-    description: "problem id",
-    type: String,
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: Problem,
   })
   @Delete("/")
   @UseGuardsWithSwagger(
@@ -151,7 +159,33 @@ export class ProblemController {
       true,
     ),
   )
-  async deleteProblem(@Req() req, @Query("id") id: string) {
-    return this.problemPsadderService.deleteProblem(req.user, id);
+  async deleteProblem(@Req() req, @Query() data: ProblemIdDTO) {
+    return this.problemPsadderService.deleteProblem(req.user, data.id);
+  }
+
+  @ApiOperation({
+    summary: "get testcases",
+    description: "get testcases",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "problem",
+    type: TestcaseListResponseDTO,
+  })
+  @Get("/testcases")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(
+      [PermissionEnum.GET_PROBLEM_SELF, PermissionEnum.GET_PROBLEM],
+      true,
+    ),
+  )
+  async getTestcases(@Req() req, @Query() data: getTestcasesDTO) {
+    return this.problemTestcaseService.getTestCases(
+      req.user,
+      data.id,
+      data.from,
+      data.count,
+    );
   }
 }

@@ -4,10 +4,13 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
+  Min,
 } from "class-validator";
 
 import { ProblemCategory, ProblemCategoryValues } from "../../../common/types";
+import { TestCase, User } from "../../../schemas";
 
 export class TestCaseDTO {
   @ApiProperty()
@@ -56,7 +59,6 @@ export class CreateProblemDTO {
 
   @ApiProperty({ type: TestCaseDTO })
   @IsArray()
-  @IsNotEmpty()
   testcases: TestCaseDTO[];
 
   @ApiProperty()
@@ -104,4 +106,97 @@ export class ProblemSummary {
   @IsString()
   @IsNotEmpty()
   category: string;
+}
+
+export class getTestcasesDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  from: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  count: number;
+}
+
+export class ProblemIdDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+}
+
+export class GetProblemListDTO {
+  @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
+  all: boolean = false;
+}
+
+export class GetFullProblemDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
+  hidden: boolean = true;
+}
+
+export class TestcaseListResponseDTO {
+  @ApiProperty({ type: [TestCaseDTO] })
+  @IsArray()
+  testcases: TestCaseDTO[];
+
+  @ApiProperty()
+  @IsNumber()
+  count: number;
+}
+
+export class ProblemCheckResult {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  pid?: number;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty({ type: ProblemCategoryValues })
+  category: ProblemCategory;
+
+  @ApiProperty()
+  difficulty: number;
+
+  @ApiProperty()
+  time_limit: number;
+
+  @ApiProperty()
+  memory_limit: number;
+
+  @ApiProperty()
+  restricted: number;
+
+  @ApiProperty({ type: [TestCase] })
+  testCases: TestCase[];
+
+  @ApiProperty()
+  testcasesCount: number;
+
+  @ApiProperty({ type: User })
+  user: User;
 }

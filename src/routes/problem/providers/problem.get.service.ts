@@ -3,14 +3,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { ErrorMsg } from "../../../common/error";
-import {
-  PermissionEnum,
-  ProblemCheckResult,
-  UserJWT,
-} from "../../../common/types";
+import { PermissionEnum, UserJWT } from "../../../common/types";
 import { hasPermission } from "../../../common/utils/permission.util";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
-import { ProblemSummary } from "../dto/problem.dto";
+import { ProblemSummary, ProblemCheckResult } from "../dto/problem.dto";
 
 @Injectable()
 export class ProblemGetService {
@@ -50,6 +46,9 @@ export class ProblemGetService {
     const publicProblem = await this.publicProblemRepository.findOne({
       where: { id: id },
     });
+    const testcasesCount = await this.testCaseRepository.count({
+      where: { problem: publicProblem.problem },
+    });
 
     if (!publicProblem)
       throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
@@ -64,17 +63,14 @@ export class ProblemGetService {
       (tc) => tc.show_user,
     );
 
-    return { pid: publicProblem.pid, ...publicProblem.problem };
+    return { pid: publicProblem.pid, ...publicProblem.problem, testcasesCount };
   }
 
   async getSelfProblemById(
     user: UserJWT,
     id: string,
     hidden: boolean,
-  ): Promise<Problem | ProblemCheckResult> {
-    if (id)
-      new HttpException(ErrorMsg.InvalidParameter, HttpStatus.BAD_REQUEST);
-
+  ): Promise<ProblemCheckResult> {
     const problem = await this.problemRepository.findOne({
       where: { id: id },
     });
@@ -82,6 +78,9 @@ export class ProblemGetService {
       where: hidden
         ? { problem: problem }
         : { problem: problem, show_user: true },
+    });
+    const testcasesCount = await this.testCaseRepository.count({
+      where: { problem: problem },
     });
 
     if (
@@ -98,11 +97,17 @@ export class ProblemGetService {
     });
 
     if (publicProblem)
-      return { pid: publicProblem.pid, ...problem, testCases: testcases };
+      return {
+        pid: publicProblem.pid,
+        ...problem,
+        testCases: testcases,
+        testcasesCount,
+      };
     else
       return {
         ...problem,
         testCases: testcases,
+        testcasesCount,
       };
   }
 }
