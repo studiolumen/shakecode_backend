@@ -14,7 +14,7 @@ async function bootstrap() {
 
   await CustomSwaggerSetup(app);
 
-  await app.listen(process.env.PORT || 3001);
+  await app.listen(3001);
 
   const validationService = app.get<ValidationService>(ValidationService);
   await validationService.validatePermissionEnum();
