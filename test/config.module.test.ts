@@ -3,7 +3,7 @@ import { ConfigModule, type ConfigModuleOptions } from "@nestjs/config";
 
 export const options: ConfigModuleOptions = {
   isGlobal: true,
-  envFilePath: ".env.dev",
+  envFilePath: ".env",
 };
 
 @Module({ imports: [ConfigModule.forRoot(options)] })
