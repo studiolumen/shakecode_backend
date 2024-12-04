@@ -4,7 +4,9 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
+  Min,
 } from "class-validator";
 
 import { ProblemCategory, ProblemCategoryValues } from "../../../common/types";
@@ -56,7 +58,6 @@ export class CreateProblemDTO {
 
   @ApiProperty({ type: TestCaseDTO })
   @IsArray()
-  @IsNotEmpty()
   testcases: TestCaseDTO[];
 
   @ApiProperty()
@@ -104,4 +105,23 @@ export class ProblemSummary {
   @IsString()
   @IsNotEmpty()
   category: string;
+}
+
+export class getTestcasesDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  from: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  @Min(0)
+  count: number;
 }

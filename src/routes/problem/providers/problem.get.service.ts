@@ -75,9 +75,6 @@ export class ProblemGetService {
     id: string,
     hidden: boolean,
   ): Promise<ProblemCheckResult> {
-    if (id)
-      new HttpException(ErrorMsg.InvalidParameter, HttpStatus.BAD_REQUEST);
-
     const problem = await this.problemRepository.findOne({
       where: { id: id },
     });

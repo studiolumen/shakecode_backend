@@ -16,9 +16,14 @@ import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/types";
-import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
+import {
+  CreateProblemDTO,
+  getTestcasesDTO,
+  UpdateProblemDTO,
+} from "../dto/problem.dto";
 import { ProblemGetService } from "../providers";
 import { ProblemManageService } from "../providers/problem.manage.service";
+import { ProblemTestCaseService } from "../providers/problem.testcase.service";
 
 @ApiTags("Problem")
 @Controller("/problem")
@@ -26,6 +31,7 @@ export class ProblemController {
   constructor(
     private readonly problemGetService: ProblemGetService,
     private readonly problemPsadderService: ProblemManageService,
+    private readonly problemTestcaseService: ProblemTestCaseService,
   ) {}
 
   @ApiOperation({
@@ -153,5 +159,26 @@ export class ProblemController {
   )
   async deleteProblem(@Req() req, @Query("id") id: string) {
     return this.problemPsadderService.deleteProblem(req.user, id);
+  }
+
+  @ApiOperation({
+    summary: "get testcases",
+    description: "get testcases",
+  })
+  @Get("/testcases")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard(
+      [PermissionEnum.GET_PROBLEM_SELF, PermissionEnum.GET_PROBLEM],
+      true,
+    ),
+  )
+  async getTestcases(@Req() req, @Query() data: getTestcasesDTO) {
+    return this.problemTestcaseService.getTestCases(
+      req.user,
+      data.id,
+      data.from,
+      data.count,
+    );
   }
 }
