@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import {
   IsArray,
   IsBoolean,
@@ -23,6 +24,7 @@ export class TestCaseDTO {
 
   @ApiProperty()
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   show_user: boolean;
 }
 
@@ -144,6 +146,7 @@ export class ProblemIdDTO {
 export class GetProblemListDTO {
   @ApiProperty()
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @IsOptional()
   all: boolean = false;
 }
@@ -156,6 +159,7 @@ export class GetFullProblemDTO {
 
   @ApiProperty()
   @IsBoolean()
+  @Transform(({ value }) => value === "true")
   @IsOptional()
   hidden: boolean = true;
 }
