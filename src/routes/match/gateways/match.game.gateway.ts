@@ -91,7 +91,6 @@ export class MatchGameGateway {
 
   @SubscribeMessage("input")
   async inputToExecution(client: Socket, data) {
-    console.log(this.dockerContainers.values());
     if (this.dockerContainers.has(client.id)) {
       const dockerContainer = this.dockerContainers.get(client.id);
       dockerContainer.stdin.write(data.body + "\n");
