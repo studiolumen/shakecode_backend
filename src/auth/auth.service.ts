@@ -48,7 +48,7 @@ export class AuthService {
       where: { id: session.user.id },
     });
 
-    return await this.generateJWTKeyPair(user, "30m", "1y");
+    return await this.generateJWTKeyPair(user, "30m", "1M");
   }
 
   async logout(user: UserJWT) {

@@ -9,7 +9,7 @@ import { Server, Socket } from "socket.io";
 
 import { MatchService } from "../providers";
 
-@WebSocketGateway(0, { namespace: "matchQueue", cors: "*" })
+@WebSocketGateway(0, { namespace: "match/queue", cors: "*" })
 export class MatchQueueGateway {
   @WebSocketServer()
   server: Server;
@@ -18,8 +18,8 @@ export class MatchQueueGateway {
 
   private logger: Logger = new Logger("MatchQueueGateway");
 
-  @SubscribeMessage("exit")
+  @SubscribeMessage("register")
   handleEvent(client: Socket, @MessageBody() data: string): string {
-    return "matchQueue";
+    return data;
   }
 }

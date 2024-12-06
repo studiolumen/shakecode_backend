@@ -19,7 +19,7 @@ describe("Permission Management Test", () => {
   it("Has Single Permission Test", () => {
     const commonUserPermission = numberPermission(...CommonUserPermission);
     expect(
-      hasPermission(commonUserPermission, [PermissionEnum.CREATE_PROBLEM]),
+      hasPermission(commonUserPermission, [PermissionEnum.GET_USER_SELF]),
     ).toBe(true);
   });
 
@@ -27,7 +27,7 @@ describe("Permission Management Test", () => {
     const commonUserPermission = numberPermission(...CommonUserPermission);
     expect(
       hasPermission(commonUserPermission, [
-        PermissionEnum.CREATE_PROBLEM,
+        PermissionEnum.GET_USER_SELF,
         PermissionEnum.SEARCH_USER,
         PermissionEnum.SEARCH_PROBLEM,
         PermissionEnum.SEARCH_CLASS,

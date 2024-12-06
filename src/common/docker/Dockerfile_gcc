@@ -1,0 +1,10 @@
+FROM gcc:latest
+
+WORKDIR /app
+
+COPY ./code ./code.c
+COPY ./input* ./
+
+RUN gcc -o code code.c
+
+CMD sh -c 'if ls input* 1> /dev/null 2>&1; then for file in input*; do cat "$file" | ./code; done; else ./code; fi'
