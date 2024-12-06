@@ -11,7 +11,7 @@ pipeline {
         stage('Build ENV') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'SHAKECODE_DB_PASS', variable: 'DB_PASS'), string(credentialsId: 'SHAKECODE_REDIS_PASS', variable: 'REDIS_PASS')]) {
+                    withCredentials([string(credentialsId: 'SHAKECODE_DB_PASS', variable: 'DB_PASS'), string(credentialsId: 'SHAKECODE_RADIS_PASS', variable: 'REDIS_PASS')]) {
                         sh """
                         echo "PORT=3000" >> .env
                         echo "DB_HOST=192.168.1.100" >> .env
@@ -19,7 +19,7 @@ pipeline {
                         echo "DB_USER=postgres" >> .env
                         echo "DB_PASS=$DB_PASS" >> .env
                         echo "DB_NAME=shakecode" >> .env
-                        echo "REDIS_HOST=192.168.1.100" >> .env
+                        echo "REDIS_HOST=192.168.1.101" >> .env
                         echo "REDIS_PORT=9102" >> .env
                         echo "REDIS_PASS=$REDIS_PASS" >> .env
                         ./genkey.sh >> .env
