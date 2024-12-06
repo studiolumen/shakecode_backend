@@ -1,7 +1,0 @@
-FROM node:latest
-
-WORKDIR /app
-
-COPY . .
-
-CMD sh -c "for file in input*; do cat "$file" | node code.js; done"

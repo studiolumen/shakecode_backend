@@ -39,7 +39,7 @@ export class CreateProblemDTO {
   @IsNotEmpty()
   description: string;
 
-  @ApiProperty({ type: ProblemCategoryValues })
+  @ApiProperty({ type: ProblemCategoryValues, enumName: "ProblemCategory" })
   @IsString()
   @IsNotEmpty()
   category: ProblemCategory;
@@ -187,7 +187,7 @@ export class ProblemCheckResult {
   @ApiProperty()
   description: string;
 
-  @ApiProperty({ type: ProblemCategoryValues })
+  @ApiProperty({ type: ProblemCategoryValues, enumName: "ProblemCategory" })
   category: ProblemCategory;
 
   @ApiProperty()

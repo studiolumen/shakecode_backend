@@ -1,0 +1,8 @@
+FROM python:latest
+
+WORKDIR /app
+
+COPY ./code ./code.py
+COPY ./input* ./
+
+CMD sh -c 'if ls input* 1> /dev/null 2>&1; then for file in input*; do cat "$file" | python3 code.py; done; else python3 code.py; fi'

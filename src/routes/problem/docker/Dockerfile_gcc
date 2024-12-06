@@ -1,9 +1,0 @@
-FROM gcc:latest
-
-WORKDIR /app
-
-COPY . .
-
-RUN gcc -o code code.c
-
-CMD sh -c 'for file in input*; do cat "$file" | ./code; done'
