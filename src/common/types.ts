@@ -61,7 +61,9 @@ export const ManagementPermissionValues = [
 ] as const;
 
 // Merge permission values without duplicates
-export const PermissionValues = [...new Set([...UserPermissionValues, ...ManagementPermissionValues])] as const;
+export const PermissionValues = [
+  ...new Set([...UserPermissionValues, ...ManagementPermissionValues]),
+] as const;
 export type PermissionType = (typeof PermissionValues)[number];
 
 // Create enum for easy permission management with binary

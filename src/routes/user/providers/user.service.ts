@@ -60,7 +60,9 @@ export class UserService {
 
     const permissions = parsePermission(user.permission);
 
-    const addPermissionTarget = data.permissions.filter((p: PermissionType) => !permissions.find((p2) => p2 === p));
+    const addPermissionTarget = data.permissions.filter(
+      (p: PermissionType) => !permissions.find((p2) => p2 === p),
+    );
 
     const resultPermission = [].concat(permissions, addPermissionTarget);
 

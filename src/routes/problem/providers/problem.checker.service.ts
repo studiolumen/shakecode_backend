@@ -19,7 +19,10 @@ export class ProblemCheckerService {
     let result: string;
     try {
       fs.mkdirSync(path.join(basePath, id));
-      fs.copyFileSync(path.join(basePath, `Dockerfile_${type}`), path.join(basePath, id, "Dockerfile"));
+      fs.copyFileSync(
+        path.join(basePath, `Dockerfile_${type}`),
+        path.join(basePath, id, "Dockerfile"),
+      );
       fs.writeFileSync(path.join(basePath, id, "code"), code, {
         flag: "w",
       });

@@ -65,7 +65,10 @@ export class ProblemManageService {
 
     if (!existingProblem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (existingProblem.user.id !== dbUser.id && !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM]))
+    if (
+      existingProblem.user.id !== dbUser.id &&
+      !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM])
+    )
       throw new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
 
     const problem = merge(existingProblem, data);
@@ -101,7 +104,10 @@ export class ProblemManageService {
     });
     if (!existingProblem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (existingProblem.user.id !== user.id && !hasPermission(user.permission, [PermissionEnum.DELETE_PROBLEM]))
+    if (
+      existingProblem.user.id !== user.id &&
+      !hasPermission(user.permission, [PermissionEnum.DELETE_PROBLEM])
+    )
       throw new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
     return await this.problemRepository.remove(existingProblem);
   }

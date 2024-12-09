@@ -34,7 +34,8 @@ export class UploadBufferService {
     });
 
     if (!uploadBuffer) new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
-    if (uploadBuffer.user.id !== user.id) new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
+    if (uploadBuffer.user.id !== user.id)
+      new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
 
     uploadBuffer.data += data;
     await this.uploadBufferRepository.save(uploadBuffer);
@@ -46,7 +47,8 @@ export class UploadBufferService {
     });
 
     if (!uploadBuffer) new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
-    if (uploadBuffer.user.id !== user.id) new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
+    if (uploadBuffer.user.id !== user.id)
+      new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
     if (uploadBuffer.identifier !== identifier)
       new HttpException(ErrorMsg.PermissionDenied_Resource, HttpStatus.FORBIDDEN);
 

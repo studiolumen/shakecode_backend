@@ -54,7 +54,11 @@ export class ProblemGetService {
     return { pid: publicProblem.pid, ...publicProblem.problem, testcasesCount };
   }
 
-  async getSelfProblemById(user: UserJWT, id: string, hidden: boolean): Promise<ProblemCheckResult> {
+  async getSelfProblemById(
+    user: UserJWT,
+    id: string,
+    hidden: boolean,
+  ): Promise<ProblemCheckResult> {
     const problem = await this.problemRepository.findOne({
       where: { id: id },
     });
@@ -65,7 +69,10 @@ export class ProblemGetService {
       where: { problem: problem },
     });
 
-    if (problem.user.id !== user.id && !hasPermission(user.permission, [PermissionEnum.GET_PROBLEM]))
+    if (
+      problem.user.id !== user.id &&
+      !hasPermission(user.permission, [PermissionEnum.GET_PROBLEM])
+    )
       throw new HttpException(ErrorMsg.PermissionDenied_Resource, HttpStatus.FORBIDDEN);
 
     const publicProblem = await this.publicProblemRepository.findOne({

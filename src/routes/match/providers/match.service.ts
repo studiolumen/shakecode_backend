@@ -20,9 +20,11 @@ export class MatchService {
       user: dbUser,
     });
 
-    if (existingMatchQueue && !existingMatchQueue.connected) return existingMatchQueue.websocketInitId;
+    if (existingMatchQueue && !existingMatchQueue.connected)
+      return existingMatchQueue.websocketInitId;
 
-    if (existingMatchQueue && existingMatchQueue.connected) await this.matchQueueRepository.remove(existingMatchQueue);
+    if (existingMatchQueue && existingMatchQueue.connected)
+      await this.matchQueueRepository.remove(existingMatchQueue);
 
     const matchQueue = new MatchQueue();
     matchQueue.user = dbUser;

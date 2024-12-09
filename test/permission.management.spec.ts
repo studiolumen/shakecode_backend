@@ -35,7 +35,12 @@ describe("Permission Management Test", () => {
 
   it("Not Has Multiple Permission Test", () => {
     const commonUserPermission = numberPermission(...CommonUserPermission);
-    expect(hasPermission(commonUserPermission, [PermissionEnum.MODIFY_CLASS, PermissionEnum.DELETE_USER])).toBe(false);
+    expect(
+      hasPermission(commonUserPermission, [
+        PermissionEnum.MODIFY_CLASS,
+        PermissionEnum.DELETE_USER,
+      ]),
+    ).toBe(false);
   });
 
   it("Mixed Permission Test", () => {
