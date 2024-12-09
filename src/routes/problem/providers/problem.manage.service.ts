@@ -54,10 +54,7 @@ export class ProblemManageService {
     return problem;
   }
 
-  async updateProblem(
-    user: UserJWT,
-    data: UpdateProblemDTO,
-  ): Promise<Problem | PublicProblem> {
+  async updateProblem(user: UserJWT, data: UpdateProblemDTO): Promise<Problem | PublicProblem> {
     const dbUser = await this.userRepository.findOne({
       where: { id: user.id },
     });
@@ -66,17 +63,10 @@ export class ProblemManageService {
       where: { id: data.id },
     });
 
-    if (!existingProblem)
-      throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+    if (!existingProblem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (
-      existingProblem.user.id !== dbUser.id &&
-      !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM])
-    )
-      throw new HttpException(
-        ErrorMsg.PermissionDenied_Action,
-        HttpStatus.FORBIDDEN,
-      );
+    if (existingProblem.user.id !== dbUser.id && !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM]))
+      throw new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
 
     const problem = merge(existingProblem, data);
     delete problem.pid;
@@ -109,17 +99,10 @@ export class ProblemManageService {
     const existingProblem = await this.problemRepository.findOne({
       where: { id: id },
     });
-    if (!existingProblem)
-      throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+    if (!existingProblem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (
-      existingProblem.user.id !== user.id &&
-      !hasPermission(user.permission, [PermissionEnum.DELETE_PROBLEM])
-    )
-      throw new HttpException(
-        ErrorMsg.PermissionDenied_Action,
-        HttpStatus.FORBIDDEN,
-      );
+    if (existingProblem.user.id !== user.id && !hasPermission(user.permission, [PermissionEnum.DELETE_PROBLEM]))
+      throw new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
     return await this.problemRepository.remove(existingProblem);
   }
 }

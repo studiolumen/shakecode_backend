@@ -5,17 +5,9 @@ import merge from "merge-js-class";
 import { Repository } from "typeorm";
 
 import { PermissionType } from "../../../common/types";
-import {
-  numberPermission,
-  parsePermission,
-} from "../../../common/utils/permission.util";
+import { numberPermission, parsePermission } from "../../../common/utils/permission.util";
 import { Login, User } from "../../../schemas";
-import {
-  AddPermissionDTO,
-  CreateUserDTO,
-  RemovePermissionDTO,
-  SetPermissionDTO,
-} from "../dto";
+import { AddPermissionDTO, CreateUserDTO, RemovePermissionDTO, SetPermissionDTO } from "../dto";
 
 @Injectable()
 export class UserService {
@@ -55,7 +47,7 @@ export class UserService {
   }
 
   // this bunch of code can be shortened.
-  // but i left it like this for optimization.
+  // but I left it like this for optimization.
   async setPermission(data: SetPermissionDTO) {
     const user = await this.userRepository.findOne({ where: { id: data.id } });
     user.permission = numberPermission(...data.permissions);
@@ -68,9 +60,7 @@ export class UserService {
 
     const permissions = parsePermission(user.permission);
 
-    const addPermissionTarget = data.permissions.filter(
-      (p: PermissionType) => !permissions.find((p2) => p2 === p),
-    );
+    const addPermissionTarget = data.permissions.filter((p: PermissionType) => !permissions.find((p2) => p2 === p));
 
     const resultPermission = [].concat(permissions, addPermissionTarget);
 

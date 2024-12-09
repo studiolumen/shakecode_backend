@@ -3,11 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { ClassProblem, Problem, User } from "../../../schemas";
-import {
-  CreateClassProblemDTO,
-  CreateProblemDTO,
-} from "../../problem/dto/problem.dto";
-import { ProblemGetService } from "../../problem/providers/problem.get.service";
+import { CreateClassProblemDTO } from "../../problem/dto/problem.dto";
+import { ProblemGetService } from "../../problem/providers";
 
 @Injectable()
 export class ClassProblemService {

@@ -28,17 +28,11 @@ export class CustomJwtStrategy extends PassportStrategy(Strategy, "jwt") {
         where: { sessionIdentifier: payload.sessionIdentifier },
       });
       if (!session) {
-        throw new HttpException(
-          "세션이 만료되었습니다.",
-          HttpStatus.UNAUTHORIZED,
-        );
+        throw new HttpException("세션이 만료되었습니다.", HttpStatus.UNAUTHORIZED);
       }
       return done(null, payload);
     } else {
-      throw new HttpException(
-        "잘못된 토큰 형식입니다. Access Token을 전달해주세요.",
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new HttpException("잘못된 토큰 형식입니다. Access Token을 전달해주세요.", HttpStatus.UNAUTHORIZED);
     }
   }
 }

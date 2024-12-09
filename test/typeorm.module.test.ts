@@ -11,7 +11,7 @@ const typeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
   imports: [CustomConfigTestModule],
   inject: [ConfigService],
   useFactory: async (configService: ConfigService) => {
-    const options = {
+    return {
       type: "postgres" as const,
       host: configService.get<string>("DB_HOST"),
       port: configService.get<number>("DB_PORT"),
@@ -23,8 +23,6 @@ const typeOrmModuleOptions: TypeOrmModuleAsyncOptions = {
       logging: true,
       // dropSchema: true,
     };
-
-    return options;
   },
 };
 
