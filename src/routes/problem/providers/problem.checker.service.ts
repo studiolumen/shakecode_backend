@@ -11,11 +11,7 @@ import { CompilerType } from "../../../common/types";
 export class ProblemCheckerService {
   constructor() {}
 
-  async runCode(
-    type: CompilerType,
-    code: string,
-    inputs: string[],
-  ): Promise<string> {
+  async runCode(type: CompilerType, code: string, inputs: string[]): Promise<string> {
     const id = uuid();
     const basePath = path.join(__dirname, "../../../common/docker");
     const workDir = { cwd: path.join(basePath, id) };
@@ -23,10 +19,7 @@ export class ProblemCheckerService {
     let result: string;
     try {
       fs.mkdirSync(path.join(basePath, id));
-      fs.copyFileSync(
-        path.join(basePath, `Dockerfile_${type}`),
-        path.join(basePath, id, "Dockerfile"),
-      );
+      fs.copyFileSync(path.join(basePath, `Dockerfile_${type}`), path.join(basePath, id, "Dockerfile"));
       fs.writeFileSync(path.join(basePath, id, "code"), code, {
         flag: "w",
       });
@@ -40,13 +33,9 @@ export class ProblemCheckerService {
         child_process.exec(`docker run --name ${id} ${id}`, workDir, accept);
       });
       result = await new Promise((accept) => {
-        child_process.exec(
-          `docker logs ${id}`,
-          workDir,
-          (error, stdout, stderror) => {
-            accept(stdout + "\n" + stderror);
-          },
-        );
+        child_process.exec(`docker logs ${id}`, workDir, (error, stdout, stderror) => {
+          accept(stdout + "\n" + stderror);
+        });
       });
     } finally {
       await new Promise((accept) => {

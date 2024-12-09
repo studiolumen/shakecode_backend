@@ -28,42 +28,27 @@ export class UploadBufferService {
     return buffer.id;
   }
 
-  async appendDataToUploadBuffer(
-    user: UserJWT,
-    bufferId: string,
-    data: string,
-  ) {
+  async appendDataToUploadBuffer(user: UserJWT, bufferId: string, data: string) {
     const uploadBuffer = await this.uploadBufferRepository.findOne({
       where: { id: bufferId },
     });
 
-    if (!uploadBuffer)
-      new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
-    if (uploadBuffer.user.id !== user.id)
-      new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
+    if (!uploadBuffer) new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+    if (uploadBuffer.user.id !== user.id) new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
 
     uploadBuffer.data += data;
     await this.uploadBufferRepository.save(uploadBuffer);
   }
 
-  async getUploadBufferData(
-    user: UserJWT,
-    bufferId: string,
-    identifier: UploadBufferIdentifier,
-  ) {
+  async getUploadBufferData(user: UserJWT, bufferId: string, identifier: UploadBufferIdentifier) {
     const uploadBuffer = await this.uploadBufferRepository.findOne({
       where: { id: bufferId },
     });
 
-    if (!uploadBuffer)
-      new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
-    if (uploadBuffer.user.id !== user.id)
-      new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
+    if (!uploadBuffer) new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+    if (uploadBuffer.user.id !== user.id) new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
     if (uploadBuffer.identifier !== identifier)
-      new HttpException(
-        ErrorMsg.PermissionDenied_Resource,
-        HttpStatus.FORBIDDEN,
-      );
+      new HttpException(ErrorMsg.PermissionDenied_Resource, HttpStatus.FORBIDDEN);
 
     await this.uploadBufferRepository.delete({ id: bufferId });
 

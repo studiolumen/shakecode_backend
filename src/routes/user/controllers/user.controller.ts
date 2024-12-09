@@ -5,12 +5,7 @@ import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { PermissionEnum } from "../../../common/types";
 import { User } from "../../../schemas";
-import {
-  AddPermissionDTO,
-  CreateUserDTO,
-  RemovePermissionDTO,
-  SetPermissionDTO,
-} from "../dto";
+import { AddPermissionDTO, CreateUserDTO, RemovePermissionDTO, SetPermissionDTO } from "../dto";
 import { UserService } from "../providers";
 
 @ApiTags("User")

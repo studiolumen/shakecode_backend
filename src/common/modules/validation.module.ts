@@ -27,8 +27,7 @@ export class ValidationService {
   ) {}
 
   async validatePermissionEnum() {
-    const savedPermissionMappings =
-      await this.permissionValidatorRepository.find();
+    const savedPermissionMappings = await this.permissionValidatorRepository.find();
 
     const fixedPermissionMappings = Object.fromEntries(
       savedPermissionMappings
@@ -49,10 +48,7 @@ export class ValidationService {
 
     if (
       deepObjectCompare(PermissionEnum, fixedPermissionMappings) &&
-      deepObjectCompare(
-        NumberedPermissionGroupsEnum,
-        fixedPermissionGroupMappings,
-      )
+      deepObjectCompare(NumberedPermissionGroupsEnum, fixedPermissionGroupMappings)
     ) {
       this.logger.log("Permission validation successful - no changes");
       return;
@@ -66,21 +62,12 @@ export class ValidationService {
     this.logger.log("Permission Group migration:");
 
     const deprecatedPermissionGroups = Object.fromEntries(
-      Object.keys(NumberedPermissionGroupsEnum).map((v) => [
-        v,
-        fixedPermissionGroupMappings[v],
-      ]),
+      Object.keys(NumberedPermissionGroupsEnum).map((v) => [v, fixedPermissionGroupMappings[v]]),
     );
     const groupUsers = users
-      .filter((u) =>
-        Object.values(deprecatedPermissionGroups).some(
-          (dpg) => dpg === u.permission,
-        ),
-      )
+      .filter((u) => Object.values(deprecatedPermissionGroups).some((dpg) => dpg === u.permission))
       .map((u) => {
-        const groupName = Object.entries(deprecatedPermissionGroups).find(
-          (v) => v[1] === u.permission,
-        )[0];
+        const groupName = Object.entries(deprecatedPermissionGroups).find((v) => v[1] === u.permission)[0];
         u.permission = NumberedPermissionGroupsEnum[groupName];
         return u;
       });
@@ -99,10 +86,7 @@ export class ValidationService {
 
     const exceptions = [];
     users = users.map((user) => {
-      const permissions = parsePermission(
-        user.permission,
-        fixedPermissionMappings,
-      );
+      const permissions = parsePermission(user.permission, fixedPermissionMappings);
 
       const newPermissions = [];
       permissions.forEach((permission) => {
@@ -118,13 +102,10 @@ export class ValidationService {
     });
 
     if (exceptions.length !== 0) {
-      this.logger.error(
-        `Failed. ${users.length} affected but ${exceptions.length} users cannot be auto-migrated`,
-      );
+      this.logger.error(`Failed. ${users.length} affected but ${exceptions.length} users cannot be auto-migrated`);
       this.logger.error(`Details: ${exceptions.map((e) => e.id).join(", ")}`);
       this.logger.error("Changes are not commited.");
       throw new Error("Migration failed");
-      return;
     }
 
     this.logger.log(`OK. ${users.length} users affected.`);

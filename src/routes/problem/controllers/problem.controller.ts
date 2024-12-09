@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpStatus,
-  Post,
-  Query,
-  Req,
-} from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpStatus, Post, Query, Req } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
@@ -27,9 +18,7 @@ import {
   ProblemCheckResult,
   TestcaseIdDTO,
 } from "../dto/problem.dto";
-import { ProblemGetService } from "../providers";
-import { ProblemManageService } from "../providers/problem.manage.service";
-import { ProblemTestCaseService } from "../providers/problem.testcase.service";
+import { ProblemGetService, ProblemManageService, ProblemTestCaseService } from "../providers";
 
 @ApiTags("Problem")
 @Controller("/problem")
@@ -50,10 +39,7 @@ export class ProblemController {
     type: ProblemCheckResult,
   })
   @Get("/")
-  @UseGuardsWithSwagger(
-    CustomJwtAuthGuard,
-    PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]),
-  )
+  @UseGuardsWithSwagger(CustomJwtAuthGuard, PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM]))
   async getProblem(@Query() data: ProblemIdDTO) {
     return this.problemGetService.getPublicProblemById(data.id);
   }
@@ -70,10 +56,7 @@ export class ProblemController {
   @Get("/list")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(
-      [PermissionEnum.GET_PUBLIC_PROBLEM, PermissionEnum.GET_PROBLEM],
-      true,
-    ),
+    PermissionGuard([PermissionEnum.GET_PUBLIC_PROBLEM, PermissionEnum.GET_PROBLEM], true),
   )
   async getProblemList(@Req() req, @Query() data: GetProblemListDTO) {
     return this.problemGetService.getPublicProblemList(req.user, data.all);
@@ -81,8 +64,7 @@ export class ProblemController {
 
   @ApiOperation({
     summary: "get problem - no filter",
-    description:
-      "get user's single public problem with hidden testcases via id",
+    description: "get user's single public problem with hidden testcases via id",
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -92,17 +74,10 @@ export class ProblemController {
   @Get("/full")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(
-      [PermissionEnum.GET_PROBLEM, PermissionEnum.GET_PROBLEM_SELF],
-      true,
-    ),
+    PermissionGuard([PermissionEnum.GET_PROBLEM, PermissionEnum.GET_PROBLEM_SELF], true),
   )
   async getFullProblem(@Req() req, @Query() data: GetFullProblemDTO) {
-    return this.problemGetService.getSelfProblemById(
-      req.user,
-      data.id,
-      data.hidden,
-    );
+    return this.problemGetService.getSelfProblemById(req.user, data.id, data.hidden);
   }
 
   @ApiOperation({
@@ -115,10 +90,7 @@ export class ProblemController {
     type: Problem,
   })
   @Post("/")
-  @UseGuardsWithSwagger(
-    CustomJwtAuthGuard,
-    PermissionGuard([PermissionEnum.CREATE_PROBLEM]),
-  )
+  @UseGuardsWithSwagger(CustomJwtAuthGuard, PermissionGuard([PermissionEnum.CREATE_PROBLEM]))
   async createProblem(@Req() req, @Body() data: CreateProblemDTO) {
     return this.problemPsadderService.createProblem(req.user, data, true);
   }
@@ -135,10 +107,7 @@ export class ProblemController {
   @Post("/update")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(
-      [PermissionEnum.MODIFY_PROBLEM_SELF, PermissionEnum.MODIFY_PROBLEM],
-      true,
-    ),
+    PermissionGuard([PermissionEnum.MODIFY_PROBLEM_SELF, PermissionEnum.MODIFY_PROBLEM], true),
   )
   async updateProblem(@Req() req, @Body() data: UpdateProblemDTO) {
     return this.problemPsadderService.updateProblem(req.user, data);
@@ -156,10 +125,7 @@ export class ProblemController {
   @Delete("/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(
-      [PermissionEnum.DELETE_PROBLEM_SELF, PermissionEnum.DELETE_PROBLEM],
-      true,
-    ),
+    PermissionGuard([PermissionEnum.DELETE_PROBLEM_SELF, PermissionEnum.DELETE_PROBLEM], true),
   )
   async deleteProblem(@Req() req, @Query() data: ProblemIdDTO) {
     return this.problemPsadderService.deleteProblem(req.user, data.id);
@@ -177,18 +143,10 @@ export class ProblemController {
   @Get("/testcases")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(
-      [PermissionEnum.GET_PROBLEM_SELF, PermissionEnum.GET_PROBLEM],
-      true,
-    ),
+    PermissionGuard([PermissionEnum.GET_PROBLEM_SELF, PermissionEnum.GET_PROBLEM], true),
   )
   async getTestcases(@Req() req, @Query() data: GetTestcasesDTO) {
-    return this.problemTestcaseService.getTestCases(
-      req.user,
-      data.id,
-      data.from,
-      data.count,
-    );
+    return this.problemTestcaseService.getTestCases(req.user, data.id, data.from, data.count);
   }
 
   @ApiOperation({
@@ -203,18 +161,10 @@ export class ProblemController {
   @Post("/testcases/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(
-      [PermissionEnum.MODIFY_PROBLEM_SELF, PermissionEnum.MODIFY_PROBLEM],
-      true,
-    ),
+    PermissionGuard([PermissionEnum.MODIFY_PROBLEM_SELF, PermissionEnum.MODIFY_PROBLEM], true),
   )
   async modifyTestCase(@Req() req, @Body() data: TestCase) {
-    return this.problemTestcaseService.modifyTestCase(
-      req.user,
-      data.id,
-      data.input,
-      data.output,
-    );
+    return this.problemTestcaseService.modifyTestCase(req.user, data.id, data.input, data.output);
   }
 
   @ApiOperation({
@@ -229,10 +179,7 @@ export class ProblemController {
   @Delete("/testcases/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
-    PermissionGuard(
-      [PermissionEnum.DELETE_PROBLEM_SELF, PermissionEnum.DELETE_PROBLEM],
-      true,
-    ),
+    PermissionGuard([PermissionEnum.DELETE_PROBLEM_SELF, PermissionEnum.DELETE_PROBLEM], true),
   )
   async deleteTestCase(@Req() req, @Query() data: TestcaseIdDTO) {
     return this.problemTestcaseService.deleteTestCase(req.user, data.id);

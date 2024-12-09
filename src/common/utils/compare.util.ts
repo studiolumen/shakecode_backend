@@ -4,12 +4,7 @@ export const deepObjectCompare = (...objects) => {
   function compare2Objects(x, y) {
     let p;
 
-    if (
-      isNaN(x) &&
-      isNaN(y) &&
-      typeof x === "number" &&
-      typeof y === "number"
-    ) {
+    if (isNaN(x) && isNaN(y) && typeof x === "number" && typeof y === "number") {
       return true;
     }
 

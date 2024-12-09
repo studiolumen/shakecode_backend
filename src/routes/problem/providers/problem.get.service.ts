@@ -22,15 +22,9 @@ export class ProblemGetService {
     private readonly publicProblemRepository: Repository<PublicProblem>,
   ) {}
 
-  async getPublicProblemList(
-    user: UserJWT,
-    all: boolean,
-  ): Promise<ProblemSummary[]> {
+  async getPublicProblemList(user: UserJWT, all: boolean): Promise<ProblemSummary[]> {
     return (await this.publicProblemRepository.find())
-      .filter(
-        (p) =>
-          p.problem.restricted === 0 || (user.id === p.problem.user.id && all),
-      )
+      .filter((p) => p.problem.restricted === 0 || (user.id === p.problem.user.id && all))
       .map((p) => ({
         id: p.problem.id,
         pid: p.pid,
@@ -50,47 +44,29 @@ export class ProblemGetService {
       where: { problem: publicProblem.problem },
     });
 
-    if (!publicProblem)
-      throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+    if (!publicProblem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
     if (publicProblem.problem.restricted !== 0)
-      throw new HttpException(
-        ErrorMsg.PermissionDenied_Resource,
-        HttpStatus.FORBIDDEN,
-      );
+      throw new HttpException(ErrorMsg.PermissionDenied_Resource, HttpStatus.FORBIDDEN);
 
-    publicProblem.problem.testCases = publicProblem.problem.testCases.filter(
-      (tc) => tc.show_user,
-    );
+    publicProblem.problem.testCases = publicProblem.problem.testCases.filter((tc) => tc.show_user);
 
     return { pid: publicProblem.pid, ...publicProblem.problem, testcasesCount };
   }
 
-  async getSelfProblemById(
-    user: UserJWT,
-    id: string,
-    hidden: boolean,
-  ): Promise<ProblemCheckResult> {
+  async getSelfProblemById(user: UserJWT, id: string, hidden: boolean): Promise<ProblemCheckResult> {
     const problem = await this.problemRepository.findOne({
       where: { id: id },
     });
     const testcases = await this.testCaseRepository.find({
-      where: hidden
-        ? { problem: problem }
-        : { problem: problem, show_user: true },
+      where: hidden ? { problem: problem } : { problem: problem, show_user: true },
     });
     const testcasesCount = await this.testCaseRepository.count({
       where: { problem: problem },
     });
 
-    if (
-      problem.user.id !== user.id &&
-      !hasPermission(user.permission, [PermissionEnum.GET_PROBLEM])
-    )
-      throw new HttpException(
-        ErrorMsg.PermissionDenied_Resource,
-        HttpStatus.FORBIDDEN,
-      );
+    if (problem.user.id !== user.id && !hasPermission(user.permission, [PermissionEnum.GET_PROBLEM]))
+      throw new HttpException(ErrorMsg.PermissionDenied_Resource, HttpStatus.FORBIDDEN);
 
     const publicProblem = await this.publicProblemRepository.findOne({
       where: { problem: problem },

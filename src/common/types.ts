@@ -1,5 +1,3 @@
-import { Problem, TestCase, User } from "../schemas";
-
 import { numberPermission } from "./utils/permission.util";
 
 export const LoginTypeValues = ["password"] as const;
@@ -11,11 +9,8 @@ export type CompilerType = (typeof CompilerTypeValues)[number];
 export const ProblemCategoryValues = ["basic"] as const;
 export type ProblemCategory = (typeof ProblemCategoryValues)[number];
 
-export const UploadBufferIdentifierValues = [
-  "problem_testcase_upload",
-] as const;
-export type UploadBufferIdentifier =
-  (typeof UploadBufferIdentifierValues)[number];
+export const UploadBufferIdentifierValues = ["problem_testcase_upload"] as const;
+export type UploadBufferIdentifier = (typeof UploadBufferIdentifierValues)[number];
 
 export type UserJWT = {
   id: string;
@@ -29,12 +24,8 @@ export type UserJWT = {
   sessionIdentifier: string;
 };
 
-export const PermissionValidationTypeValues = [
-  "permission",
-  "permission_group",
-] as const;
-export type PermissionValidationType =
-  (typeof PermissionValidationTypeValues)[number];
+export const PermissionValidationTypeValues = ["permission", "permission_group"] as const;
+export type PermissionValidationType = (typeof PermissionValidationTypeValues)[number];
 
 export const UserPermissionValues = [
   "SEARCH_PROBLEM",
@@ -70,9 +61,7 @@ export const ManagementPermissionValues = [
 ] as const;
 
 // Merge permission values without duplicates
-export const PermissionValues = [
-  ...new Set([...UserPermissionValues, ...ManagementPermissionValues]),
-] as const;
+export const PermissionValues = [...new Set([...UserPermissionValues, ...ManagementPermissionValues])] as const;
 export type PermissionType = (typeof PermissionValues)[number];
 
 // Create enum for easy permission management with binary
@@ -111,8 +100,5 @@ export const PermissionGroups = {
   AdminUserPermission,
 };
 export const NumberedPermissionGroupsEnum = Object.fromEntries(
-  Object.keys(PermissionGroups).map((v) => [
-    v,
-    numberPermission(...PermissionGroups[v]),
-  ]),
+  Object.keys(PermissionGroups).map((v) => [v, numberPermission(...PermissionGroups[v])]),
 ) as { [key in string]: number };

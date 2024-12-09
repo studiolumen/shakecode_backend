@@ -18,15 +18,8 @@ export class UploadBufferController {
     description: "upload buffer",
   })
   @Post("/")
-  @UseGuardsWithSwagger(
-    CustomJwtAuthGuard,
-    PermissionGuard([PermissionEnum.USE_UPLOAD_BUFFER]),
-  )
+  @UseGuardsWithSwagger(CustomJwtAuthGuard, PermissionGuard([PermissionEnum.USE_UPLOAD_BUFFER]))
   async createUploadBuffer(@Req() req, @Body() data: UploadBufferDTO) {
-    return this.uploadBufferService.appendDataToUploadBuffer(
-      req.user,
-      data.id,
-      data.data,
-    );
+    return this.uploadBufferService.appendDataToUploadBuffer(req.user, data.id, data.data);
   }
 }
