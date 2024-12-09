@@ -67,7 +67,9 @@ export class ValidationService {
     const groupUsers = users
       .filter((u) => Object.values(deprecatedPermissionGroups).some((dpg) => dpg === u.permission))
       .map((u) => {
-        const groupName = Object.entries(deprecatedPermissionGroups).find((v) => v[1] === u.permission)[0];
+        const groupName = Object.entries(deprecatedPermissionGroups).find(
+          (v) => v[1] === u.permission,
+        )[0];
         u.permission = NumberedPermissionGroupsEnum[groupName];
         return u;
       });
@@ -75,11 +77,7 @@ export class ValidationService {
     this.logger.log(`OK. ${groupUsers.length} users affected`);
 
     users = users.filter(
-      (u) =>
-        !(
-          u.permission === numberPermission(...CommonUserPermission) ||
-          u.permission === numberPermission(...TeacherUserPermission)
-        ),
+      (u) => !Object.values(deprecatedPermissionGroups).some((dpg) => dpg === u.permission),
     );
 
     this.logger.log("Individual Permission migration: ");
@@ -102,7 +100,9 @@ export class ValidationService {
     });
 
     if (exceptions.length !== 0) {
-      this.logger.error(`Failed. ${users.length} affected but ${exceptions.length} users cannot be auto-migrated`);
+      this.logger.error(
+        `Failed. ${users.length} affected but ${exceptions.length} users cannot be auto-migrated`,
+      );
       this.logger.error(`Details: ${exceptions.map((e) => e.id).join(", ")}`);
       this.logger.error("Changes are not commited.");
       throw new Error("Migration failed");
