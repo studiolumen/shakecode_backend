@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { ProblemCategory } from "../common/types";
+import { ProblemCategory } from "../common/mapper/types";
 
 import { Classroom } from "./group.schema";
 import { User } from "./user.schema";

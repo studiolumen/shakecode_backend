@@ -4,12 +4,10 @@ import { Repository } from "typeorm";
 
 import { PermissionValidator, Session, User } from "../../schemas";
 import {
-  CommonUserPermission,
   NumberedPermissionGroupsEnum,
   PermissionEnum,
   PermissionType,
-  TeacherUserPermission,
-} from "../types";
+} from "../mapper/permissions";
 import { deepObjectCompare } from "../utils/compare.util";
 import { numberPermission, parsePermission } from "../utils/permission.util";
 

@@ -4,7 +4,7 @@ import * as bcrypt from "bcrypt";
 import merge from "merge-js-class";
 import { Repository } from "typeorm";
 
-import { PermissionType } from "../../../common/types";
+import { PermissionType } from "../../../common/mapper/permissions";
 import { numberPermission, parsePermission } from "../../../common/utils/permission.util";
 import { Login, User } from "../../../schemas";
 import { AddPermissionDTO, CreateUserDTO, RemovePermissionDTO, SetPermissionDTO } from "../dto";

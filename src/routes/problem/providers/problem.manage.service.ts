@@ -4,7 +4,8 @@ import merge from "merge-js-class";
 import { Repository } from "typeorm";
 
 import { ErrorMsg } from "../../../common/error";
-import { PermissionEnum, UserJWT } from "../../../common/types";
+import { PermissionEnum } from "../../../common/mapper/permissions";
+import { UserJWT } from "../../../common/mapper/types";
 import { hasPermission } from "../../../common/utils/permission.util";
 import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
 import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";

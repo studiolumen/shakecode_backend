@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { LoginType, LoginTypeValues } from "../common/types";
+import { LoginType, LoginTypeValues } from "../common/mapper/types";
 
 import { User } from "./user.schema";
 

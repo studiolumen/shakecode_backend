@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { ErrorMsg } from "../../../common/error";
-import { UploadBufferIdentifier, UserJWT } from "../../../common/types";
+import { UploadBufferIdentifier, UserJWT } from "../../../common/mapper/types";
 import { UploadBuffer, User } from "../../../schemas";
 
 @Injectable()

@@ -1,31 +1,4 @@
-import { numberPermission } from "./utils/permission.util";
-
-export const LoginTypeValues = ["password"] as const;
-export type LoginType = (typeof LoginTypeValues)[number];
-
-export const CompilerTypeValues = ["gcc", "node", "python"] as const;
-export type CompilerType = (typeof CompilerTypeValues)[number];
-
-export const ProblemCategoryValues = ["basic"] as const;
-export type ProblemCategory = (typeof ProblemCategoryValues)[number];
-
-export const UploadBufferIdentifierValues = ["problem_testcase_upload"] as const;
-export type UploadBufferIdentifier = (typeof UploadBufferIdentifierValues)[number];
-
-export type UserJWT = {
-  id: string;
-  email: string;
-  name: string;
-  nickname: string;
-  lvl: number;
-  rating: number;
-  permission: number;
-  refresh: boolean;
-  sessionIdentifier: string;
-};
-
-export const PermissionValidationTypeValues = ["permission", "permission_group"] as const;
-export type PermissionValidationType = (typeof PermissionValidationTypeValues)[number];
+import { numberPermission } from "../utils/permission.util";
 
 export const UserPermissionValues = [
   "SEARCH_PROBLEM",

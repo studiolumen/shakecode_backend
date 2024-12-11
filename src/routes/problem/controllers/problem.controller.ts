@@ -4,7 +4,7 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
-import { PermissionEnum } from "../../../common/types";
+import { PermissionEnum } from "../../../common/mapper/permissions";
 import { Problem, TestCase } from "../../../schemas";
 import {
   CreateProblemDTO,

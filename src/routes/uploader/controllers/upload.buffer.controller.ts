@@ -4,7 +4,7 @@ import { ApiOperation, ApiTags } from "@nestjs/swagger";
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
-import { PermissionEnum } from "../../../common/types";
+import { PermissionEnum } from "../../../common/mapper/permissions";
 import { UploadBufferDTO } from "../dto/upload.buffer.dto";
 import { UploadBufferService } from "../providers";
 

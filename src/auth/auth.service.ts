@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
 import { ErrorMsg } from "../common/error";
-import { UserJWT } from "../common/types";
+import { UserJWT } from "../common/mapper/types";
 import { Login, Session, User } from "../schemas";
 
 @Injectable()

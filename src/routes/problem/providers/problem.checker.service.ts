@@ -5,7 +5,7 @@ import * as path from "path";
 import { Injectable } from "@nestjs/common";
 import { v4 as uuid } from "uuid";
 
-import { CompilerType } from "../../../common/types";
+import { CompilerType } from "../../../common/mapper/types";
 
 @Injectable()
 export class ProblemCheckerService {

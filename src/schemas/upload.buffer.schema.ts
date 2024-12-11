@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { UploadBufferIdentifier } from "../common/types";
+import { UploadBufferIdentifier } from "../common/mapper/types";
 
 import { User } from "./user.schema";
 

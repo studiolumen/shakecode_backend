@@ -10,7 +10,7 @@ import {
   Min,
 } from "class-validator";
 
-import { ProblemCategory, ProblemCategoryValues } from "../../../common/types";
+import { ProblemCategory, ProblemCategoryValues } from "../../../common/mapper/types";
 import { TestCase, User } from "../../../schemas";
 
 export class TestCaseDTO {

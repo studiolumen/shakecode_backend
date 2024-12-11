@@ -1,6 +1,6 @@
 import { describe, it, expect, jest } from "@jest/globals";
 
-import { CommonUserPermission, PermissionEnum } from "../src/common/types";
+import { CommonUserPermission, PermissionEnum } from "../src/common/mapper/permissions";
 import { hasPermission, numberPermission } from "../src/common/utils/permission.util";
 
 jest.useRealTimers();
