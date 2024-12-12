@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { ErrorMsg } from "../../../common/error";
+import { ErrorMsg } from "../../../common/mapper/error";
 import { PermissionEnum } from "../../../common/mapper/permissions";
 import { UserJWT } from "../../../common/mapper/types";
 import { hasPermission } from "../../../common/utils/permission.util";
