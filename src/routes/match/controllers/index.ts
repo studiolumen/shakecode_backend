@@ -1,1 +1,1 @@
-export * from "./match.controller";
+export * from "./match.create.controller";

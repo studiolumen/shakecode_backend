@@ -12,6 +12,8 @@ export const UserPermissionValues = [
   "GET_PUBLIC_CLASS",
   "CREATE_PROBLEM",
   "CREATE_CLASS",
+  "CREATE_PUBLIC_ROOM",
+  "CREATE_PRIVATE_ROOM",
   "MODIFY_USER_SELF",
   "MODIFY_PROBLEM_SELF",
   "MODIFY_CLASS_SELF",
@@ -19,6 +21,8 @@ export const UserPermissionValues = [
   "DELETE_CLASS_SELF",
   "DELETE_USER_SELF",
   "USE_UPLOAD_BUFFER",
+  "JOIN_QUEUE",
+  "JOIN_ROOM",
 ] as const;
 
 export const ManagementPermissionValues = [
@@ -60,6 +64,10 @@ export const CommonUserPermission: number[] = [
   PermissionEnum.DELETE_PROBLEM_SELF,
   PermissionEnum.DELETE_USER_SELF,
   PermissionEnum.USE_UPLOAD_BUFFER,
+  PermissionEnum.CREATE_PUBLIC_ROOM,
+  PermissionEnum.CREATE_PRIVATE_ROOM,
+  PermissionEnum.JOIN_ROOM,
+  PermissionEnum.JOIN_QUEUE,
 ];
 export const TeacherUserPermission: number[] = [
   ...CommonUserPermission,

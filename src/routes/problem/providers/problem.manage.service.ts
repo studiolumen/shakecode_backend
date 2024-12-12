@@ -3,7 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import merge from "merge-js-class";
 import { Repository } from "typeorm";
 
-import { ErrorMsg } from "../../../common/error";
+import { ErrorMsg } from "../../../common/mapper/error";
 import { PermissionEnum } from "../../../common/mapper/permissions";
 import { UserJWT } from "../../../common/mapper/types";
 import { hasPermission } from "../../../common/utils/permission.util";
@@ -84,7 +84,7 @@ export class ProblemManageService {
     }
 
     const result = await this.problemRepository.save(problem);
-    await this.testCaseRepository.delete({ problem: problem, show_user: true });
+    await this.testCaseRepository.delete({ problem: problem });
     await this.testCaseRepository.save(testcases);
 
     const publicProblem = await this.publicProblemRepository.findOne({

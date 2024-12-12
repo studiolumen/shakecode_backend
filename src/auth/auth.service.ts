@@ -5,7 +5,7 @@ import * as bcrypt from "bcrypt";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import { ErrorMsg } from "../common/error";
+import { ErrorMsg } from "../common/mapper/error";
 import { UserJWT } from "../common/mapper/types";
 import { Login, Session, User } from "../schemas";
 
@@ -45,7 +45,7 @@ export class AuthService {
       where: { id: session.user.id },
     });
 
-    return await this.generateJWTKeyPair(user, "30m", "1M");
+    return await this.generateJWTKeyPair(user, "30m", "1y");
   }
 
   async logout(user: UserJWT) {

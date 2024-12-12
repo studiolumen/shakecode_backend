@@ -39,22 +39,24 @@ export class MatchQueueService {
     return matchQueueElement.websocketInitId;
   }
 
-  async registerPrivateRoom(user: UserJWT): Promise<string> {
+  async createPrivateRoom(user: UserJWT): Promise<string> {
     const redisKey = `${RedisMapper.MR_PRIVATE}_${user.id}`;
     await this.redisService.del(redisKey);
 
     const matchRoomElement: MatchRoomElement = {
+      websocketInitId: uuid().replaceAll("-", ""),
       roomId: uuid().substring(0, 4),
       gameMode: "1VS1",
       players: [],
       maxPlayer: 2,
       roomOwner: { userId: user.id, socketId: null },
       roomStatus: "waiting_owner",
+      issued: Date.now(),
     };
 
     await this.redisService.set(redisKey, JSON.stringify(matchRoomElement));
 
-    return matchRoomElement.roomId;
+    return matchRoomElement.websocketInitId;
   }
 
   @Cron(CronExpression.EVERY_5_SECONDS)

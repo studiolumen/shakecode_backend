@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import { numberPermission } from "../utils/permission.util";
 
 export const LoginTypeValues = ["password"] as const;
@@ -45,10 +47,12 @@ export type MatchQueueElement = {
 };
 
 export type MatchRoomElement = {
+  websocketInitId: string;
   roomId: string;
   gameMode: GameMode;
   players: SocketUser[];
   maxPlayer: number;
   roomOwner: SocketUser;
   roomStatus: RoomStatus;
+  issued: number;
 };

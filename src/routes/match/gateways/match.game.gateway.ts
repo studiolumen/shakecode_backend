@@ -2,6 +2,7 @@ import * as child_process from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 
+import { Logger } from "@nestjs/common";
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { v4 as uuid } from "uuid";
@@ -14,6 +15,8 @@ export class MatchGameGateway {
   > = new Map();
 
   private isDockerInitializing: Map<string, boolean> = new Map();
+
+  private logger: Logger = new Logger("MatchQueueGateway");
 
   @WebSocketServer()
   server: Server;
