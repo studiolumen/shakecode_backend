@@ -33,7 +33,7 @@ COPY --chown=node:node package.json ./
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
-RUN apk update
 RUN apk add --update docker openrc
+RUN rc-update add docker boot
 
 CMD [ "node", "dist/main.js" ]
