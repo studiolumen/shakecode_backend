@@ -161,7 +161,7 @@ export class GetFullProblemDTO {
   @IsBoolean()
   @Transform(({ value }) => value === "true")
   @IsOptional()
-  hidden: boolean = true;
+  hidden: boolean;
 }
 
 export class TestcaseListResponseDTO {
