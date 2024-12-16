@@ -50,7 +50,7 @@ export class UserService {
   // but I left it like this for optimization.
   async setPermission(data: SetPermissionDTO) {
     const user = await this.userRepository.findOne({ where: { id: data.id } });
-    user.permission = numberPermission(...data.permissions);
+    user.permission = numberPermission(...data.permissions).toString();
 
     return await this.userRepository.save(user);
   }
@@ -66,7 +66,7 @@ export class UserService {
 
     const resultPermission = [].concat(permissions, addPermissionTarget);
 
-    user.permission = numberPermission(...resultPermission);
+    user.permission = numberPermission(...resultPermission).toString();
 
     return await this.userRepository.save(user);
   }
@@ -78,7 +78,7 @@ export class UserService {
       (p: PermissionType) => !data.permissions.find((p2) => p2 === p),
     ) as PermissionType[];
 
-    user.permission = numberPermission(...resultPermissions);
+    user.permission = numberPermission(...resultPermissions).toString();
 
     return await this.userRepository.save(user);
   }

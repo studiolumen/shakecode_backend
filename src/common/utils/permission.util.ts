@@ -16,9 +16,11 @@ export const numberPermission = (...items: number[] | PermissionType[]): number 
 };
 
 export const parsePermission = (
-  numberedPermission: number,
+  numberedPermission: number | string,
   customPermissionEnum?: { [key: string]: number },
 ): PermissionType[] => {
+  if (typeof numberedPermission === "string") numberedPermission = parseInt(numberedPermission);
+
   const permissionEnum = customPermissionEnum || PermissionEnum;
 
   const permissions: PermissionType[] = [];
@@ -35,10 +37,12 @@ export const parsePermission = (
 };
 
 export const hasPermission = (
-  currentPermission: number,
+  currentPermission: number | string,
   requiredPermission: number[],
   or: boolean = false,
 ) => {
+  if (typeof currentPermission === "string") currentPermission = parseInt(currentPermission);
+
   const currentPermissionList = parsePermission(currentPermission);
   // TODO: Optimise
   const requiredPermissionList = parsePermission(numberPermission(...requiredPermission));
