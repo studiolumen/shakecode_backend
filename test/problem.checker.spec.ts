@@ -23,18 +23,19 @@ describe("Problem service test", () => {
       [],
     );
 
-    expect(gcc.trim()).toBe("hello world!");
+    expect(gcc[0]).toBe("hello world!");
   }, 180000);
 
   it("docker code run test - node", async () => {
     const node = await problemCheckerService.runCode(
       "node",
       // eslint-disable-next-line prettier/prettier
-      "console.log(\"hello world!\")",
+      "console.log('hello world!')",
       [],
+      1024,
     );
 
-    expect(node.trim()).toBe("hello world!");
+    expect(node[0]).toBe("hello world!");
   }, 180000);
 
   it("docker code run test - python", async () => {
@@ -42,9 +43,10 @@ describe("Problem service test", () => {
       "python",
       // eslint-disable-next-line prettier/prettier
       "print(input())",
-      ["hello world!"],
+      ["hello world!", "hello world?"],
     );
 
-    expect(python.trim()).toBe("hello world!");
+    expect(python[0]).toBe("hello world!");
+    expect(python[1]).toBe("hello world?");
   }, 180000);
 });
