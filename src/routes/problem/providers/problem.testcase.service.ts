@@ -6,7 +6,7 @@ import { ErrorMsg } from "../../../common/mapper/error";
 import { PermissionEnum } from "../../../common/mapper/permissions";
 import { UserJWT } from "../../../common/mapper/types";
 import { hasPermission } from "../../../common/utils/permission.util";
-import { Problem, TestCase } from "../../../schemas";
+import { Problem, Testcase } from "../../../schemas";
 import { TestcaseListResponseDTO } from "../dto/problem.dto";
 
 @Injectable()
@@ -14,8 +14,8 @@ export class ProblemTestCaseService {
   constructor(
     @InjectRepository(Problem)
     private readonly problemRepository: Repository<Problem>,
-    @InjectRepository(TestCase)
-    private readonly testCaseRepository: Repository<TestCase>,
+    @InjectRepository(Testcase)
+    private readonly testCaseRepository: Repository<Testcase>,
   ) {}
 
   async generateTestCase() {}
@@ -51,7 +51,7 @@ export class ProblemTestCaseService {
     id: string,
     input: string,
     output: string,
-  ): Promise<TestCase> {
+  ): Promise<Testcase> {
     const testcase = await this.testCaseRepository.findOne({
       where: { id: id },
       relations: ["problem"],
@@ -70,7 +70,7 @@ export class ProblemTestCaseService {
     return await this.testCaseRepository.save(testcase);
   }
 
-  async deleteTestCase(user: UserJWT, id: string): Promise<TestCase> {
+  async deleteTestCase(user: UserJWT, id: string): Promise<Testcase> {
     const testcase = await this.testCaseRepository.findOne({
       where: { id: id },
       relations: ["problem"],

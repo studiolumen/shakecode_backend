@@ -7,7 +7,7 @@ import { ErrorMsg } from "../../../common/mapper/error";
 import { PermissionEnum } from "../../../common/mapper/permissions";
 import { UserJWT } from "../../../common/mapper/types";
 import { hasPermission } from "../../../common/utils/permission.util";
-import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
+import { Problem, PublicProblem, Testcase, User } from "../../../schemas";
 import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
 
 @Injectable()
@@ -19,8 +19,8 @@ export class ProblemManageService {
     private readonly problemRepository: Repository<Problem>,
     @InjectRepository(PublicProblem)
     private readonly publicProblemRepository: Repository<PublicProblem>,
-    @InjectRepository(TestCase)
-    private readonly testCaseRepository: Repository<TestCase>,
+    @InjectRepository(Testcase)
+    private readonly testCaseRepository: Repository<Testcase>,
   ) {}
 
   async createProblem(
@@ -37,7 +37,7 @@ export class ProblemManageService {
 
     const testcases = [];
     for (const t of data.testcases) {
-      const tc = merge(new TestCase(), t);
+      const tc = merge(new Testcase(), t);
       tc.problem = problem;
       testcases.push(tc);
     }
@@ -78,7 +78,7 @@ export class ProblemManageService {
 
     const testcases = [];
     for (const t of data.testcases) {
-      const tc = merge(new TestCase(), t);
+      const tc = merge(new Testcase(), t);
       tc.problem = problem;
       testcases.push(tc);
     }

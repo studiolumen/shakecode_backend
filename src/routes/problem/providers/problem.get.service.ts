@@ -6,7 +6,7 @@ import { ErrorMsg } from "../../../common/mapper/error";
 import { PermissionEnum } from "../../../common/mapper/permissions";
 import { UserJWT } from "../../../common/mapper/types";
 import { hasPermission } from "../../../common/utils/permission.util";
-import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
+import { Problem, PublicProblem, Testcase, User } from "../../../schemas";
 import { ProblemSummary, ProblemCheckResult } from "../dto/problem.dto";
 
 @Injectable()
@@ -16,8 +16,8 @@ export class ProblemGetService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Problem)
     private readonly problemRepository: Repository<Problem>,
-    @InjectRepository(TestCase)
-    private readonly testCaseRepository: Repository<TestCase>,
+    @InjectRepository(Testcase)
+    private readonly testCaseRepository: Repository<Testcase>,
 
     @InjectRepository(PublicProblem)
     private readonly publicProblemRepository: Repository<PublicProblem>,
