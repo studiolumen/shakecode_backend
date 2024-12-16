@@ -34,6 +34,6 @@ COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
 RUN apk add --update docker openrc
-RUN service docker start
+RUN service docker restart
 
 CMD [ "node", "dist/main.js" ]
