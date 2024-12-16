@@ -2,14 +2,29 @@ import * as child_process from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import { CompilerType } from "../../../common/mapper/types";
+import { ErrorMsg } from "../../../common/mapper/error";
+import { MapRedisConstant, RedisMapper } from "../../../common/mapper/redis.mapper";
+import {
+  CompilerType,
+  MatchRoomElement,
+  TestCodeResult,
+  UserJWT,
+} from "../../../common/mapper/types";
+import { Problem, Testcase } from "../../../schemas";
 
 @Injectable()
 export class ProblemCheckerService {
-  constructor() {}
+  constructor(
+    @InjectRepository(Problem)
+    private readonly problemRepository: Repository<Problem>,
+    @InjectRepository(Testcase)
+    private readonly testcaseRepository: Repository<Testcase>,
+  ) {}
 
   async runCode(
     type: CompilerType,
@@ -62,5 +77,28 @@ export class ProblemCheckerService {
       result[index] = (e[1] as string).replace(/^\s+|\s+$/g, "");
     });
     return result;
+  }
+
+  async testCode(
+    problemId: string,
+    compiler: CompilerType,
+    code: string,
+    show_user: boolean = false,
+  ): Promise<TestCodeResult> {
+    const problem = await this.problemRepository.findOne({ where: { id: problemId } });
+    let testcases: Testcase[];
+    if (show_user)
+      testcases = await this.testcaseRepository.find({ where: { problem, show_user } });
+    else testcases = await this.testcaseRepository.find({ where: { problem } });
+
+    const inputs = testcases.map((tc) => tc.input);
+    const outputs = testcases.map((tc) => tc.output);
+
+    const result = await this.runCode(compiler, code, inputs);
+
+    return {
+      passed: result.every((tco, i) => tco === outputs[i]),
+      testcases: outputs.map((output, i) => [output, result[i]]),
+    };
   }
 }
