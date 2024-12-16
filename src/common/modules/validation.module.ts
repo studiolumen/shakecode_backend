@@ -4,12 +4,10 @@ import { Repository } from "typeorm";
 
 import { PermissionValidator, Session, User } from "../../schemas";
 import {
-  CommonUserPermission,
   NumberedPermissionGroupsEnum,
   PermissionEnum,
   PermissionType,
-  TeacherUserPermission,
-} from "../types";
+} from "../mapper/permissions";
 import { deepObjectCompare } from "../utils/compare.util";
 import { numberPermission, parsePermission } from "../utils/permission.util";
 
@@ -33,7 +31,7 @@ export class ValidationService {
       savedPermissionMappings
         .filter((v) => v.type === "permission")
         .sort()
-        .map((v) => [v.key, v.value]),
+        .map((v) => [v.key, parseInt(v.value as unknown as string)]),
     ) as {
       [K in PermissionType]: number;
     };
@@ -41,7 +39,7 @@ export class ValidationService {
       savedPermissionMappings
         .filter((v) => v.type === "permission_group")
         .sort()
-        .map((v) => [v.key, v.value]),
+        .map((v) => [v.key, parseInt(v.value as unknown as string)]),
     ) as {
       [K in PermissionType]: number;
     };
@@ -67,7 +65,9 @@ export class ValidationService {
     const groupUsers = users
       .filter((u) => Object.values(deprecatedPermissionGroups).some((dpg) => dpg === u.permission))
       .map((u) => {
-        const groupName = Object.entries(deprecatedPermissionGroups).find((v) => v[1] === u.permission)[0];
+        const groupName = Object.entries(deprecatedPermissionGroups).find(
+          (v) => v[1] === u.permission,
+        )[0];
         u.permission = NumberedPermissionGroupsEnum[groupName];
         return u;
       });
@@ -75,11 +75,7 @@ export class ValidationService {
     this.logger.log(`OK. ${groupUsers.length} users affected`);
 
     users = users.filter(
-      (u) =>
-        !(
-          u.permission === numberPermission(...CommonUserPermission) ||
-          u.permission === numberPermission(...TeacherUserPermission)
-        ),
+      (u) => !Object.values(deprecatedPermissionGroups).some((dpg) => dpg === u.permission),
     );
 
     this.logger.log("Individual Permission migration: ");
@@ -102,7 +98,9 @@ export class ValidationService {
     });
 
     if (exceptions.length !== 0) {
-      this.logger.error(`Failed. ${users.length} affected but ${exceptions.length} users cannot be auto-migrated`);
+      this.logger.error(
+        `Failed. ${users.length} affected but ${exceptions.length} users cannot be auto-migrated`,
+      );
       this.logger.error(`Details: ${exceptions.map((e) => e.id).join(", ")}`);
       this.logger.error("Changes are not commited.");
       throw new Error("Migration failed");

@@ -2,10 +2,11 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
-import { ErrorMsg } from "../../../common/error";
-import { PermissionEnum, UserJWT } from "../../../common/types";
+import { ErrorMsg } from "../../../common/mapper/error";
+import { PermissionEnum } from "../../../common/mapper/permissions";
+import { UserJWT } from "../../../common/mapper/types";
 import { hasPermission } from "../../../common/utils/permission.util";
-import { Problem, TestCase } from "../../../schemas";
+import { Problem, Testcase } from "../../../schemas";
 import { TestcaseListResponseDTO } from "../dto/problem.dto";
 
 @Injectable()
@@ -13,13 +14,18 @@ export class ProblemTestCaseService {
   constructor(
     @InjectRepository(Problem)
     private readonly problemRepository: Repository<Problem>,
-    @InjectRepository(TestCase)
-    private readonly testCaseRepository: Repository<TestCase>,
+    @InjectRepository(Testcase)
+    private readonly testCaseRepository: Repository<Testcase>,
   ) {}
 
   async generateTestCase() {}
 
-  async getTestCases(user: UserJWT, problemId: string, from: number, count: number): Promise<TestcaseListResponseDTO> {
+  async getTestCases(
+    user: UserJWT,
+    problemId: string,
+    from: number,
+    count: number,
+  ): Promise<TestcaseListResponseDTO> {
     const problem = await this.problemRepository.findOne({
       where: { id: problemId },
     });
@@ -40,14 +46,22 @@ export class ProblemTestCaseService {
     };
   }
 
-  async modifyTestCase(user: UserJWT, id: string, input: string, output: string): Promise<TestCase> {
+  async modifyTestCase(
+    user: UserJWT,
+    id: string,
+    input: string,
+    output: string,
+  ): Promise<Testcase> {
     const testcase = await this.testCaseRepository.findOne({
       where: { id: id },
       relations: ["problem"],
     });
     if (!testcase) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (testcase.problem.user.id !== user.id && !hasPermission(user.permission, [PermissionEnum.MODIFY_PROBLEM]))
+    if (
+      testcase.problem.user.id !== user.id &&
+      !hasPermission(user.permission, [PermissionEnum.MODIFY_PROBLEM])
+    )
       throw new HttpException(ErrorMsg.PermissionDenied_Resource, HttpStatus.FORBIDDEN);
 
     testcase.input = input;
@@ -56,14 +70,17 @@ export class ProblemTestCaseService {
     return await this.testCaseRepository.save(testcase);
   }
 
-  async deleteTestCase(user: UserJWT, id: string): Promise<TestCase> {
+  async deleteTestCase(user: UserJWT, id: string): Promise<Testcase> {
     const testcase = await this.testCaseRepository.findOne({
       where: { id: id },
       relations: ["problem"],
     });
     if (!testcase) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (testcase.problem.user.id !== user.id && !hasPermission(user.permission, [PermissionEnum.MODIFY_PROBLEM]))
+    if (
+      testcase.problem.user.id !== user.id &&
+      !hasPermission(user.permission, [PermissionEnum.MODIFY_PROBLEM])
+    )
       throw new HttpException(ErrorMsg.PermissionDenied_Resource, HttpStatus.FORBIDDEN);
 
     return await this.testCaseRepository.remove(testcase);

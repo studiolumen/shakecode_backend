@@ -1,11 +1,11 @@
 import { Column, Entity, Index, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { CommonUserPermission } from "../common/types";
+import { CommonUserPermission } from "../common/mapper/permissions";
 import { numberPermission } from "../common/utils/permission.util";
 
 import { Login, Session } from "./auth.schema";
 import { ClassUser } from "./group.schema";
-import { MatchInGame, MatchQueue } from "./match.schema";
+import { MatchInGame } from "./match.schema";
 import { Problem } from "./problem.schema";
 import { UploadBuffer } from "./upload.buffer.schema";
 
@@ -47,9 +47,6 @@ export class User {
 
   @OneToMany(() => UploadBuffer, (uploadBuffer) => uploadBuffer.user)
   uploadBuffer: UploadBuffer[];
-
-  @OneToMany(() => MatchQueue, (matchQueue) => matchQueue.user)
-  matchQueue: MatchQueue[];
 
   @OneToMany(() => MatchInGame, (matchInGame) => matchInGame.user)
   matchInGame: MatchInGame[];

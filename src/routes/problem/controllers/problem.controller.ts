@@ -4,8 +4,8 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
-import { PermissionEnum } from "../../../common/types";
-import { Problem, TestCase } from "../../../schemas";
+import { PermissionEnum } from "../../../common/mapper/permissions";
+import { Problem, Testcase } from "../../../schemas";
 import {
   CreateProblemDTO,
   GetFullProblemDTO,
@@ -77,7 +77,7 @@ export class ProblemController {
     PermissionGuard([PermissionEnum.GET_PROBLEM, PermissionEnum.GET_PROBLEM_SELF], true),
   )
   async getFullProblem(@Req() req, @Query() data: GetFullProblemDTO) {
-    return this.problemGetService.getSelfProblemById(req.user, data.id, data.hidden);
+    return this.problemGetService.getFullProblemById(req.user, data.id, data.hidden);
   }
 
   @ApiOperation({
@@ -156,14 +156,14 @@ export class ProblemController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "testcase",
-    type: TestCase,
+    type: Testcase,
   })
   @Post("/testcases/")
   @UseGuardsWithSwagger(
     CustomJwtAuthGuard,
     PermissionGuard([PermissionEnum.MODIFY_PROBLEM_SELF, PermissionEnum.MODIFY_PROBLEM], true),
   )
-  async modifyTestCase(@Req() req, @Body() data: TestCase) {
+  async modifyTestCase(@Req() req, @Body() data: Testcase) {
     return this.problemTestcaseService.modifyTestCase(req.user, data.id, data.input, data.output);
   }
 
@@ -174,7 +174,7 @@ export class ProblemController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "testcase",
-    type: TestCase,
+    type: Testcase,
   })
   @Delete("/testcases/")
   @UseGuardsWithSwagger(

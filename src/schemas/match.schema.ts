@@ -1,33 +1,14 @@
-import { Column, CreateDateColumn, Entity, Generated, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Generated,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
 import { User } from "./user.schema";
-
-@Entity()
-export class MatchQueue {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
-
-  @Generated("uuid")
-  @Column()
-  websocketInitId: string;
-
-  @Column()
-  webSocketId: string;
-
-  @Column()
-  rating: number;
-
-  @Column("boolean", { default: false })
-  connected: boolean;
-
-  @JoinColumn()
-  @ManyToOne(() => User, (user) => user.matchQueue, {
-    onDelete: "CASCADE",
-    onUpdate: "CASCADE",
-    eager: true,
-  })
-  user: User;
-}
 
 @Entity()
 export class Match {

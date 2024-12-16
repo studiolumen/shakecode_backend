@@ -1,31 +1,4 @@
-import { numberPermission } from "./utils/permission.util";
-
-export const LoginTypeValues = ["password"] as const;
-export type LoginType = (typeof LoginTypeValues)[number];
-
-export const CompilerTypeValues = ["gcc", "node", "python"] as const;
-export type CompilerType = (typeof CompilerTypeValues)[number];
-
-export const ProblemCategoryValues = ["basic"] as const;
-export type ProblemCategory = (typeof ProblemCategoryValues)[number];
-
-export const UploadBufferIdentifierValues = ["problem_testcase_upload"] as const;
-export type UploadBufferIdentifier = (typeof UploadBufferIdentifierValues)[number];
-
-export type UserJWT = {
-  id: string;
-  email: string;
-  name: string;
-  nickname: string;
-  lvl: number;
-  rating: number;
-  permission: number;
-  refresh: boolean;
-  sessionIdentifier: string;
-};
-
-export const PermissionValidationTypeValues = ["permission", "permission_group"] as const;
-export type PermissionValidationType = (typeof PermissionValidationTypeValues)[number];
+import { numberPermission } from "../utils/permission.util";
 
 export const UserPermissionValues = [
   "SEARCH_PROBLEM",
@@ -39,6 +12,8 @@ export const UserPermissionValues = [
   "GET_PUBLIC_CLASS",
   "CREATE_PROBLEM",
   "CREATE_CLASS",
+  "CREATE_PUBLIC_ROOM",
+  "CREATE_PRIVATE_ROOM",
   "MODIFY_USER_SELF",
   "MODIFY_PROBLEM_SELF",
   "MODIFY_CLASS_SELF",
@@ -46,6 +21,10 @@ export const UserPermissionValues = [
   "DELETE_CLASS_SELF",
   "DELETE_USER_SELF",
   "USE_UPLOAD_BUFFER",
+  "JOIN_QUEUE",
+  "JOIN_ROOM",
+  "TEST_CODE",
+  "SUBMIT_CODE",
 ] as const;
 
 export const ManagementPermissionValues = [
@@ -61,7 +40,9 @@ export const ManagementPermissionValues = [
 ] as const;
 
 // Merge permission values without duplicates
-export const PermissionValues = [...new Set([...UserPermissionValues, ...ManagementPermissionValues])] as const;
+export const PermissionValues = [
+  ...new Set([...UserPermissionValues, ...ManagementPermissionValues]),
+] as const;
 export type PermissionType = (typeof PermissionValues)[number];
 
 // Create enum for easy permission management with binary
@@ -85,6 +66,12 @@ export const CommonUserPermission: number[] = [
   PermissionEnum.DELETE_PROBLEM_SELF,
   PermissionEnum.DELETE_USER_SELF,
   PermissionEnum.USE_UPLOAD_BUFFER,
+  PermissionEnum.CREATE_PUBLIC_ROOM,
+  PermissionEnum.CREATE_PRIVATE_ROOM,
+  PermissionEnum.JOIN_ROOM,
+  PermissionEnum.JOIN_QUEUE,
+  PermissionEnum.TEST_CODE,
+  PermissionEnum.SUBMIT_CODE,
 ];
 export const TeacherUserPermission: number[] = [
   ...CommonUserPermission,

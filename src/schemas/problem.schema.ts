@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { ProblemCategory } from "../common/types";
+import { ProblemCategory } from "../common/mapper/types";
 
 import { Classroom } from "./group.schema";
 import { User } from "./user.schema";
@@ -37,14 +37,14 @@ export class Problem {
   @Column()
   restricted: number = null;
 
-  @OneToMany(() => TestCase, (testCase) => testCase.problem)
-  testCases: TestCase[];
+  @OneToMany(() => Testcase, (testCase) => testCase.problem)
+  testCases: Testcase[];
 
   @OneToMany(() => PublicProblem, (publicProblem) => publicProblem.problem)
-  publicProblem: TestCase[];
+  publicProblem: Testcase[];
 
   @OneToMany(() => ClassProblem, (classProblem) => classProblem.problem)
-  classProblem: TestCase[];
+  classProblem: Testcase[];
 
   @JoinColumn()
   @ManyToOne(() => User, (user) => user.problem, { eager: true })
@@ -52,7 +52,7 @@ export class Problem {
 }
 
 @Entity()
-export class TestCase {
+export class Testcase {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

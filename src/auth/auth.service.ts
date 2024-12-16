@@ -5,8 +5,8 @@ import * as bcrypt from "bcrypt";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import { ErrorMsg } from "../common/error";
-import { UserJWT } from "../common/types";
+import { ErrorMsg } from "../common/mapper/error";
+import { UserJWT } from "../common/mapper/types";
 import { Login, Session, User } from "../schemas";
 
 @Injectable()
@@ -36,7 +36,8 @@ export class AuthService {
     const session = await this.sessionRepository.findOne({
       where: { refreshToken: refreshToken || "" },
     });
-    if (!session) throw new HttpException("Session not found. Is this valid jwt refresh token?", 404);
+    if (!session)
+      throw new HttpException("Session not found. Is this valid jwt refresh token?", 404);
 
     await this.sessionRepository.delete(session);
 
@@ -44,7 +45,7 @@ export class AuthService {
       where: { id: session.user.id },
     });
 
-    return await this.generateJWTKeyPair(user, "30m", "1M");
+    return await this.generateJWTKeyPair(user, "30m", "1y");
   }
 
   async logout(user: UserJWT) {

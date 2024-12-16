@@ -3,7 +3,7 @@ import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
-import { PermissionEnum } from "../../../common/types";
+import { PermissionEnum } from "../../../common/mapper/permissions";
 import { User } from "../../../schemas";
 import { AddPermissionDTO, CreateUserDTO, RemovePermissionDTO, SetPermissionDTO } from "../dto";
 import { UserService } from "../providers";

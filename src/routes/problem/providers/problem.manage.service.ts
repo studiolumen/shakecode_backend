@@ -3,10 +3,11 @@ import { InjectRepository } from "@nestjs/typeorm";
 import merge from "merge-js-class";
 import { Repository } from "typeorm";
 
-import { ErrorMsg } from "../../../common/error";
-import { PermissionEnum, UserJWT } from "../../../common/types";
+import { ErrorMsg } from "../../../common/mapper/error";
+import { PermissionEnum } from "../../../common/mapper/permissions";
+import { UserJWT } from "../../../common/mapper/types";
 import { hasPermission } from "../../../common/utils/permission.util";
-import { Problem, PublicProblem, TestCase, User } from "../../../schemas";
+import { Problem, PublicProblem, Testcase, User } from "../../../schemas";
 import { CreateProblemDTO, UpdateProblemDTO } from "../dto/problem.dto";
 
 @Injectable()
@@ -18,8 +19,8 @@ export class ProblemManageService {
     private readonly problemRepository: Repository<Problem>,
     @InjectRepository(PublicProblem)
     private readonly publicProblemRepository: Repository<PublicProblem>,
-    @InjectRepository(TestCase)
-    private readonly testCaseRepository: Repository<TestCase>,
+    @InjectRepository(Testcase)
+    private readonly testCaseRepository: Repository<Testcase>,
   ) {}
 
   async createProblem(
@@ -36,7 +37,7 @@ export class ProblemManageService {
 
     const testcases = [];
     for (const t of data.testcases) {
-      const tc = merge(new TestCase(), t);
+      const tc = merge(new Testcase(), t);
       tc.problem = problem;
       testcases.push(tc);
     }
@@ -65,7 +66,10 @@ export class ProblemManageService {
 
     if (!existingProblem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (existingProblem.user.id !== dbUser.id && !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM]))
+    if (
+      existingProblem.user.id !== dbUser.id &&
+      !hasPermission(dbUser.permission, [PermissionEnum.MODIFY_PROBLEM])
+    )
       throw new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
 
     const problem = merge(existingProblem, data);
@@ -74,13 +78,13 @@ export class ProblemManageService {
 
     const testcases = [];
     for (const t of data.testcases) {
-      const tc = merge(new TestCase(), t);
+      const tc = merge(new Testcase(), t);
       tc.problem = problem;
       testcases.push(tc);
     }
 
     const result = await this.problemRepository.save(problem);
-    await this.testCaseRepository.delete({ problem: problem, show_user: true });
+    await this.testCaseRepository.delete({ problem: problem });
     await this.testCaseRepository.save(testcases);
 
     const publicProblem = await this.publicProblemRepository.findOne({
@@ -101,7 +105,10 @@ export class ProblemManageService {
     });
     if (!existingProblem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (existingProblem.user.id !== user.id && !hasPermission(user.permission, [PermissionEnum.DELETE_PROBLEM]))
+    if (
+      existingProblem.user.id !== user.id &&
+      !hasPermission(user.permission, [PermissionEnum.DELETE_PROBLEM])
+    )
       throw new HttpException(ErrorMsg.PermissionDenied_Action, HttpStatus.FORBIDDEN);
     return await this.problemRepository.remove(existingProblem);
   }

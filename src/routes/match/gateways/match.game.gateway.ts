@@ -2,23 +2,29 @@ import * as child_process from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 
+import { Logger } from "@nestjs/common";
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { v4 as uuid } from "uuid";
 
 @WebSocketGateway(0, { namespace: "match/game", cors: "*" })
 export class MatchGameGateway {
-  private dockerContainers: Map<string, { id: string; process: child_process.ChildProcessWithoutNullStreams }> =
-    new Map();
+  private dockerContainers: Map<
+    string,
+    { id: string; process: child_process.ChildProcessWithoutNullStreams }
+  > = new Map();
 
   private isDockerInitializing: Map<string, boolean> = new Map();
+
+  private logger: Logger = new Logger("MatchQueueGateway");
 
   @WebSocketServer()
   server: Server;
 
   @SubscribeMessage("execute")
   async executeCode(client: Socket, data) {
-    if (this.isDockerInitializing.has(client.id) && this.isDockerInitializing.get(client.id)) return "error";
+    if (this.isDockerInitializing.has(client.id) && this.isDockerInitializing.get(client.id))
+      return "error";
     this.isDockerInitializing.set(client.id, true);
     if (this.dockerContainers.has(client.id)) {
       const container = this.dockerContainers.get(client.id);
@@ -36,7 +42,10 @@ export class MatchGameGateway {
       const code = data.body.split("\n").slice(1).join("\n");
 
       fs.mkdirSync(path.join(basePath, id));
-      fs.copyFileSync(path.join(basePath, `Dockerfile_${type}`), path.join(basePath, id, "Dockerfile"));
+      fs.copyFileSync(
+        path.join(basePath, `Dockerfile_${type}`),
+        path.join(basePath, id, "Dockerfile"),
+      );
       fs.writeFileSync(path.join(basePath, id, "code"), code, {
         flag: "w",
       });
@@ -44,7 +53,14 @@ export class MatchGameGateway {
         child_process.exec(`docker build . -t ${id}`, workDir, accept);
       });
 
-      const dockerContainer = child_process.spawn("docker", ["run", "-i", "--rm", "--name", id, id]);
+      const dockerContainer = child_process.spawn("docker", [
+        "run",
+        "-i",
+        "--rm",
+        "--name",
+        id,
+        id,
+      ]);
 
       dockerContainer.stdout.on("data", (data) => {
         client.emit("out_plain", data.toString());

@@ -1,9 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Transform } from "class-transformer";
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from "class-validator";
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from "class-validator";
 
-import { ProblemCategory, ProblemCategoryValues } from "../../../common/types";
-import { TestCase, User } from "../../../schemas";
+import { ProblemCategory, ProblemCategoryValues } from "../../../common/mapper/types";
+import { Testcase, User } from "../../../schemas";
 
 export class TestCaseDTO {
   @ApiProperty()
@@ -153,7 +161,7 @@ export class GetFullProblemDTO {
   @IsBoolean()
   @Transform(({ value }) => value === "true")
   @IsOptional()
-  hidden: boolean = true;
+  hidden: boolean;
 }
 
 export class TestcaseListResponseDTO {
@@ -194,8 +202,8 @@ export class ProblemCheckResult {
   @ApiProperty()
   restricted: number;
 
-  @ApiProperty({ type: [TestCase] })
-  testCases: TestCase[];
+  @ApiProperty({ type: [Testcase] })
+  testCases: Testcase[];
 
   @ApiProperty()
   testcasesCount: number;

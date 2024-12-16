@@ -1,6 +1,6 @@
 import { describe, it, expect, jest } from "@jest/globals";
 
-import { CommonUserPermission, PermissionEnum } from "../src/common/types";
+import { CommonUserPermission, PermissionEnum } from "../src/common/mapper/permissions";
 import { hasPermission, numberPermission } from "../src/common/utils/permission.util";
 
 jest.useRealTimers();
@@ -35,7 +35,12 @@ describe("Permission Management Test", () => {
 
   it("Not Has Multiple Permission Test", () => {
     const commonUserPermission = numberPermission(...CommonUserPermission);
-    expect(hasPermission(commonUserPermission, [PermissionEnum.MODIFY_CLASS, PermissionEnum.DELETE_USER])).toBe(false);
+    expect(
+      hasPermission(commonUserPermission, [
+        PermissionEnum.MODIFY_CLASS,
+        PermissionEnum.DELETE_USER,
+      ]),
+    ).toBe(false);
   });
 
   it("Mixed Permission Test", () => {

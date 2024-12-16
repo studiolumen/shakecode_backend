@@ -1,15 +1,20 @@
 import { Logger } from "@nestjs/common";
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import {
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 
-import { MatchService } from "../providers";
+import { MatchQueueService } from "../providers";
 
 @WebSocketGateway(0, { namespace: "match/queue", cors: "*" })
 export class MatchQueueGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly matchService: MatchService) {}
+  constructor(private readonly matchService: MatchQueueService) {}
 
   private logger: Logger = new Logger("MatchQueueGateway");
 
