@@ -31,7 +31,7 @@ export class ValidationService {
       savedPermissionMappings
         .filter((v) => v.type === "permission")
         .sort()
-        .map((v) => [v.key, v.value]),
+        .map((v) => [v.key, parseInt(v.value as unknown as string)]),
     ) as {
       [K in PermissionType]: number;
     };
@@ -39,7 +39,7 @@ export class ValidationService {
       savedPermissionMappings
         .filter((v) => v.type === "permission_group")
         .sort()
-        .map((v) => [v.key, v.value]),
+        .map((v) => [v.key, parseInt(v.value as unknown as string)]),
     ) as {
       [K in PermissionType]: number;
     };

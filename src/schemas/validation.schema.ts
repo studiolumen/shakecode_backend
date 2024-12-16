@@ -13,6 +13,6 @@ export class PermissionValidator {
   @Column()
   key: string;
 
-  @Column()
+  @Column("int8")
   value: number;
 }
