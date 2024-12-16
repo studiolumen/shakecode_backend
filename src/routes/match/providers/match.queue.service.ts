@@ -52,6 +52,7 @@ export class MatchQueueService {
       roomStatus: "waiting_owner",
       problems: [],
       players: [],
+      history: [],
       issued: Date.now(),
     };
 
