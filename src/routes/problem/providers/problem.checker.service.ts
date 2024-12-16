@@ -98,7 +98,7 @@ export class ProblemCheckerService {
 
     return {
       passed: result.every((tco, i) => tco === outputs[i]),
-      testcases: outputs.map((output, i) => [output, result[i]]),
+      testcases: outputs.map((output, i) => [inputs[i], output, result[i]]),
     };
   }
 }
