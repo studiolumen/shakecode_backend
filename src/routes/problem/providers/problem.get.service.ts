@@ -55,7 +55,7 @@ export class ProblemGetService {
     return { pid: publicProblem.pid, ...publicProblem.problem, testcasesCount };
   }
 
-  async getSelfProblemById(
+  async getFullProblemById(
     user: UserJWT,
     id: string,
     hidden: boolean,
