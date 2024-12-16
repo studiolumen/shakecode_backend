@@ -10,7 +10,12 @@ import {
   Min,
 } from "class-validator";
 
-import { ProblemCategory, ProblemCategoryValues } from "../../../common/mapper/types";
+import {
+  CompilerType,
+  CompilerTypeValues,
+  ProblemCategory,
+  ProblemCategoryValues,
+} from "../../../common/mapper/types";
 import { Testcase, User } from "../../../schemas";
 
 export class TestCaseDTO {
@@ -210,4 +215,21 @@ export class ProblemCheckResult {
 
   @ApiProperty({ type: User })
   user: User;
+}
+
+export class TestProblemWithoutMatchDTO {
+  @ApiProperty({ enum: CompilerTypeValues })
+  @IsString()
+  @IsNotEmpty()
+  compiler: CompilerType;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  problemId: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  code: string;
 }

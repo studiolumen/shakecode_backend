@@ -16,6 +16,18 @@ export type PermissionValidationType = (typeof PermissionValidationTypeValues)[n
 export const GameModeValues = ["1VS1"] as const;
 export type GameMode = (typeof GameModeValues)[number];
 
+export const RoomStatusValues = ["waiting_owner", "waiting", "starting", "playing"] as const;
+export type RoomStatus = (typeof RoomStatusValues)[number];
+
+export const CodeRunHistoryValues = [
+  "correct",
+  "wrong",
+  "runtime_error",
+  "timeout",
+  "out_of_memory",
+] as const;
+export type CodeRunHistory = (typeof CodeRunHistoryValues)[number];
+
 export type UserJWT = {
   id: string;
   email: string;
@@ -33,8 +45,6 @@ export type SocketUser = {
   socketId: string | null;
 };
 
-export type RoomStatus = "waiting_owner" | "waiting" | "starting" | "playing";
-
 export type MatchQueueElement = {
   connected: boolean;
   websocketInitId: string;
@@ -50,7 +60,15 @@ export type MatchRoomElement = {
   roomOwner: SocketUser;
   roomStatus: RoomStatus;
   problems: string[];
-  players: SocketUser[];
+  players: (SocketUser & {
+    solves: boolean[];
+  })[];
+  history: {
+    id: number;
+    user: string;
+    status: CodeRunHistory;
+    timestamp: string;
+  }[];
   issued: number;
 };
 

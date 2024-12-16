@@ -5,7 +5,7 @@ import { CustomJwtAuthGuard } from "../../../auth/guards";
 import { PermissionGuard } from "../../../auth/guards/permission.guard";
 import { UseGuardsWithSwagger } from "../../../auth/guards/useGuards";
 import { PermissionEnum } from "../../../common/mapper/permissions";
-import { TestCodeDTO } from "../dto/match.game.dto";
+import { RunCodeDTO } from "../dto/match.game.dto";
 import { MatchGameService } from "../providers";
 
 @ApiTags("Match Game")
@@ -19,7 +19,23 @@ export class MatchGameController {
   })
   @Post("/test")
   @UseGuardsWithSwagger(CustomJwtAuthGuard, PermissionGuard([PermissionEnum.TEST_CODE]))
-  async testCode(@Req() req, @Body() data: TestCodeDTO) {
+  async testCode(@Req() req, @Body() data: RunCodeDTO) {
+    return this.matchGameService.testCode(
+      req.user,
+      data.matchType,
+      data.problemId,
+      data.compiler,
+      data.code,
+    );
+  }
+
+  @ApiOperation({
+    summary: "submit code",
+    description: "submit answer code",
+  })
+  @Post("/submit")
+  @UseGuardsWithSwagger(CustomJwtAuthGuard, PermissionGuard([PermissionEnum.SUBMIT_CODE]))
+  async submitCode(@Req() req, @Body() data: RunCodeDTO) {
     return this.matchGameService.testCode(
       req.user,
       data.matchType,
