@@ -68,7 +68,7 @@ export class ValidationService {
         const groupName = Object.entries(deprecatedPermissionGroups).find(
           (v) => v[1] === u.permission,
         )[0];
-        u.permission = NumberedPermissionGroupsEnum[groupName];
+        u.permission = NumberedPermissionGroupsEnum[groupName].toString();
         return u;
       });
 
@@ -82,7 +82,7 @@ export class ValidationService {
 
     const exceptions = [];
     users = users.map((user) => {
-      const permissions = parsePermission(user.permission, fixedPermissionMappings);
+      const permissions = parsePermission(parseInt(user.permission), fixedPermissionMappings);
 
       const newPermissions = [];
       permissions.forEach((permission) => {
@@ -93,7 +93,7 @@ export class ValidationService {
         newPermissions.push(PermissionEnum[permission]);
       });
 
-      user.permission = numberPermission(...newPermissions);
+      user.permission = numberPermission(...newPermissions).toString();
       return user;
     });
 
@@ -128,7 +128,7 @@ export class ValidationService {
       const permissionGroup = new PermissionValidator();
       permissionGroup.type = "permission_group";
       permissionGroup.key = pg;
-      permissionGroup.value = NumberedPermissionGroupsEnum[pg];
+      permissionGroup.value = NumberedPermissionGroupsEnum[pg].toString();
       permissions.push(permissionGroup);
     });
 
