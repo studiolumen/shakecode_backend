@@ -26,8 +26,16 @@ export class RedisCacheService {
     return await this.cache.get(key);
   }
 
+  async getJSON<T>(key: string): Promise<T> {
+    return JSON.parse(await this.get(key)) as T;
+  }
+
   async set(key: string, value: any, option?: CachingConfig<any>) {
     await this.cache.set(key, value, option);
+  }
+
+  async setJSON(key: string, value: any, option?: CachingConfig<any>) {
+    await this.set(key, JSON.stringify(value), option);
   }
 
   async reset() {
