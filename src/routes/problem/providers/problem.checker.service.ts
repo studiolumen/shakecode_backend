@@ -70,7 +70,6 @@ export class ProblemCheckerService {
       });
       fs.rmSync(path.join(basePath, id), { recursive: true, force: true });
     }
-    console.log(output);
     const parsedOutput = JSON.parse(output);
     const result = new Array(Object.keys(parsedOutput).length);
     Object.entries(parsedOutput).forEach((e) => {
