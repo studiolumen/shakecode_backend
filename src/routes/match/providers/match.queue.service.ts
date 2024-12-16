@@ -4,7 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import { RedisMapper } from "../../../common/mapper/redis.mapper";
+import { MapRedisConstant, RedisMapper } from "../../../common/mapper/redis.mapper";
 import { MatchQueueElement, MatchRoomElement, UserJWT } from "../../../common/mapper/types";
 import { RedisCacheService } from "../../../common/modules/redis.module";
 import { User } from "../../../schemas";
@@ -18,7 +18,7 @@ export class MatchQueueService {
   ) {}
 
   async registerMatchQueue(user: UserJWT): Promise<string> {
-    const redisKey = `${RedisMapper.MQ_PRIVATE}_${user.id}`;
+    const redisKey = MapRedisConstant(RedisMapper.MQ_PUBLIC, user.id);
 
     const existingMatchQueue = await this.redisService.get(redisKey);
     if (existingMatchQueue) {
@@ -40,17 +40,18 @@ export class MatchQueueService {
   }
 
   async createPrivateRoom(user: UserJWT): Promise<string> {
-    const redisKey = `${RedisMapper.MR_PRIVATE}_${user.id}`;
+    const redisKey = MapRedisConstant(RedisMapper.MR_PRIVATE, user.id);
     await this.redisService.del(redisKey);
 
     const matchRoomElement: MatchRoomElement = {
       websocketInitId: uuid().replaceAll("-", ""),
       roomId: uuid().substring(0, 4),
       gameMode: "1VS1",
-      players: [],
       maxPlayer: 2,
       roomOwner: { userId: user.id, socketId: null },
       roomStatus: "waiting_owner",
+      problems: [],
+      players: [],
       issued: Date.now(),
     };
 
