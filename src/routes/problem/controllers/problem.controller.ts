@@ -17,8 +17,14 @@ import {
   UpdateProblemDTO,
   ProblemCheckResult,
   TestcaseIdDTO,
+  TestProblemWithoutMatchDTO,
 } from "../dto/problem.dto";
-import { ProblemGetService, ProblemManageService, ProblemTestCaseService } from "../providers";
+import {
+  ProblemCheckerService,
+  ProblemGetService,
+  ProblemManageService,
+  ProblemTestCaseService,
+} from "../providers";
 
 @ApiTags("Problem")
 @Controller("/problem")
@@ -27,6 +33,7 @@ export class ProblemController {
     private readonly problemGetService: ProblemGetService,
     private readonly problemPsadderService: ProblemManageService,
     private readonly problemTestcaseService: ProblemTestCaseService,
+    private readonly problemCheckerService: ProblemCheckerService,
   ) {}
 
   @ApiOperation({
@@ -183,5 +190,18 @@ export class ProblemController {
   )
   async deleteTestCase(@Req() req, @Query() data: TestcaseIdDTO) {
     return this.problemTestcaseService.deleteTestCase(req.user, data.id);
+  }
+
+  @ApiOperation({
+    summary: "test code",
+    description: "test code without match",
+  })
+  @Post("/checker")
+  @UseGuardsWithSwagger(
+    CustomJwtAuthGuard,
+    PermissionGuard([PermissionEnum.TEST_CODE_WITHOUT_MATCH]),
+  )
+  async testCodeWithoutMatch(@Body() data: TestProblemWithoutMatchDTO) {
+    return this.problemCheckerService.testCode(data.problemId, data.compiler, data.code);
   }
 }
