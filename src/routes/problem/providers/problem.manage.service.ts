@@ -84,7 +84,7 @@ export class ProblemManageService {
     }
 
     const result = await this.problemRepository.save(problem);
-    await this.testCaseRepository.delete({ problem: problem, show_user: true });
+    await this.testCaseRepository.delete({ problem: problem });
     await this.testCaseRepository.save(testcases);
 
     const publicProblem = await this.publicProblemRepository.findOne({
