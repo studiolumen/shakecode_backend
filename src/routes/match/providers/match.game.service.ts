@@ -17,10 +17,6 @@ import { ProblemCheckerService } from "../../problem/providers";
 @Injectable()
 export class MatchGameService {
   constructor(
-    @InjectRepository(Problem)
-    private readonly problemRepository: Repository<Problem>,
-    @InjectRepository(Testcase)
-    private readonly testcaseRepository: Repository<Testcase>,
     private readonly redisService: RedisCacheService,
     private readonly problemCheckerService: ProblemCheckerService,
   ) {}

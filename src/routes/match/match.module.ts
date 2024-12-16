@@ -4,13 +4,14 @@ import importToArray from "import-to-array";
 
 import { CustomRedisModule } from "../../common/modules/redis.module";
 import { User } from "../../schemas";
+import { ProblemModule } from "../problem";
 
 import * as controllers from "./controllers";
 import * as gateways from "./gateways";
 import * as providers from "./providers";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), CustomRedisModule],
+  imports: [TypeOrmModule.forFeature([User]), CustomRedisModule, ProblemModule],
   controllers: importToArray(controllers),
   providers: [...importToArray(providers), ...importToArray(gateways)],
   exports: [...importToArray(providers), ...importToArray(gateways)],

@@ -23,6 +23,8 @@ export const UserPermissionValues = [
   "USE_UPLOAD_BUFFER",
   "JOIN_QUEUE",
   "JOIN_ROOM",
+  "TEST_CODE",
+  "SUBMIT_CODE",
 ] as const;
 
 export const ManagementPermissionValues = [
@@ -68,6 +70,8 @@ export const CommonUserPermission: number[] = [
   PermissionEnum.CREATE_PRIVATE_ROOM,
   PermissionEnum.JOIN_ROOM,
   PermissionEnum.JOIN_QUEUE,
+  PermissionEnum.TEST_CODE,
+  PermissionEnum.SUBMIT_CODE,
 ];
 export const TeacherUserPermission: number[] = [
   ...CommonUserPermission,
