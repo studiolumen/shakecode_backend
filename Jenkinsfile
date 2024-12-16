@@ -63,7 +63,7 @@ pipeline {
                         docker stop shakecode_back || true
                         docker rm shakecode_back || true
                         docker pull ghcr.io/$username/shakecode_back
-                        docker run -it -d --name shakecode_back --restart always -p 9007:3000 ghcr.io/$username/shakecode_back
+                        docker run -it -d -v /var/run/docker.sock:/var/run/docker.sock --name shakecode_back --restart always -p 9007:3000 ghcr.io/$username/shakecode_back
                         docker network connect --ip 192.168.1.102 shakecode_default shakecode_back
                         docker image prune -f
                         """
