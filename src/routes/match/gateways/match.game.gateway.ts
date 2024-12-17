@@ -7,6 +7,8 @@ import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/web
 import { Server, Socket } from "socket.io";
 import { v4 as uuid } from "uuid";
 
+import { CompilerTypeValues } from "../../../common/mapper/types";
+
 @WebSocketGateway(0, { namespace: "match/game", cors: "*" })
 export class MatchGameGateway {
   private dockerContainers: Map<
@@ -38,20 +40,24 @@ export class MatchGameGateway {
     const workDir = { cwd: path.join(basePath, id) };
 
     try {
+      console.log(data);
       const type = data.body.split("\n")[0];
       const code = data.body.split("\n").slice(1).join("\n");
 
+      if (!CompilerTypeValues.find((ctv) => ctv === type)) return "error";
+
       fs.mkdirSync(path.join(basePath, id));
       fs.copyFileSync(
-        path.join(basePath, `Dockerfile_${type}`),
+        path.join(basePath, `Dockerfile_run_${type}`),
         path.join(basePath, id, "Dockerfile"),
       );
       fs.writeFileSync(path.join(basePath, id, "code"), code, {
         flag: "w",
       });
-      await new Promise((accept) => {
+      const debug1 = await new Promise((accept) => {
         child_process.exec(`docker build . -t ${id}`, workDir, accept);
       });
+      console.log(debug1);
 
       const dockerContainer = child_process.spawn("docker", [
         "run",
@@ -61,6 +67,8 @@ export class MatchGameGateway {
         id,
         id,
       ]);
+
+      client.emit("executed", "true");
 
       dockerContainer.stdout.on("data", (data) => {
         client.emit("out_plain", data.toString());
@@ -89,8 +97,8 @@ export class MatchGameGateway {
           dockerContainer.process.kill();
           fs.rmSync(path.join(basePath, id), { recursive: true, force: true });
           this.dockerContainers.delete(client.id);
+          client.emit("out_error", "Timeout");
         }
-        client.emit("out_error", "Timeout");
       }, 60000);
     }
 

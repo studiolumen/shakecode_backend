@@ -1,0 +1,8 @@
+FROM python:latest
+
+WORKDIR /app
+
+COPY ./code ./code.py
+COPY ./input* ./
+
+CMD python3 code.py
