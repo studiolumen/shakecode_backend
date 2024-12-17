@@ -4,12 +4,10 @@ import * as path from "path";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { trimNewlines, trimNewlinesEnd } from "trim-newlines";
+import { trimNewlinesEnd } from "trim-newlines";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import { ErrorMsg } from "../../../common/mapper/error";
-import { MapRedisConstant, RedisMapper } from "../../../common/mapper/redis.mapper";
 import {
   CompilerType,
   MatchRoomElement,
