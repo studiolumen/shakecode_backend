@@ -95,8 +95,8 @@ export class MatchGameGateway {
           dockerContainer.process.kill();
           fs.rmSync(path.join(basePath, id), { recursive: true, force: true });
           this.dockerContainers.delete(client.id);
+          client.emit("out_error", "Timeout");
         }
-        client.emit("out_error", "Timeout");
       }, 60000);
     }
 
