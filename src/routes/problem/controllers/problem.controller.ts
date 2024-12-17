@@ -84,7 +84,12 @@ export class ProblemController {
     PermissionGuard([PermissionEnum.GET_PROBLEM, PermissionEnum.GET_PROBLEM_SELF], true),
   )
   async getFullProblem(@Req() req, @Query() data: GetFullProblemDTO) {
-    return this.problemGetService.getFullProblemById(req.user, data.id, data.hidden);
+    console.log(data);
+    return this.problemGetService.getFullProblemById(
+      req.user,
+      data.id,
+      (data.hidden as unknown as string) === "true",
+    );
   }
 
   @ApiOperation({
