@@ -1,0 +1,13 @@
+FROM gcc:latest
+
+WORKDIR /app
+
+COPY ./mem.txt ./mem
+COPY ./code ./code.c
+COPY ./input* ./
+
+RUN g++ -o code code.c
+
+RUN apt-get update && apt-get install -y util-linux && apt install -y jq
+
+CMD if ls input* 1> /dev/null 2>&1; then for file in input*; do cat "$file" | prlimit --as=$(cat mem) -- ./code > output_$file; done; else prlimit --as=$(cat mem) -- ./code > output_input_0.txt; fi; echo -n "{"; first=1; for file in output*; do [ -f "$file" ] && { content=$(awk '{printf "%s\\n", $0}' "$file" | jq -Rs .); [ $first -eq 0 ] && echo -n ","; echo -n "\"$file\":$content"; first=0; }; done; echo "}"
