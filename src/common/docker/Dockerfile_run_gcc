@@ -1,0 +1,10 @@
+FROM gcc:latest
+
+WORKDIR /app
+
+COPY ./code ./code.c
+COPY ./input* ./
+
+RUN gcc -o code code.c
+
+CMD ./code
