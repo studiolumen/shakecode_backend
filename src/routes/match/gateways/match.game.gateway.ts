@@ -68,6 +68,8 @@ export class MatchGameGateway {
         id,
       ]);
 
+      client.emit("executed", "true");
+
       dockerContainer.stdout.on("data", (data) => {
         client.emit("out_plain", data.toString());
       });
