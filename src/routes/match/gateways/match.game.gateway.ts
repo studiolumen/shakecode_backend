@@ -40,7 +40,6 @@ export class MatchGameGateway {
     const workDir = { cwd: path.join(basePath, id) };
 
     try {
-      console.log(data);
       const type = data.body.split("\n")[0];
       const code = data.body.split("\n").slice(1).join("\n");
 
@@ -57,7 +56,6 @@ export class MatchGameGateway {
       const debug1 = await new Promise((accept) => {
         child_process.exec(`docker build . -t ${id}`, workDir, accept);
       });
-      console.log(debug1);
 
       const dockerContainer = child_process.spawn("docker", [
         "run",
