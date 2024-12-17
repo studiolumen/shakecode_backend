@@ -7,12 +7,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
-import {
-  CompilerType,
-  MatchRoomElement,
-  TestCodeResult,
-  UserJWT,
-} from "../../../common/mapper/types";
+import { CompilerType, TestCodeResult } from "../../../common/mapper/types";
 import { Problem, Testcase } from "../../../schemas";
 
 @Injectable()
