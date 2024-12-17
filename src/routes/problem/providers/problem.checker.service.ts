@@ -99,7 +99,9 @@ export class ProblemCheckerService {
 
     return {
       passed: result.every((tco, i) => tco === outputs[i]),
-      testcases: outputs.map((output, i) => [inputs[i], output, result[i]]),
+      testcases: outputs
+        .map((output, i) => [inputs[i], output, result[i]])
+        .filter((o) => o[2] !== o[3]),
     };
   }
 }
