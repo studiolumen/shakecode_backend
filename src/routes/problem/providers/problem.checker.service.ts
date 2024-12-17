@@ -4,6 +4,7 @@ import * as path from "path";
 
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { trimNewlines, trimNewlinesEnd } from "trim-newlines";
 import { Repository } from "typeorm";
 import { v4 as uuid } from "uuid";
 
@@ -97,10 +98,14 @@ export class ProblemCheckerService {
 
     const result = await this.runCode(compiler, code, inputs);
 
+    const newTrim = (str: string) => {
+      return trimNewlinesEnd(str.trimEnd()).trimEnd();
+    };
+
     return {
-      passed: result.every((tco, i) => tco === outputs[i]),
+      passed: result.every((tco, i) => newTrim(tco) === newTrim(outputs[i])),
       testcases: outputs
-        .map((output, i) => [inputs[i], output, result[i]])
+        .map((output, i) => [newTrim(inputs[i]), newTrim(output), newTrim(result[i])])
         .filter((o) => o[2] !== o[3]),
     };
   }
