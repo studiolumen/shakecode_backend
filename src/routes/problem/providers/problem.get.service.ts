@@ -38,21 +38,24 @@ export class ProblemGetService {
   }
 
   async getPublicProblemById(id: string): Promise<ProblemCheckResult> {
-    const publicProblem = await this.publicProblemRepository.findOne({
-      where: { id: id },
-    });
+    const problem = await this.problemRepository
+      .createQueryBuilder("problem")
+      .leftJoinAndSelect("problem.testCases", "testcase", "testcase.show_user = :showUser", {
+        showUser: true,
+      })
+      .where("problem.id = :id", { id })
+      .getOne();
+    const publicProblem = await this.publicProblemRepository.findOne({ where: { problem } });
     const testcasesCount = await this.testCaseRepository.count({
-      where: { problem: publicProblem.problem },
+      where: { problem },
     });
 
-    if (!publicProblem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
+    if (!problem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
-    if (publicProblem.problem.restricted !== 0)
+    if (problem.restricted !== 0)
       throw new HttpException(ErrorMsg.PermissionDenied_Resource, HttpStatus.FORBIDDEN);
 
-    publicProblem.problem.testCases = publicProblem.problem.testCases.filter((tc) => tc.show_user);
-
-    return { pid: publicProblem.pid, ...publicProblem.problem, testcasesCount };
+    return { pid: publicProblem.pid, ...problem, testcasesCount };
   }
 
   async getFullProblemById(

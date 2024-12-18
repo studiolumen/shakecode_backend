@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 import { Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { v4 as uuid } from "uuid";
@@ -11,6 +12,11 @@ import { CompilerTypeValues } from "../../../common/mapper/types";
 
 @WebSocketGateway(0, { namespace: "match/game", cors: "*" })
 export class MatchGameGateway {
+  constructor(private readonly configService: ConfigService) {}
+
+  private currentProblem: string = "f59d1dd1-286f-4ac1-ac48-844ba35b2c92";
+  private currentCharCount: { [key: string]: number };
+
   private dockerContainers: Map<
     string,
     { id: string; process: child_process.ChildProcessWithoutNullStreams }
@@ -25,6 +31,7 @@ export class MatchGameGateway {
 
   @SubscribeMessage("execute")
   async executeCode(client: Socket, data) {
+    console.log(this.isDockerInitializing.has(client.id), this.isDockerInitializing.get(client.id));
     if (this.isDockerInitializing.has(client.id) && this.isDockerInitializing.get(client.id))
       return "error";
     this.isDockerInitializing.set(client.id, true);
@@ -40,7 +47,6 @@ export class MatchGameGateway {
     const workDir = { cwd: path.join(basePath, id) };
 
     try {
-      console.log(data);
       const type = data.body.split("\n")[0];
       const code = data.body.split("\n").slice(1).join("\n");
 
@@ -57,7 +63,6 @@ export class MatchGameGateway {
       const debug1 = await new Promise((accept) => {
         child_process.exec(`docker build . -t ${id}`, workDir, accept);
       });
-      console.log(debug1);
 
       const dockerContainer = child_process.spawn("docker", [
         "run",
@@ -90,7 +95,6 @@ export class MatchGameGateway {
       console.log(e);
     } finally {
       setTimeout(() => {
-        this.isDockerInitializing.set(client.id, false);
         const dockerContainer = this.dockerContainers.get(client.id);
         if (dockerContainer) {
           child_process.exec(`docker kill ${id}`);
@@ -101,7 +105,7 @@ export class MatchGameGateway {
         }
       }, 60000);
     }
-
+    this.isDockerInitializing.set(client.id, false);
     return "ok";
   }
 
@@ -127,5 +131,25 @@ export class MatchGameGateway {
     } else {
       return "404";
     }
+  }
+
+  @SubscribeMessage("setCharCount")
+  async setCharCount(client: Socket, data) {
+    this.currentCharCount[data.user] = data.count;
+  }
+
+  @SubscribeMessage("getCharCount")
+  async getCharCount(client: Socket, data) {
+    this.server.emit("charCount", this.currentCharCount);
+  }
+
+  @SubscribeMessage("getProblem")
+  async getProblem(client: Socket, data) {
+    this.server.emit("problem_set", this.currentProblem);
+  }
+
+  @SubscribeMessage("setProblem")
+  async setProblem(client: Socket, data) {
+    this.currentProblem = data.body;
   }
 }
