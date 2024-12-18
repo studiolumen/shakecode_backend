@@ -14,7 +14,6 @@ const cacheModule = CacheModule.register({
     host: configService.get<string>("REDIS_HOST"),
     port: configService.get<number>("REDIS_PORT"),
     password: configService.get<string>("REDIS_PASS"),
-    ttl: 1000,
   }),
 });
 
@@ -31,7 +30,7 @@ export class RedisCacheService {
   }
 
   async set(key: string, value: any, option?: CachingConfig<any>) {
-    await this.cache.set(key, value, option);
+    await this.cache.set(key, value, { ttl: 3600, ...option });
   }
 
   async setJSON(key: string, value: any, option?: CachingConfig<any>) {

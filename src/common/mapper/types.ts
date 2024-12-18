@@ -75,4 +75,7 @@ export type MatchRoomElement = {
 export type TestCodeResult = {
   passed: boolean;
   testcases: string[][];
+  error: string | null;
 };
+
+export type SubmitResult = { passed: boolean; error: string | null };
