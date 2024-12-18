@@ -10,12 +10,27 @@ import { v4 as uuid } from "uuid";
 
 import { CompilerTypeValues } from "../../../common/mapper/types";
 import { RedisCacheService } from "../../../common/modules/redis.module";
+import { ProblemGetService } from "../../problem/providers";
 
 @WebSocketGateway(0, { namespace: "match/game", cors: "*" })
 export class MatchGameGateway {
-  constructor(private readonly redisService: RedisCacheService) {}
+  constructor(
+    private readonly redisService: RedisCacheService,
+    private readonly problemGetService: ProblemGetService,
+  ) {}
 
-  currentProblem: string = "f59d1dd1-286f-4ac1-ac48-844ba35b2c92";
+  round: number = 0;
+  roundStart: number = 0;
+  // problemList: string[] = [
+  //   "f59d1dd1-286f-4ac1-ac48-844ba35b2c92",
+  //   "0c5df337-c0af-45a8-bdfa-ac306027d7be",
+  // ];
+  problemList: string[] = [
+    "f1d81ae3-5d6f-4bde-9f37-9a7ebf89ecf1",
+    "a499fa9c-fe89-49ad-8a46-ad554b748326",
+    "b483641d-45e3-44e7-815f-effea78d1799",
+  ];
+  history: string[] = [];
   private currentCharCount: { [key: string]: number } = {};
 
   private dockerContainers: Map<
@@ -147,17 +162,7 @@ export class MatchGameGateway {
 
   @SubscribeMessage("getProblem")
   async getProblem(client: Socket, data) {
-    this.server.emit("problem_set", this.currentProblem);
-  }
-
-  @SubscribeMessage("setProblem")
-  async setProblem(client: Socket, data) {
-    this.currentProblem = data.body;
-  }
-
-  @SubscribeMessage("clean_redis")
-  async cleanRedis(client: Socket, data) {
-    this.redisService.reset();
+    this.server.emit("problem_set", this.problemList[this.round]);
   }
 
   @SubscribeMessage("get_submission")
@@ -165,5 +170,52 @@ export class MatchGameGateway {
     this.server.emit("data_submissions", {
       body: await this.redisService.getJSON("submition"),
     });
+  }
+
+  @SubscribeMessage("get_history")
+  async getHistory(client: Socket, data) {
+    this.server.emit("data_history", {
+      body: await Promise.all(
+        this.history.map(async (e, i) => {
+          return [(await this.problemGetService.getPublicProblemById(this.problemList[i])).name, e];
+        }),
+      ),
+    });
+  }
+
+  async roundEnd(winUser: string) {
+    if (this.round < this.problemList.length) this.round++;
+    this.history.push(winUser);
+
+    if (this.round === this.problemList.length) {
+      const winCount = {};
+      this.history.forEach((e, i) => {
+        if (!winCount[e]) winCount[e] = 0;
+        winCount[e]++;
+      });
+      const arr = Object.keys(winCount).map(function (key) {
+        return winCount[key];
+      });
+      const max = Math.max(...arr);
+      const winUser = Object.keys(winCount).filter(function (key) {
+        return winCount[key] === max;
+      });
+      if (winUser.length > 1) {
+        this.server.emit("match:draw");
+        return;
+      }
+      this.server.emit("match:finish", winUser[0]);
+    } else {
+      if (winUser === null) {
+        this.server.emit("round:draw");
+        return;
+      } else {
+        this.server.emit("round:finish", winUser);
+      }
+      this.server.emit("problem_set", this.problemList[this.round]);
+      setTimeout(() => {
+        this.server.emit("reset");
+      }, 5000);
+    }
   }
 }

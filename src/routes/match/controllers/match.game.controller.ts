@@ -67,6 +67,14 @@ export class MatchGameController {
 
   @Post("/setProblem")
   async setProblem(@Body() data: ProblemIdDTO) {
-    this.matchGameGateway.currentProblem = data.id;
+    this.matchGameGateway.problemList[this.matchGameGateway.round] = data.id;
+  }
+
+  @Post("/force_problem")
+  async forceProblem() {
+    this.matchGameGateway.server.emit(
+      "problem_set",
+      this.matchGameGateway.problemList[this.matchGameGateway.round],
+    );
   }
 }
