@@ -25,6 +25,7 @@ export class MatchGameGateway {
 
   @SubscribeMessage("execute")
   async executeCode(client: Socket, data) {
+    console.log(this.isDockerInitializing.has(client.id), this.isDockerInitializing.get(client.id));
     if (this.isDockerInitializing.has(client.id) && this.isDockerInitializing.get(client.id))
       return "error";
     this.isDockerInitializing.set(client.id, true);
@@ -88,7 +89,6 @@ export class MatchGameGateway {
       console.log(e);
     } finally {
       setTimeout(() => {
-        this.isDockerInitializing.set(client.id, false);
         const dockerContainer = this.dockerContainers.get(client.id);
         if (dockerContainer) {
           child_process.exec(`docker kill ${id}`);
@@ -99,7 +99,7 @@ export class MatchGameGateway {
         }
       }, 60000);
     }
-
+    this.isDockerInitializing.set(client.id, false);
     return "ok";
   }
 
