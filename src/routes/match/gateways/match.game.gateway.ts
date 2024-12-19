@@ -255,9 +255,9 @@ export class MatchGameGateway {
       this.pauseTmp = -1;
       this.pauseStart = -1;
     } else {
+      this.pauseTmp = this.roundStart;
       this.roundStart = -2;
       this.pauseStart = Date.now();
-      this.pauseTmp = this.roundStart;
     }
     this.server.emit("time_round_start", {
       body: this.roundStart,
