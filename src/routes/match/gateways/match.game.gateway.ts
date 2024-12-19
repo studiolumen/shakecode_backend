@@ -82,6 +82,7 @@ export class MatchGameGateway {
       const debug1 = await new Promise((accept) => {
         child_process.exec(`docker build . -t ${id}`, workDir, accept);
       });
+      if (debug1) client.emit("out_error", debug1);
 
       const dockerContainer = child_process.spawn("docker", [
         "run",
