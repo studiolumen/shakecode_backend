@@ -93,7 +93,9 @@ export class MatchGameGateway {
       ]);
 
       client.emit("executed", "true");
-      if (debug1) client.emit("out_error", debug1);
+      if (debug1) {
+        client.emit("out_error", debug1.stderr);
+      }
       dockerContainer.stdout.on("data", (data) => {
         client.emit("out_plain", data.toString());
       });
