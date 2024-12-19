@@ -20,17 +20,19 @@ export class MatchGameGateway {
   ) {}
 
   round: number = 0;
-  roundStart: number = 0;
-  // problemList: string[] = [
-  //   "f59d1dd1-286f-4ac1-ac48-844ba35b2c92",
-  //   "0c5df337-c0af-45a8-bdfa-ac306027d7be",
-  // ];
+  roundStart: number = -1;
+  pauseStart = -1;
+  pauseTmp = -1;
+  problemList: string[] = [
+    "f59d1dd1-286f-4ac1-ac48-844ba35b2c92",
+    "0c5df337-c0af-45a8-bdfa-ac306027d7be",
+  ];
   // problemList: string[] = [
   //   "f1d81ae3-5d6f-4bde-9f37-9a7ebf89ecf1",
   //   "a499fa9c-fe89-49ad-8a46-ad554b748326",
   //   "b483641d-45e3-44e7-815f-effea78d1799",
   // ];
-  problemList: string[] = ["04cb6e11-a580-4d5a-8542-e4e6e31d3fc9"];
+  // problemList: string[] = ["04cb6e11-a580-4d5a-8542-e4e6e31d3fc9"];
   history: string[] = [];
   private currentCharCount: { [key: string]: number } = {};
 
@@ -184,6 +186,47 @@ export class MatchGameGateway {
     });
   }
 
+  @SubscribeMessage("get_round_time")
+  async getTime(client: Socket, data) {
+    this.server.emit("time_round_start", {
+      body: this.roundStart,
+    });
+  }
+
+  @SubscribeMessage("get_result")
+  async getResult(client: Socket, data) {
+    this.server.emit("match_result", this.history);
+  }
+
+  async startRound() {
+    this.roundStart = Date.now();
+    this.server.emit("time_round_start", {
+      body: this.roundStart,
+    });
+  }
+
+  async pauseRound() {
+    if (this.roundStart === -2) {
+      this.roundStart = this.pauseTmp + Date.now() - this.pauseStart;
+      this.pauseTmp = -1;
+      this.pauseStart = -1;
+    } else {
+      this.roundStart = -2;
+      this.pauseStart = Date.now();
+      this.pauseTmp = this.roundStart;
+    }
+    this.server.emit("time_round_start", {
+      body: this.roundStart,
+    });
+  }
+
+  async endRound() {
+    this.roundStart = -1;
+    this.server.emit("time_round_start", {
+      body: this.roundStart,
+    });
+  }
+
   async roundEnd(winUser: string) {
     if (this.round < this.problemList.length) this.round++;
     this.history.push(winUser);
@@ -201,22 +244,28 @@ export class MatchGameGateway {
       const winUser = Object.keys(winCount).filter(function (key) {
         return winCount[key] === max;
       });
-      if (winUser.length > 1) {
+      console.log(winUser);
+      if (winUser.length > 1 || winUser[0] == "null") {
         this.server.emit("match:draw");
         return;
       }
       this.server.emit("match:finish", winUser[0]);
     } else {
-      if (winUser === null) {
-        this.server.emit("round:draw");
-        return;
-      } else {
-        this.server.emit("round:finish", winUser);
+      try {
+        if (winUser === null) {
+          this.server.emit("round:draw");
+          return;
+        } else {
+          this.server.emit("round:finish", winUser);
+        }
+      } finally {
+        setTimeout(() => {
+          this.server.emit("problem_set", this.problemList[this.round]);
+        }, 2000);
+        setTimeout(() => {
+          this.server.emit("reset");
+        }, 5000);
       }
-      this.server.emit("problem_set", this.problemList[this.round]);
-      setTimeout(() => {
-        this.server.emit("reset");
-      }, 5000);
     }
   }
 }
