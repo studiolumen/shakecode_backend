@@ -83,7 +83,7 @@ export class MatchGameService {
     }
     console.log("submit2", await this.redisService.getJSON(rediskey));
     this.matchGameGateway.server.emit("data_submissions", {
-      body: await this.redisService.getJSON("submition"),
+      body: await this.redisService.getJSON(rediskey),
     });
     const passed = result.passed;
     if (passed) {

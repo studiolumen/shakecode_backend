@@ -9,14 +9,13 @@ import { Server, Socket } from "socket.io";
 import { v4 as uuid } from "uuid";
 
 import { CompilerTypeValues } from "../../../common/mapper/types";
-import { RedisCacheService } from "../../../common/modules/redis.module";
 
 @WebSocketGateway(0, { namespace: "match/game", cors: "*" })
 export class MatchGameGateway {
-  constructor(private readonly redisService: RedisCacheService) {}
+  constructor(private readonly configService: ConfigService) {}
 
-  currentProblem: string = "f59d1dd1-286f-4ac1-ac48-844ba35b2c92";
-  private currentCharCount: { [key: string]: number } = {};
+  private currentProblem: string = "f59d1dd1-286f-4ac1-ac48-844ba35b2c92";
+  private currentCharCount: { [key: string]: number };
 
   private dockerContainers: Map<
     string,
@@ -137,7 +136,6 @@ export class MatchGameGateway {
   @SubscribeMessage("setCharCount")
   async setCharCount(client: Socket, data) {
     this.currentCharCount[data.user] = data.count;
-    this.server.emit("charCount", this.currentCharCount);
   }
 
   @SubscribeMessage("getCharCount")
@@ -153,17 +151,5 @@ export class MatchGameGateway {
   @SubscribeMessage("setProblem")
   async setProblem(client: Socket, data) {
     this.currentProblem = data.body;
-  }
-
-  @SubscribeMessage("clean_redis")
-  async cleanRedis(client: Socket, data) {
-    this.redisService.reset();
-  }
-
-  @SubscribeMessage("get_submission")
-  async getSubmission(client: Socket, data) {
-    this.server.emit("data_submissions", {
-      body: await this.redisService.getJSON("submition"),
-    });
   }
 }
