@@ -70,32 +70,12 @@ export class MatchGameController {
     this.matchGameGateway.problemList[this.matchGameGateway.round] = data.id;
   }
 
-  @Post("/setProblemList")
-  async setProblemList(@Body() data: ProblemIdDTO) {
-    this.matchGameGateway.problemList = JSON.parse(data.id);
-  }
-
   @Post("/force_problem")
   async forceProblem() {
     this.matchGameGateway.server.emit(
       "problem_set",
       this.matchGameGateway.problemList[this.matchGameGateway.round],
     );
-  }
-
-  @Post("/startRound")
-  async startRound() {
-    this.matchGameGateway.startRound();
-  }
-
-  @Post("/pauseRound")
-  async pauseRound() {
-    this.matchGameGateway.pauseRound();
-  }
-
-  @Post("/endRound")
-  async endRound() {
-    this.matchGameGateway.endRound();
   }
 
   @Post("/draw")
