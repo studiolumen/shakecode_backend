@@ -135,8 +135,7 @@ export class MatchGameGateway {
       if (debug1) {
         client.emit("out_error", (debug1 as child_process.ExecException).stderr);
         client.emit("out_error", (debug1 as child_process.ExecException).stdout);
-        const message = (debug1 as child_process.ExecException).message.indexOf("RUN g++");
-        client.emit("out_error", (debug1 as child_process.ExecException).message.slice(message));
+        client.emit("out_error", (debug1 as child_process.ExecException).message);
       }
       dockerContainer.stdout.on("data", (data) => {
         client.emit("out_plain", data.toString());
