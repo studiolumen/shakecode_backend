@@ -21,15 +21,7 @@ export class MatchGameGateway {
 
   round: number = 0;
   roundStart: number = 0;
-  // problemList: string[] = [
-  //   "f59d1dd1-286f-4ac1-ac48-844ba35b2c92",
-  //   "0c5df337-c0af-45a8-bdfa-ac306027d7be",
-  // ];
-  problemList: string[] = [
-    "f1d81ae3-5d6f-4bde-9f37-9a7ebf89ecf1",
-    "a499fa9c-fe89-49ad-8a46-ad554b748326",
-    "b483641d-45e3-44e7-815f-effea78d1799",
-  ];
+  problemList: string[] = ["f59d1dd1-286f-4ac1-ac48-844ba35b2c92"];
   history: string[] = [];
   private currentCharCount: { [key: string]: number } = {};
 
@@ -212,10 +204,8 @@ export class MatchGameGateway {
       } else {
         this.server.emit("round:finish", winUser);
       }
+      this.server.emit("reset");
       this.server.emit("problem_set", this.problemList[this.round]);
-      setTimeout(() => {
-        this.server.emit("reset");
-      }, 5000);
     }
   }
 }
