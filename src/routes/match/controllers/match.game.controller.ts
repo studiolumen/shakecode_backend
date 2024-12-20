@@ -36,7 +36,7 @@ export class MatchGameController {
   @Post("/submit")
   @UseGuardsWithSwagger(CustomJwtAuthGuard, PermissionGuard([PermissionEnum.SUBMIT_CODE]))
   async submitCode(@Req() req, @Body() data: RunCodeDTO) {
-    return this.matchGameService.submitCode(
+    return this.matchGameService.testCode(
       req.user,
       data.matchType,
       data.problemId,

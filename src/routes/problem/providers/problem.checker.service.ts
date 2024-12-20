@@ -23,13 +23,12 @@ export class ProblemCheckerService {
     type: CompilerType,
     code: string,
     inputs: string[],
-    m_limit: number = 1024,
-  ): Promise<string[] | string> {
+    m_limit: number = 256,
+  ): Promise<string[]> {
     const id = uuid();
     const basePath = path.join(__dirname, "../../../common/docker");
     const workDir = { cwd: path.join(basePath, id) };
 
-    let error = "";
     let output: string;
     try {
       fs.mkdirSync(path.join(basePath, id));
@@ -44,10 +43,9 @@ export class ProblemCheckerService {
       for (let i = 0; i < inputs.length; i++) {
         fs.writeFileSync(path.join(basePath, id, `input_${i}.txt`), inputs[i]);
       }
-      const debug1 = await new Promise((accept) => {
+      await new Promise((accept) => {
         child_process.exec(`docker build . -t ${id}`, workDir, accept);
       });
-      if (debug1) error = "compile";
       await new Promise((accept) => {
         child_process.exec(`docker run --name ${id} ${id}`, workDir, accept);
       });
@@ -56,7 +54,7 @@ export class ProblemCheckerService {
           accept(stdout + "\n" + stderror);
         });
       });
-      if (output.startsWith("Error:")) error = "runtime";
+      console.log(output);
     } finally {
       await new Promise((accept) => {
         child_process.exec(`docker rm ${id} -f`, workDir, accept);
@@ -66,10 +64,6 @@ export class ProblemCheckerService {
       });
       fs.rmSync(path.join(basePath, id), { recursive: true, force: true });
     }
-    if (error) {
-      return error;
-    }
-
     const parsedOutput = JSON.parse(output);
     const result = new Array(Object.keys(parsedOutput).length);
     Object.entries(parsedOutput).forEach((e) => {
@@ -100,18 +94,11 @@ export class ProblemCheckerService {
       return str.trimEnd().replace("\n$", "").trimEnd();
     };
 
-    if (result === "runtime" || result == "compile")
-      return {
-        passed: false,
-        testcases: [],
-        error: result,
-      };
     return {
-      passed: (result as string[]).every((tco, i) => newTrim(tco) === newTrim(outputs[i])),
+      passed: result.every((tco, i) => newTrim(tco) === newTrim(outputs[i])),
       testcases: outputs
         .map((output, i) => [newTrim(inputs[i]), newTrim(output), newTrim(result[i])])
         .filter((o) => o[2] !== o[3]),
-      error: null,
     };
   }
 }

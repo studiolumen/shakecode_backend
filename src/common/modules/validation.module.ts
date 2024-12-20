@@ -139,9 +139,8 @@ export class ValidationService {
 
   async validateSession() {
     this.logger.log("Clearing expired sessions:");
-    // await this.sessionRepository.clear();
-    // this.logger.log("OK. Sessions cleared");
-    this.logger.log("NOP");
+    await this.sessionRepository.clear();
+    this.logger.log("OK. Sessions cleared");
   }
 }
 
