@@ -77,9 +77,4 @@ export class MatchGameController {
       this.matchGameGateway.problemList[this.matchGameGateway.round],
     );
   }
-
-  @Post("/draw")
-  async draw() {
-    this.matchGameGateway.roundEnd(null);
-  }
 }
