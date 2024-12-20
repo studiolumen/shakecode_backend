@@ -193,24 +193,6 @@ export class MatchGameGateway {
     });
   }
 
-  @SubscribeMessage("get_result")
-  async getResult(client: Socket, data) {
-    const winCount = {};
-    this.history.forEach((e, i) => {
-      if (!winCount[e]) winCount[e] = 0;
-      winCount[e]++;
-    });
-    const arr = Object.keys(winCount).map(function (key) {
-      return winCount[key];
-    });
-    const max = Math.max(...arr);
-    const winUser = Object.keys(winCount).filter(function (key) {
-      return winCount[key] === max;
-    });
-    console.log(winUser);
-    this.server.emit("match_result", winUser[0]);
-  }
-
   async startRound() {
     this.roundStart = Date.now();
     this.server.emit("time_round_start", {
