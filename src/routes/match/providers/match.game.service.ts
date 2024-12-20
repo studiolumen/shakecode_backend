@@ -1,8 +1,18 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-import { RedisMapper } from "../../../common/mapper/redis.mapper";
-import { CompilerType, SubmitResult, TestCodeResult, UserJWT } from "../../../common/mapper/types";
+import { ErrorMsg } from "../../../common/mapper/error";
+import { MapRedisConstant, RedisMapper } from "../../../common/mapper/redis.mapper";
+import {
+  CompilerType,
+  MatchRoomElement,
+  SubmitResult,
+  TestCodeResult,
+  UserJWT,
+} from "../../../common/mapper/types";
 import { RedisCacheService } from "../../../common/modules/redis.module";
+import { Problem, Testcase } from "../../../schemas";
 import { ProblemCheckerService } from "../../problem/providers";
 import { MatchGameGateway } from "../gateways";
 
@@ -51,15 +61,13 @@ export class MatchGameService {
     //   throw new HttpException(ErrorMsg.Match_NotFound, HttpStatus.NOT_FOUND);
     // if (!matchRoomElement.problems.includes(problemId))
     //   throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
-    if (problemId !== this.matchGameGateway.problemList[this.matchGameGateway.round]) {
-      return { passed: false, error: "problem" };
-    }
 
     const rediskey = "submition";
     const timestamp = Date.now();
 
     const result = await this.problemCheckerService.testCode(problemId, compiler, code, false);
     const submits = await this.redisService.get(rediskey);
+    console.log("submit", submits);
     if (submits) {
       const data = (await this.redisService.getJSON(rediskey)) as (TestCodeResult & {
         user: string;
@@ -73,12 +81,13 @@ export class MatchGameService {
         { user: user.name, problemId, timestamp, ...result },
       ]);
     }
+    console.log("submit2", await this.redisService.getJSON(rediskey));
     this.matchGameGateway.server.emit("data_submissions", {
       body: await this.redisService.getJSON("submition"),
     });
     const passed = result.passed;
     if (passed) {
-      this.matchGameGateway.roundEnd(user.name);
+      this.matchGameGateway.server.emit("round:finish", user.name);
     }
     console.log(`Submit approved! ${passed}`);
     return { passed, error: result.error };
