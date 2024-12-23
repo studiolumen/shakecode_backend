@@ -50,6 +50,8 @@ export class ProblemGetService {
       where: { problem },
     });
 
+    console.log(problem);
+
     if (!problem) throw new HttpException(ErrorMsg.Resource_NotFound, HttpStatus.NOT_FOUND);
 
     if (problem.restricted !== 0)
