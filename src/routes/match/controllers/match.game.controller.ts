@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req } from "@nestjs/common";
+import { Body, Controller, Post, Req, Sse } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { CustomJwtAuthGuard } from "../../../auth/guards";
@@ -36,7 +36,7 @@ export class MatchGameController {
   @Post("/submit")
   @UseGuardsWithSwagger(CustomJwtAuthGuard, PermissionGuard([PermissionEnum.SUBMIT_CODE]))
   async submitCode(@Req() req, @Body() data: RunCodeDTO) {
-    return this.matchGameService.testCode(
+    return this.matchGameService.submitCode(
       req.user,
       data.matchType,
       data.problemId,
@@ -44,4 +44,12 @@ export class MatchGameController {
       data.code,
     );
   }
+
+  // @ApiOperation({
+  //   summary: "submit status",
+  //   description: "get submit status over sse",
+  // })
+  // @Sse("/submit/status")
+  // @UseGuardsWithSwagger(CustomJwtAuthGuard, PermissionGuard([PermissionEnum.SUBMIT_CODE]))
+  // async submitStatus(@Req() req) {}
 }

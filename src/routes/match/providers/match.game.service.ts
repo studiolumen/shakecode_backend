@@ -60,4 +60,8 @@ export class MatchGameService {
 
     return (await this.problemCheckerService.testCode(problemId, compiler, code, false)).passed;
   }
+
+  async getSubmitStatus(user: UserJWT) {
+    // const
+  }
 }

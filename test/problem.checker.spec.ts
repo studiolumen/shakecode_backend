@@ -1,7 +1,11 @@
 import { beforeEach, describe, it, expect, jest } from "@jest/globals";
 import { Test } from "@nestjs/testing";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { ProblemCheckerService } from "../src/routes/problem/providers";
+import { Problem, Testcase } from "../src/schemas";
+
+import { EssentialTestModules } from "./modue.test";
 
 jest.useRealTimers();
 
@@ -10,6 +14,7 @@ describe("Problem service test", () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
+      imports: [...EssentialTestModules, TypeOrmModule.forFeature([Problem, Testcase])],
       providers: [ProblemCheckerService],
     }).compile();
     problemCheckerService = moduleRef.get(ProblemCheckerService);

@@ -76,3 +76,8 @@ export type TestCodeResult = {
   passed: boolean;
   testcases: string[][];
 };
+
+export type MatchGameSubmitInfo = {
+  timestamp: number;
+  containerId: string;
+};

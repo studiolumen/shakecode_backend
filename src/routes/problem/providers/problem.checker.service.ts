@@ -54,7 +54,6 @@ export class ProblemCheckerService {
           accept(stdout + "\n" + stderror);
         });
       });
-      console.log(output);
     } finally {
       await new Promise((accept) => {
         child_process.exec(`docker rm ${id} -f`, workDir, accept);
